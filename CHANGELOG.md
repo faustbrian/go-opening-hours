@@ -5,6 +5,11 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Bind the reviewed zero-mutant `openinghourswire` delegation package to its
+  exact standalone source identity.
+
 ### Changed
 
 - Exclude intentional nested modules from root local-proxy archives so local,

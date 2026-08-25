@@ -7,7 +7,7 @@
       "module_directory": ".",
       "package_directory": "openinghourswire",
       "reason": "The stateless codec directly delegates canonical encoding and strict parsing; the complete enabled Gremlins operator set discovers no viable transformations.",
-      "source_digest": "8461b96b9a4769fd7bef3c70c0432e5f2b27853704eb360dbc04e133b5e8ab87"
+      "source_digest": "bbf26734bb1e9486bfe94e73297ec87fd28ad2a78c174b43d6496255c964fdbf"
     }
   ]
 }
