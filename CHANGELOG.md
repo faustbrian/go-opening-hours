@@ -5,6 +5,8 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-08-25
+
 ### Fixed
 
 - Bind the reviewed zero-mutant `openinghourswire` delegation package to its
@@ -26,8 +28,6 @@ Versioning after v1.0.0.
 - Harden standalone documentation validation with deterministic spelling and
   link checks, package-specific documentation gates, and repository-local
   contributor guidance.
-
-## [1.0.0] - 2026-08-25
 
 ### Documentation
 
