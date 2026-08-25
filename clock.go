@@ -1,6 +1,6 @@
 package openinghours
 
-import clock "github.com/faustbrian/golib/pkg/clock"
+import clock "github.com/faustbrian/go-clock"
 
 // Clock is the clock current-time capability. Core schedule queries never
 // read a process-global clock.

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours"
 )
 
 func BenchmarkConstruction(b *testing.B) {

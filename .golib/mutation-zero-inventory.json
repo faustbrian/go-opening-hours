@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "packages": [
+    {
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module_directory": ".",
+      "package_directory": "openinghourswire",
+      "reason": "The stateless codec directly delegates canonical encoding and strict parsing; the complete enabled Gremlins operator set discovers no viable transformations.",
+      "source_digest": "8461b96b9a4769fd7bef3c70c0432e5f2b27853704eb360dbc04e133b5e8ab87"
+    }
+  ]
+}

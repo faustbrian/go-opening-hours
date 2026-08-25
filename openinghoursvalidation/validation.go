@@ -3,8 +3,8 @@
 package openinghoursvalidation
 
 import (
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
-	validation "github.com/faustbrian/golib/pkg/validation"
+	openinghours "github.com/faustbrian/go-opening-hours"
+	validation "github.com/faustbrian/go-validation"
 )
 
 // CodeInvalidSchedule is the stable validation violation code.

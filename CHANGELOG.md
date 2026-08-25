@@ -5,6 +5,8 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-08-25
+
 ### Documentation
 
 - Replace obsolete standalone-repository links and workflow claims with
@@ -14,6 +16,7 @@ Versioning after v1.0.0.
 
 ### Changed
 
+- Publish the module from its standalone `github.com/faustbrian/go-opening-hours` identity while preserving its documented API and behavior.
 - Refresh local `v0.0.0` owned-module checksums after dependency manifests and
   release notes were normalized; runtime behavior and public APIs are
   unchanged.
@@ -54,4 +57,5 @@ Versioning after v1.0.0.
 - Replace unreachable owned-module pseudo-versions with published revisions so
   clean checkouts can reproduce every gate without local replacements.
 
-[Unreleased]: https://github.com/faustbrian/golib/commits/main/pkg/opening-hours
+[Unreleased]: https://github.com/faustbrian/go-opening-hours/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/faustbrian/go-opening-hours/releases/tag/v1.0.0

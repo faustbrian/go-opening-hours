@@ -5,9 +5,9 @@ package openinghourscalendar
 import (
 	"errors"
 
-	calendar "github.com/faustbrian/golib/pkg/calendar"
-	"github.com/faustbrian/golib/pkg/calendar/business"
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
+	calendar "github.com/faustbrian/go-calendar"
+	"github.com/faustbrian/go-calendar/business"
+	openinghours "github.com/faustbrian/go-opening-hours"
 )
 
 var (

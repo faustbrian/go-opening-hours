@@ -4,7 +4,7 @@ import (
 	"slices"
 	"time"
 
-	calendartz "github.com/faustbrian/golib/pkg/calendar/timezone"
+	calendartz "github.com/faustbrian/go-calendar/timezone"
 )
 
 // DayState distinguishes absence, ranged opening, full-day opening, and closure.

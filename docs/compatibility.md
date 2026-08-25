@@ -2,7 +2,7 @@
 
 The minimum supported compiler is Go 1.26.6, the latest stable release at
 implementation time. Public API changes are checked against `api/baseline.txt`.
-Before v1, documented breaking changes may occur in minor releases; v1 follows
+Breaking changes require a new major release; v1 follows
 Semantic Versioning.
 
 Canonical wire version is `1`. Decoders reject other versions. Canonical bytes

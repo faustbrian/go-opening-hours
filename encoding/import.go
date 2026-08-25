@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours"
 )
 
 // Slot is a strict structured local-time interval.

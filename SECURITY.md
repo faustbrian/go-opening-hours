@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Until v1, only the latest commit on `main` receives security fixes. After v1,
+The latest stable v1 release and `main` receive security fixes.
 the latest minor release is supported.
 
 ## Reporting

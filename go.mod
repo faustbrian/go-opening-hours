@@ -1,14 +1,14 @@
-module github.com/faustbrian/golib/pkg/opening-hours
+module github.com/faustbrian/go-opening-hours
 
 go 1.26.6
 
 require (
-	github.com/faustbrian/golib/pkg/calendar v0.0.0
-	github.com/faustbrian/golib/pkg/clock v0.0.0
-	github.com/faustbrian/golib/pkg/config v0.0.0
-	github.com/faustbrian/golib/pkg/temporal v0.0.0
-	github.com/faustbrian/golib/pkg/validation v0.0.0
-	github.com/faustbrian/golib/pkg/wire v0.0.0
+	github.com/faustbrian/go-calendar v1.0.0
+	github.com/faustbrian/go-clock v1.0.0
+	github.com/faustbrian/go-config v1.0.0
+	github.com/faustbrian/go-temporal v1.0.0
+	github.com/faustbrian/go-validation v1.0.0
+	github.com/faustbrian/go-wire v1.0.0
 	github.com/jackc/pgx/v5 v5.10.0
 )
 

@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
-	"github.com/faustbrian/golib/pkg/opening-hours/compile"
+	openinghours "github.com/faustbrian/go-opening-hours"
+	"github.com/faustbrian/go-opening-hours/compile"
 )
 
 func TestIndexPreservesQueriesAndIsSafeForConcurrentReads(t *testing.T) {

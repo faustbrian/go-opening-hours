@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
-	openinghoursencoding "github.com/faustbrian/golib/pkg/opening-hours/encoding"
+	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghoursencoding "github.com/faustbrian/go-opening-hours/encoding"
 )
 
 func TestLocationCompatibilityFixture(t *testing.T) {

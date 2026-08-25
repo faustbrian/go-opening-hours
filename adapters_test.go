@@ -5,13 +5,13 @@ import (
 	"testing"
 	"time"
 
-	calendar "github.com/faustbrian/golib/pkg/calendar"
-	clock "github.com/faustbrian/golib/pkg/clock"
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
-	openinghoursencoding "github.com/faustbrian/golib/pkg/opening-hours/encoding"
-	openinghoursconfig "github.com/faustbrian/golib/pkg/opening-hours/openinghoursconfig"
-	openinghoursvalidation "github.com/faustbrian/golib/pkg/opening-hours/openinghoursvalidation"
-	openinghourswire "github.com/faustbrian/golib/pkg/opening-hours/openinghourswire"
+	calendar "github.com/faustbrian/go-calendar"
+	clock "github.com/faustbrian/go-clock"
+	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghoursencoding "github.com/faustbrian/go-opening-hours/encoding"
+	openinghoursconfig "github.com/faustbrian/go-opening-hours/openinghoursconfig"
+	openinghoursvalidation "github.com/faustbrian/go-opening-hours/openinghoursvalidation"
+	openinghourswire "github.com/faustbrian/go-opening-hours/openinghourswire"
 )
 
 type fixedClock struct{ now time.Time }

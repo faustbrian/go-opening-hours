@@ -3,9 +3,9 @@ package openinghoursconfig_test
 import (
 	"testing"
 
-	configdecode "github.com/faustbrian/golib/pkg/config/decode"
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
-	"github.com/faustbrian/golib/pkg/opening-hours/openinghoursconfig"
+	configdecode "github.com/faustbrian/go-config/decode"
+	openinghours "github.com/faustbrian/go-opening-hours"
+	"github.com/faustbrian/go-opening-hours/openinghoursconfig"
 )
 
 func TestParse(t *testing.T) {

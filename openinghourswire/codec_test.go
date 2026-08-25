@@ -3,9 +3,9 @@ package openinghourswire_test
 import (
 	"testing"
 
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
-	"github.com/faustbrian/golib/pkg/opening-hours/openinghourswire"
-	wire "github.com/faustbrian/golib/pkg/wire"
+	openinghours "github.com/faustbrian/go-opening-hours"
+	"github.com/faustbrian/go-opening-hours/openinghourswire"
+	wire "github.com/faustbrian/go-wire"
 )
 
 func TestCodec(t *testing.T) {

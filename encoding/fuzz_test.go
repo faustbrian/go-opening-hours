@@ -3,7 +3,7 @@ package encoding_test
 import (
 	"testing"
 
-	openinghoursencoding "github.com/faustbrian/golib/pkg/opening-hours/encoding"
+	openinghoursencoding "github.com/faustbrian/go-opening-hours/encoding"
 )
 
 func FuzzStructuredImports(f *testing.F) {

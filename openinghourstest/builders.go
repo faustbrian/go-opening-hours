@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours"
 )
 
 // Time constructs a test local time or fails the test immediately.

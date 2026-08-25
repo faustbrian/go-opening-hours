@@ -5,9 +5,9 @@ package openinghourstemporal
 import (
 	"errors"
 
-	openinghours "github.com/faustbrian/golib/pkg/opening-hours"
-	temporal "github.com/faustbrian/golib/pkg/temporal"
-	"github.com/faustbrian/golib/pkg/temporal/timeofday"
+	openinghours "github.com/faustbrian/go-opening-hours"
+	temporal "github.com/faustbrian/go-temporal"
+	"github.com/faustbrian/go-temporal/timeofday"
 )
 
 // ErrLossyMapping reports an interval whose state or bounds cannot be

@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "repository": "github.com/faustbrian/go-opening-hours",
+  "packages": [
+    {
+      "module_directory": ".",
+      "directory": ".",
+      "name": "openinghours",
+      "import_path": "github.com/faustbrian/go-opening-hours",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "compile",
+      "name": "compile",
+      "import_path": "github.com/faustbrian/go-opening-hours/compile",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "encoding",
+      "name": "encoding",
+      "import_path": "github.com/faustbrian/go-opening-hours/encoding",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "openinghourscalendar",
+      "name": "openinghourscalendar",
+      "import_path": "github.com/faustbrian/go-opening-hours/openinghourscalendar",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "openinghoursconfig",
+      "name": "openinghoursconfig",
+      "import_path": "github.com/faustbrian/go-opening-hours/openinghoursconfig",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "openinghourstemporal",
+      "name": "openinghourstemporal",
+      "import_path": "github.com/faustbrian/go-opening-hours/openinghourstemporal",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "openinghourstest",
+      "name": "openinghourstest",
+      "import_path": "github.com/faustbrian/go-opening-hours/openinghourstest",
+      "kind": "test support",
+      "production": false,
+      "executable": true,
+      "coverage_required": false,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "openinghoursvalidation",
+      "name": "openinghoursvalidation",
+      "import_path": "github.com/faustbrian/go-opening-hours/openinghoursvalidation",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "openinghourswire",
+      "name": "openinghourswire",
+      "import_path": "github.com/faustbrian/go-opening-hours/openinghourswire",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    },
+    {
+      "module_directory": ".",
+      "directory": "postgres",
+      "name": "postgres",
+      "import_path": "github.com/faustbrian/go-opening-hours/postgres",
+      "kind": "public",
+      "production": true,
+      "executable": true,
+      "coverage_required": true,
+      "build_required": true,
+      "build_tags": []
+    }
+  ]
+}
