@@ -7,9 +7,9 @@ github.com/faustbrian/go-calendar v1.0.0 h1:slKfy50cBpXkVt604i2EK4yNB4HDMsW83o5D
 github.com/faustbrian/go-calendar v1.0.0/go.mod h1:BgDZIrkEx6CZDebZLlrApN8s47aFdQMc0aRB+ZKXx/s=
 github.com/faustbrian/go-clock v1.0.0 h1:S98Gi1KHv2N6ZFV+3VlloP11zcMBFGnaAabBaG7+CtU=
 github.com/faustbrian/go-clock v1.0.0/go.mod h1:WKZ5p79IKGNTZGDp2L81cYjbsEjv3+9U0be7uwS8t6Y=
-github.com/faustbrian/go-config v1.0.0 h1:p2YTEa83SbgpH+TFFCyyihRfeMP+onmFqNv0DoR8clE=
+github.com/faustbrian/go-config v1.0.0 h1:qDlATQn1NgZGahHtqQFZXAGify8rF95OHc2u1EauxyY=
 github.com/faustbrian/go-config v1.0.0/go.mod h1:pnqiOzoqa91gG8gWhQI7S1BXuE/E0DKRCOh19SQ3qYc=
-github.com/faustbrian/go-temporal v1.0.0 h1:j3Qm1vTPuK5tj2+onm/WC1knBT0gh6BhAE+Yt5OxzVM=
+github.com/faustbrian/go-temporal v1.0.0 h1:LM2ivqyIP3UPcmsexF+m6EirKFJH6/MHDA3DzCnVHZ0=
 github.com/faustbrian/go-temporal v1.0.0/go.mod h1:z6LeTLo1rMao3RuZtbgkQ6BlsN2rp5eLWUvkKUJVAOg=
 github.com/faustbrian/go-validation v1.0.0 h1:xdcMbe4iXEgWBbX7KOpxY63dsCnevzhgk2jtPw5iD0s=
 github.com/faustbrian/go-validation v1.0.0/go.mod h1:oSoKEITwgaCzWpdgdxrV+Q6QPpteJJvRldAeOZL9Plg=
