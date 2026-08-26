@@ -16,7 +16,7 @@
 - [Architecture](architecture.md)
 - [Compatibility](compatibility.md)
 
-## Adoption and operations
+## Usage and operations
 
 - [Service points](service-points.md)
 - [Storefronts](storefronts.md)
@@ -30,5 +30,4 @@
 - [Performance](performance.md)
 - [Troubleshooting](troubleshooting.md)
 - [FAQ](faq.md)
-- [Hardening evidence](hardening.md)
 - [Roadmap](roadmap.md)

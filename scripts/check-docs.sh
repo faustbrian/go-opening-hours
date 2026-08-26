@@ -11,7 +11,6 @@ required=(
 	docs/legacy-migration.md docs/cookbook.md docs/security.md
 	docs/performance.md docs/faq.md docs/troubleshooting.md
 	docs/compatibility.md docs/architecture.md docs/roadmap.md
-	docs/hardening.md
 )
 for file in "${required[@]}"; do
 	if [[ ! -s "$file" ]]; then
