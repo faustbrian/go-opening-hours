@@ -32,7 +32,7 @@ that hide a failing package.
 
 ## Verification
 
-Run during development:
+Run during development with the released shared tooling:
 
 ```bash
 make inventory
@@ -45,8 +45,10 @@ Before submitting a repository-wide change:
 make ci
 ```
 
-The full scheduled and release gate is `make ci`. Report every unavailable or
-failing command; do not describe partial results as release-ready.
+The full repository gate is `make ci`. The `golib` binary owns disposable Go
+caches, service fixtures, evidence reuse, and gate thresholds. Report every
+unavailable or failing command; do not describe partial results as
+release-ready.
 
 ## Adding A Module
 

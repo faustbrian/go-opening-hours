@@ -97,23 +97,16 @@ Owned-module integration is covered in [integrations](docs/integrations.md).
 
 ```sh
 make check
-make lint
-make nilaway
-make integration
 ```
 
-`make check` is the core release gate; lint, advisory NilAway, and PostgreSQL
-integration have separate reproducible targets shown above. PostgreSQL skips
-when `POSTGRES_URL` is absent and runs against the supplied disposable database
-when present.
+`make check` runs the complete shared-library contract, including formatting,
+tests, race detection, exact coverage, mutation verification, fuzzing,
+benchmarks, API compatibility, documentation, security, and the typed timezone
+regression operation. Package-specific services are task-owned by the shared
+tool; PostgreSQL integration is enabled by the module manifest.
 
 ## Support and policy
 
 See [security policy](SECURITY.md), [contribution guide](CONTRIBUTING.md),
 [compatibility policy](docs/compatibility.md), and [changelog](CHANGELOG.md).
 The project is available under the [MIT License](LICENSE).
-
-## Ecosystem
-
-Use the [Golib documentation portal](https://github.com/faustbrian/golib/blob/main/docs/index.md)
-to choose companion packages, supported stacks, recipes, and operations guidance.
