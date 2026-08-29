@@ -97,15 +97,13 @@ Owned-module integration is covered in [integrations](docs/integrations.md).
 
 ```sh
 make check
-make lint
-make nilaway
-make integration
 ```
 
-`make check` is the core release gate; lint, advisory NilAway, and PostgreSQL
-integration have separate reproducible targets shown above. PostgreSQL skips
-when `POSTGRES_URL` is absent and runs against the supplied disposable database
-when present.
+`make check` runs the complete shared-library contract, including formatting,
+tests, race detection, exact coverage, mutation verification, fuzzing,
+benchmarks, API compatibility, documentation, security, and the typed timezone
+regression operation. Package-specific services are task-owned by the shared
+tool; PostgreSQL integration is enabled by the module manifest.
 
 ## Support and policy
 

@@ -1,7 +1,9 @@
 # API reference
 
 The authoritative symbol reference is the package documentation generated from
-the source and checked by `scripts/check-api-compat.sh`. Key contracts are:
+the source and checked by `golib api check` against `api/baseline.txt`. The
+baseline and package selection are declared in `.golib.yaml`. Key contracts
+are:
 
 | Area | Exported API |
 | --- | --- |

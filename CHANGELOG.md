@@ -5,10 +5,16 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Adopt released `go-library-tools` v1.0.5 for local and GitHub Actions
+  verification while preserving package-owned evidence and fixtures.
+- Replace copied repository tooling with the strict `.golib.yaml` contract and
+  the centralized immutable CI workflow.
+
 ### Documentation
 
-- Replace archived monorepo links and completed execution artifacts with a
-  standalone, human-oriented documentation structure.
+- Document the standalone verification commands and shared gate behavior.
 
 ## [1.0.0] - 2026-08-25
 
@@ -35,9 +41,6 @@ Versioning after v1.0.0.
   contributor guidance.
 
 ### Documentation
-
-- Replace obsolete standalone-repository links and workflow claims with
-  monorepo-canonical targets and current release guidance.
 
 - Link the package README to package-owned documentation.
 

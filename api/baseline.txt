@@ -1,4 +1,3 @@
-PACKAGE github.com/faustbrian/go-opening-hours
 package openinghours // import "github.com/faustbrian/go-opening-hours"
 
 Package openinghours provides immutable recurring opening-hours schedules, dated
@@ -577,7 +576,6 @@ const (
 	// TransitionClose identifies a boundary whose following instant is closed.
 	TransitionClose
 )
-PACKAGE github.com/faustbrian/go-opening-hours/compile
 package compile // import "github.com/faustbrian/go-opening-hours/compile"
 
 Package compile provides an immutable prepared schedule handle for repeated
@@ -609,7 +607,6 @@ func (index Index) NextTransition(instant time.Time, horizon time.Duration) (ope
 func (index Index) Schedule() openinghours.Schedule
     Schedule returns the immutable prepared schedule value.
 
-PACKAGE github.com/faustbrian/go-opening-hours/encoding
 package encoding // import "github.com/faustbrian/go-opening-hours/encoding"
 
 Package encoding exposes the canonical schedule wire contract without shadowing
@@ -655,7 +652,6 @@ type Slot struct {
 }
     Slot is a strict structured local-time interval.
 
-PACKAGE github.com/faustbrian/go-opening-hours/openinghourscalendar
 package openinghourscalendar // import "github.com/faustbrian/go-opening-hours/openinghourscalendar"
 
 Package openinghourscalendar adapts calendar civil dates and bounded
@@ -684,7 +680,6 @@ func HolidayClosures(businessCalendar business.Calendar, start, end calendar.Dat
 func ToDate(date openinghours.Date) (calendar.Date, error)
     ToDate converts a valid opening-hours civil date without timezone inference.
 
-PACKAGE github.com/faustbrian/go-opening-hours/openinghoursconfig
 package openinghoursconfig // import "github.com/faustbrian/go-opening-hours/openinghoursconfig"
 
 Package openinghoursconfig adapts canonical schedule documents from
@@ -722,7 +717,6 @@ func (value Value) Schedule() openinghours.Schedule
 func (value *Value) UnmarshalConfigValue(input any) error
     UnmarshalConfigValue decodes canonical JSON text supplied by config.
 
-PACKAGE github.com/faustbrian/go-opening-hours/openinghourstemporal
 package openinghourstemporal // import "github.com/faustbrian/go-opening-hours/openinghourstemporal"
 
 Package openinghourstemporal provides lossless adapters for temporal/timeofday
@@ -752,7 +746,6 @@ func RuleFromIntervals(intervals []timeofday.Interval,
     An empty or single collapsed interval maps to closed; full day must stand
     alone.
 
-PACKAGE github.com/faustbrian/go-opening-hours/openinghoursvalidation
 package openinghoursvalidation // import "github.com/faustbrian/go-opening-hours/openinghoursvalidation"
 
 Package openinghoursvalidation provides a dependency-neutral validator seam
@@ -780,7 +773,6 @@ type ValidationError struct{}
 
 func (*ValidationError) Error() string
 
-PACKAGE github.com/faustbrian/go-opening-hours/openinghourswire
 package openinghourswire // import "github.com/faustbrian/go-opening-hours/openinghourswire"
 
 Package openinghourswire adapts schedules to byte-oriented wire registries.
@@ -805,7 +797,6 @@ func (Codec) Decode(data []byte) (openinghours.Schedule, error)
 func (Codec) Encode(schedule openinghours.Schedule) ([]byte, error)
     Encode returns canonical bytes.
 
-PACKAGE github.com/faustbrian/go-opening-hours/postgres
 package postgres // import "github.com/faustbrian/go-opening-hours/postgres"
 
 Package postgres provides nullable JSONB persistence values. The root Schedule
