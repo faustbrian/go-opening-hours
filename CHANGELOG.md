@@ -7,7 +7,7 @@ Versioning after v1.0.0.
 
 ### Changed
 
-- Adopt released `go-library-tools` v1.0.5 for local and GitHub Actions
+- Adopt released `go-library-tools` v1.0.13 for local and GitHub Actions
   verification while preserving package-owned evidence and fixtures.
 - Replace copied repository tooling with the strict `.golib.yaml` contract and
   the centralized immutable CI workflow.
