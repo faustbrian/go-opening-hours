@@ -93,6 +93,10 @@ Start at the [documentation index](docs/README.md). The five-minute guides cover
 [precedence](docs/precedence.md) and [normalization](docs/normalization.md).
 Owned-module integration is covered in [integrations](docs/integrations.md).
 
+For ecosystem-wide selection and ownership guidance, see the versioned
+[Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md)
+and its [Domain utilities family](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/design-language.md#package-families-and-selection).
+
 ## Local verification
 
 ```sh
