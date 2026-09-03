@@ -7,12 +7,21 @@ Versioning after v1.0.0.
 
 ### Changed
 
+- Adopt the `go-library-tools` v1.3.0 schema-v2 cohesion contract and local
+  `make cohesion` gate without changing opening-hours API or runtime behavior.
+- Pin reusable CI to the immutable v1.3.0 workflow and enforce cohesion
+  metadata in the repository's required CI contract.
+
 - Adopt released `go-library-tools` v1.0.5 for local and GitHub Actions
   verification while preserving package-owned evidence and fixtures.
 - Replace copied repository tooling with the strict `.golib.yaml` contract and
   the centralized immutable CI workflow.
 
 ### Documentation
+
+- Publish the module's family, capabilities, ownership, lifecycle, supported
+  environments, package selection, and delivery status, and link package
+  documentation to the immutable v1.3.0 ecosystem guidance.
 
 - Document the standalone verification commands and shared gate behavior.
 
