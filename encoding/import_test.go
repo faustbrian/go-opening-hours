@@ -202,6 +202,32 @@ func TestImportLocationLimitBoundaries(t *testing.T) {
 	}
 }
 
+func TestImportLocationPreservesEveryPresentEmptyDayAsClosed(t *testing.T) {
+	days := map[string][]openinghoursencoding.Slot{
+		"sunday": nil, "monday": nil, "tuesday": nil, "wednesday": nil,
+		"thursday": nil, "friday": nil, "saturday": nil,
+	}
+
+	schedule, err := openinghoursencoding.ImportLocation(
+		"UTC", days, openinghoursencoding.DefaultImportLimits(),
+	)
+	if err != nil {
+		t.Fatalf("ImportLocation() error = %v", err)
+	}
+
+	closed := make(map[time.Weekday]openinghours.DayRule, len(days))
+	for weekday := time.Sunday; weekday <= time.Saturday; weekday++ {
+		closed[weekday] = openinghours.Closed()
+	}
+	want, err := openinghours.NewSchedule(openinghours.Config{Timezone: "UTC", Weekly: closed})
+	if err != nil {
+		t.Fatalf("NewSchedule() error = %v", err)
+	}
+	if !schedule.Equal(want) {
+		t.Fatalf("ImportLocation() omitted one or more explicitly closed days")
+	}
+}
+
 func TestImportSpatieRejectsAmbiguousSeparatorsAsRanges(t *testing.T) {
 	limits := openinghoursencoding.DefaultImportLimits()
 	for _, input := range []string{"01:00", "01:00-02:00-03:00"} {
