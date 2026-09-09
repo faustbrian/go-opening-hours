@@ -1,37 +1,33 @@
-// Package openinghourscalendar adapts calendar civil dates and bounded
-// business-calendar holidays to opening-hours values.
+// Package openinghourscalendar is the compatibility path for
+// [github.com/faustbrian/go-opening-hours/adapters/calendar].
+//
+// Deprecated: use github.com/faustbrian/go-opening-hours/adapters/calendar.
+// This package remains supported for the longer of 180 days after successor
+// public availability and two subsequently published stable minor releases.
 package openinghourscalendar
 
 import (
-	"errors"
-
 	calendar "github.com/faustbrian/go-calendar"
 	"github.com/faustbrian/go-calendar/business"
 	openinghours "github.com/faustbrian/go-opening-hours"
+	canonical "github.com/faustbrian/go-opening-hours/adapters/calendar"
 )
 
 var (
 	// ErrInvalidInput reports an invalid date, calendar, source, or range.
-	ErrInvalidInput = errors.New("openinghourscalendar: invalid input")
+	ErrInvalidInput = canonical.ErrInvalidInput
 	// ErrExpansionLimit reports a non-positive or exhausted date bound.
-	ErrExpansionLimit = errors.New("openinghourscalendar: expansion limit")
+	ErrExpansionLimit = canonical.ErrExpansionLimit
 )
 
 // FromDate converts a valid calendar civil date without timezone inference.
 func FromDate(date calendar.Date) (openinghours.Date, error) {
-	if !date.IsValid() {
-		return openinghours.Date{}, ErrInvalidInput
-	}
-	return openinghours.NewDate(date.Year(), date.Month(), date.Day())
+	return canonical.FromDate(date)
 }
 
 // ToDate converts a valid opening-hours civil date without timezone inference.
 func ToDate(date openinghours.Date) (calendar.Date, error) {
-	converted, err := calendar.NewDate(date.Year(), date.Month(), date.Day())
-	if err != nil {
-		return calendar.Date{}, ErrInvalidInput
-	}
-	return converted, nil
+	return canonical.ToDate(date)
 }
 
 // HolidayClosures resolves holidays in an inclusive, explicitly bounded civil
@@ -39,31 +35,7 @@ func ToDate(date openinghours.Date) (calendar.Date, error) {
 func HolidayClosures(businessCalendar business.Calendar, start, end calendar.Date,
 	maximumDates, priority int, source string,
 ) ([]openinghours.Exception, error) {
-	if !businessCalendar.IsValid() || !start.IsValid() || !end.IsValid() ||
-		start.DaysUntil(end) < 0 || maximumDates <= 0 || source == "" {
-		return nil, ErrInvalidInput
-	}
-	result := make([]openinghours.Exception, 0)
-	date := start
-	for step := 0; ; step++ {
-		if step >= maximumDates {
-			return nil, ErrExpansionLimit
-		}
-		if businessCalendar.IsHoliday(date) {
-			converted, _ := FromDate(date)
-			exception, err := openinghours.NewException(openinghours.ExceptionConfig{
-				Date: converted, Operation: openinghours.ExceptionClose,
-				Priority: priority, Source: source, Revision: businessCalendar.Revision(),
-			})
-			if err != nil {
-				return nil, err
-			}
-			result = append(result, exception)
-		}
-		if date.Equal(end) {
-			return result, nil
-		}
-		next, _ := date.AddDays(1)
-		date = next
-	}
+	return canonical.HolidayClosures(
+		businessCalendar, start, end, maximumDates, priority, source,
+	)
 }

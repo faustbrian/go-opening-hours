@@ -13,6 +13,12 @@
 Immutable, deterministic, timezone-safe recurring opening hours and dated
 exceptions for Go 1.26.6 and later.
 
+Install the stable root module with:
+
+```sh
+go get github.com/faustbrian/go-opening-hours@v1.1.0
+```
+
 The package models generic availability for service points, storefronts,
 offices, pickup locations, and support desks. It does not parse carrier prose,
 book appointments, plan workforces, or decide whether an order is eligible.
@@ -74,15 +80,20 @@ no timezone; it never means always open.
 | Package | Purpose |
 | --- | --- |
 | root | Values, rules, exceptions, algebra, queries, encoding, SQL |
+| `adapters/calendar` | Calendar dates and bounded holiday closures |
+| `adapters/config` | Strict configuration values |
+| `adapters/temporal` | Lossless Temporal time-of-day conversion |
+| `adapters/validation` | Shared Validation contract |
+| `adapters/wire` | Canonical byte codec for Wire registries |
 | `compile` | Immutable prepared query handle |
 | `encoding` | Canonical Location/Spatie imports; Track/Postal fixtures |
-| `postgres` | Nullable JSONB wrapper and pgx compatibility |
-| `openinghourswire` | Byte-codec adapter |
-| `openinghoursvalidation` | Canonical validation adapter |
-| `openinghoursconfig` | Strict configuration adapter |
-| `openinghourscalendar` | `calendar` dates and holiday closures |
-| `openinghourstemporal` | Lossless `temporal/timeofday` conversion |
 | `openinghourstest` | Panic-on-error test builders |
+| `postgres` | Domain-owned nullable JSONB and pgx schedule mapping |
+
+The released `openinghourscalendar`, `openinghoursconfig`,
+`openinghourstemporal`, `openinghoursvalidation`, and `openinghourswire`
+packages remain compatibility facades. New code should use the corresponding
+`adapters/<target>` path. See the [migration guide](docs/legacy-migration.md).
 
 ## Documentation
 
@@ -94,8 +105,8 @@ Start at the [documentation index](docs/README.md). The five-minute guides cover
 Owned-module integration is covered in [integrations](docs/integrations.md).
 
 For ecosystem-wide selection and ownership guidance, see the versioned
-[Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md)
-and its [Domain utilities family](https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/design-language.md#package-families-and-selection).
+[Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.6.2/docs/ecosystem/README.md)
+and its [Domain utilities family](https://github.com/faustbrian/go-library-tools/blob/v1.6.2/docs/ecosystem/design-language.md#package-families-and-selection).
 
 ## Local verification
 

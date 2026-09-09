@@ -1,7 +1,8 @@
 # Compatibility Policy
 
-Each releasable directory is an independent Go module and follows semantic
-versioning. Tags use `<module-directory>/v<version>`.
+The repository has one releasable root Go module. Its packages, including
+canonical adapters and compatibility facades, ship under root `v<version>`
+tags and follow semantic versioning together.
 
 Before `v1`, minor releases MAY contain reviewed breaking changes, but every
 break MUST be documented with migration guidance. Patch releases MUST remain
@@ -16,3 +17,9 @@ defaults. A compile-compatible change can still be behaviorally breaking.
 Specification-backed modules MUST NOT diverge from their declared standards.
 Ambiguities require documented decisions and stable tests. Deprecated APIs
 follow [`DEPRECATION.md`](DEPRECATION.md).
+
+The `openinghourscalendar`, `openinghoursconfig`, `openinghourstemporal`,
+`openinghoursvalidation`, and `openinghourswire` package paths remain supported
+compatibility facades for their `adapters/<target>` successors. The facades
+preserve released signatures, named-type identity, shared sentinels, encoding,
+and error behavior for the interval defined in [`DEPRECATION.md`](DEPRECATION.md).

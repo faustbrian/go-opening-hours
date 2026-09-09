@@ -7,10 +7,24 @@ Versioning after v1.0.0.
 
 ### Changed
 
-- Adopt the `go-library-tools` v1.4.0 schema-v2 cohesion contract and local
+- Add canonical `adapters/calendar`, `adapters/config`, `adapters/temporal`,
+  `adapters/validation`, and `adapters/wire` entry points. The released
+  top-level integration packages remain supported compatibility facades with
+  unchanged signatures, behavior, sentinels, and named-type identities.
+- Adopt Calendar v1.1.0, Temporal v1.1.0, and Validation v1.1.0 while
+  retaining Config v1.0.0 and Wire v1.0.0.
+
+### Deprecated
+
+- Prefer the five target-oriented `adapters/<target>` packages for new code.
+  The former integration paths remain supported for the longer of 180 days
+  after successor public availability and two later stable minor releases.
+
+- Adopt the `go-library-tools` v1.6.2 cohesion contract and local
   `make cohesion` gate without changing opening-hours API or runtime behavior.
-- Pin reusable CI to the immutable v1.4.0 W14-enforcement workflow and enforce
-  cohesion metadata in the repository's required CI contract.
+- Pin reusable CI to the immutable v1.6.2 workflow, including proportional
+  zero-mutant verification, and enforce cohesion metadata in the repository's
+  required CI contract.
 - Reconcile owned v1.0.0 dependency checksums with their transparency-log
   authenticated public module archives without changing dependency versions.
 
@@ -23,11 +37,11 @@ Versioning after v1.0.0.
 
 - Publish the module's family, capabilities, ownership, lifecycle, supported
   environments, package selection, and delivery status, and link package
-  documentation to the immutable v1.4.0 ecosystem guidance.
+  documentation to the immutable v1.6.2 ecosystem guidance.
 
 - Document the standalone verification commands and shared gate behavior.
 
-## [1.0.0] - 2026-08-25
+## [1.0.0] - 2026-08-26
 
 ### Fixed
 

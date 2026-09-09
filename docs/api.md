@@ -17,7 +17,8 @@ are:
 | formatting | `HumanSummary` display text, canonical JSON/text wire encoding |
 | encoding | strict parse, SQL scanner/valuer |
 | capabilities | `Clock`, `ElapsedClock`, `Observer`, `Observation` |
-| owned adapters | calendar dates/holidays, temporal intervals, config, validation, wire |
+| canonical adapters | `adapters/calendar`, `adapters/config`, `adapters/temporal`, `adapters/validation`, `adapters/wire` |
+| compatibility paths | `openinghourscalendar`, `openinghoursconfig`, `openinghourstemporal`, `openinghoursvalidation`, `openinghourswire` |
 
 Every constructor returns a typed package `Error` category through `IsCode`.
 Errors contain an operation and stable code only; they do not embed source
@@ -27,3 +28,9 @@ JSON, 16 composition levels, 366 elapsed search days, 8,192 output fragments,
 
 The zero `Date` is invalid, zero `LocalTime` is midnight, zero `DayRule` is
 inherited, and zero `Schedule` is closed without a timezone.
+
+Canonical and compatibility adapter paths share the same package-owned error
+sentinels and observable behavior. Their exported named `Value`,
+`ValidationError`, and `Codec` types retain distinct reflection identities;
+use the type from the import path your code selected. Failed configuration
+decoding is atomic and leaves the prior schedule unchanged.

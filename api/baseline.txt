@@ -576,6 +576,153 @@ const (
 	// TransitionClose identifies a boundary whose following instant is closed.
 	TransitionClose
 )
+package openinghourscalendar // import "github.com/faustbrian/go-opening-hours/adapters/calendar"
+
+Package openinghourscalendar adapts calendar civil dates and bounded
+business-calendar holidays to opening-hours values.
+
+VARIABLES
+
+var (
+	// ErrInvalidInput reports an invalid date, calendar, source, or range.
+	ErrInvalidInput = errors.New("openinghourscalendar: invalid input")
+	// ErrExpansionLimit reports a non-positive or exhausted date bound.
+	ErrExpansionLimit = errors.New("openinghourscalendar: expansion limit")
+)
+
+FUNCTIONS
+
+func FromDate(date calendar.Date) (openinghours.Date, error)
+    FromDate converts a valid calendar civil date without timezone inference.
+
+func HolidayClosures(businessCalendar business.Calendar, start, end calendar.Date,
+	maximumDates, priority int, source string,
+) ([]openinghours.Exception, error)
+    HolidayClosures resolves holidays in an inclusive, explicitly bounded civil
+    date range to deterministic exact-date closure exceptions.
+
+func ToDate(date openinghours.Date) (calendar.Date, error)
+    ToDate converts a valid opening-hours civil date without timezone inference.
+
+package openinghoursconfig // import "github.com/faustbrian/go-opening-hours/adapters/config"
+
+Package openinghoursconfig adapts canonical schedule documents from
+configuration sources while leaving environment and file ownership to the
+caller.
+
+VARIABLES
+
+var ErrInvalidValue = errors.New("openinghoursconfig: invalid value")
+    ErrInvalidValue reports a configuration value that is not canonical JSON
+    text. The rejected value is never included.
+
+
+FUNCTIONS
+
+func Parse(value string) (openinghours.Schedule, error)
+    Parse strictly decodes one bounded canonical configuration value.
+
+
+TYPES
+
+type Value struct {
+	// Has unexported fields.
+}
+    Value implements config's value-unmarshal seam without owning sources.
+
+func NewValue(schedule openinghours.Schedule) Value
+    NewValue wraps an immutable schedule for configuration serialization.
+
+func (value Value) MarshalText() ([]byte, error)
+    MarshalText returns canonical configuration text.
+
+func (value Value) Schedule() openinghours.Schedule
+    Schedule returns the decoded immutable schedule.
+
+func (value *Value) UnmarshalConfigValue(input any) error
+    UnmarshalConfigValue decodes canonical JSON text supplied by config.
+
+package openinghourstemporal // import "github.com/faustbrian/go-opening-hours/adapters/temporal"
+
+Package openinghourstemporal provides lossless adapters for temporal/timeofday
+values.
+
+VARIABLES
+
+var ErrLossyMapping = errors.New("openinghourstemporal: lossy mapping")
+    ErrLossyMapping reports an interval whose state or bounds cannot be
+    represented without changing semantics.
+
+
+FUNCTIONS
+
+func IntervalFromRange(value openinghours.Range, digits int) (timeofday.Interval, error)
+    IntervalFromRange converts a range while making fractional precision
+    explicit. Digits must exactly represent both endpoints.
+
+func RangeFromInterval(interval timeofday.Interval) (openinghours.Range, error)
+    RangeFromInterval converts an ordinary or circular start-inclusive,
+    end-exclusive interval.
+
+func RuleFromIntervals(intervals []timeofday.Interval,
+	policy openinghours.OverlapPolicy,
+) (openinghours.DayRule, error)
+    RuleFromIntervals converts an explicitly bounded interval collection.
+    An empty or single collapsed interval maps to closed; full day must stand
+    alone.
+
+package openinghoursvalidation // import "github.com/faustbrian/go-opening-hours/adapters/validation"
+
+Package openinghoursvalidation adapts schedule validation to the shared
+validation contract.
+
+CONSTANTS
+
+const CodeInvalidSchedule = "opening_hours.invalid_schedule"
+    CodeInvalidSchedule is the stable validation violation code.
+
+
+FUNCTIONS
+
+func Validate(schedule openinghours.Schedule) error
+    Validate proves that a schedule has a lossless strict canonical round trip.
+
+func Validator() validation.Validator[openinghours.Schedule]
+    Validator returns a deterministic validation adapter.
+
+
+TYPES
+
+type ValidationError struct{}
+    ValidationError reports a canonical round-trip mismatch without data.
+
+func (*ValidationError) Error() string
+    Error returns the stable, data-free diagnostic.
+
+package openinghourswire // import "github.com/faustbrian/go-opening-hours/adapters/wire"
+
+Package openinghourswire adapts schedules to byte-oriented wire registries.
+
+CONSTANTS
+
+const Format = "opening-hours+json;v=1"
+    Format is the stable registry name for canonical opening-hours JSON.
+
+const WireFormat wire.Format = Format
+    WireFormat is the typed wire registry identity.
+
+
+TYPES
+
+type Codec struct{}
+    Codec is stateless and safe for concurrent use.
+
+func (Codec) Decode(data []byte) (openinghours.Schedule, error)
+    Decode strictly parses canonical bytes.
+
+func (Codec) Encode(schedule openinghours.Schedule) ([]byte, error)
+    Encode returns canonical bytes.
+
 package compile // import "github.com/faustbrian/go-opening-hours/compile"
 
 Package compile provides an immutable prepared schedule handle for repeated
@@ -654,16 +801,20 @@ type Slot struct {
 
 package openinghourscalendar // import "github.com/faustbrian/go-opening-hours/openinghourscalendar"
 
-Package openinghourscalendar adapts calendar civil dates and bounded
-business-calendar holidays to opening-hours values.
+Package openinghourscalendar is the compatibility path for
+github.com/faustbrian/go-opening-hours/adapters/calendar.
+
+Deprecated: use github.com/faustbrian/go-opening-hours/adapters/calendar.
+This package remains supported for the longer of 180 days after successor public
+availability and two subsequently published stable minor releases.
 
 VARIABLES
 
 var (
 	// ErrInvalidInput reports an invalid date, calendar, source, or range.
-	ErrInvalidInput = errors.New("openinghourscalendar: invalid input")
+	ErrInvalidInput = canonical.ErrInvalidInput
 	// ErrExpansionLimit reports a non-positive or exhausted date bound.
-	ErrExpansionLimit = errors.New("openinghourscalendar: expansion limit")
+	ErrExpansionLimit = canonical.ErrExpansionLimit
 )
 
 FUNCTIONS
@@ -682,12 +833,16 @@ func ToDate(date openinghours.Date) (calendar.Date, error)
 
 package openinghoursconfig // import "github.com/faustbrian/go-opening-hours/openinghoursconfig"
 
-Package openinghoursconfig adapts canonical schedule documents from
-configuration sources while leaving environment/file ownership to config.
+Package openinghoursconfig is the compatibility path for
+github.com/faustbrian/go-opening-hours/adapters/config.
+
+Deprecated: use github.com/faustbrian/go-opening-hours/adapters/config.
+This package remains supported for the longer of 180 days after successor public
+availability and two subsequently published stable minor releases.
 
 VARIABLES
 
-var ErrInvalidValue = errors.New("openinghoursconfig: invalid value")
+var ErrInvalidValue = canonical.ErrInvalidValue
     ErrInvalidValue reports a configuration value that is not canonical JSON
     text. The rejected value is never included.
 
@@ -719,12 +874,16 @@ func (value *Value) UnmarshalConfigValue(input any) error
 
 package openinghourstemporal // import "github.com/faustbrian/go-opening-hours/openinghourstemporal"
 
-Package openinghourstemporal provides lossless adapters for temporal/timeofday
-values.
+Package openinghourstemporal is the compatibility path for
+github.com/faustbrian/go-opening-hours/adapters/temporal.
+
+Deprecated: use github.com/faustbrian/go-opening-hours/adapters/temporal.
+This package remains supported for the longer of 180 days after successor public
+availability and two subsequently published stable minor releases.
 
 VARIABLES
 
-var ErrLossyMapping = errors.New("openinghourstemporal: lossy mapping")
+var ErrLossyMapping = canonical.ErrLossyMapping
     ErrLossyMapping reports an interval whose state or bounds cannot be
     represented without changing semantics.
 
@@ -748,12 +907,16 @@ func RuleFromIntervals(intervals []timeofday.Interval,
 
 package openinghoursvalidation // import "github.com/faustbrian/go-opening-hours/openinghoursvalidation"
 
-Package openinghoursvalidation provides a dependency-neutral validator seam
-suitable for registration with validation once that module is published.
+Package openinghoursvalidation is the compatibility path for
+github.com/faustbrian/go-opening-hours/adapters/validation.
+
+Deprecated: use github.com/faustbrian/go-opening-hours/adapters/validation.
+This package remains supported for the longer of 180 days after successor public
+availability and two subsequently published stable minor releases.
 
 CONSTANTS
 
-const CodeInvalidSchedule = "opening_hours.invalid_schedule"
+const CodeInvalidSchedule = canonical.CodeInvalidSchedule
     CodeInvalidSchedule is the stable validation violation code.
 
 
@@ -775,14 +938,19 @@ func (*ValidationError) Error() string
 
 package openinghourswire // import "github.com/faustbrian/go-opening-hours/openinghourswire"
 
-Package openinghourswire adapts schedules to byte-oriented wire registries.
+Package openinghourswire is the compatibility path for
+github.com/faustbrian/go-opening-hours/adapters/wire.
+
+Deprecated: use github.com/faustbrian/go-opening-hours/adapters/wire.
+This package remains supported for the longer of 180 days after successor public
+availability and two subsequently published stable minor releases.
 
 CONSTANTS
 
-const Format = "opening-hours+json;v=1"
+const Format = canonical.Format
     Format is the stable registry name for canonical opening-hours JSON.
 
-const WireFormat wire.Format = Format
+const WireFormat wire.Format = canonical.WireFormat
     WireFormat is the typed wire registry identity.
 
 
