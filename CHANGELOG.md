@@ -5,6 +5,8 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-09
+
 ### Changed
 
 - Add canonical `adapters/calendar`, `adapters/config`, `adapters/temporal`,
@@ -112,5 +114,6 @@ Versioning after v1.0.0.
 - Replace unreachable owned-module pseudo-versions with published revisions so
   clean checkouts can reproduce every gate without local replacements.
 
-[Unreleased]: https://github.com/faustbrian/go-opening-hours/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/faustbrian/go-opening-hours/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/faustbrian/go-opening-hours/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/faustbrian/go-opening-hours/releases/tag/v1.0.0
