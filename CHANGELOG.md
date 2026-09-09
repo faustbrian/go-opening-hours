@@ -7,6 +7,19 @@ Versioning after v1.0.0.
 
 ### Changed
 
+- Add canonical `adapters/calendar`, `adapters/config`, `adapters/temporal`,
+  `adapters/validation`, and `adapters/wire` entry points. The released
+  top-level integration packages remain supported compatibility facades with
+  unchanged signatures, behavior, sentinels, and named-type identities.
+- Adopt Calendar v1.1.0, Temporal v1.1.0, and Validation v1.1.0 while
+  retaining Config v1.0.0 and Wire v1.0.0.
+
+### Deprecated
+
+- Prefer the five target-oriented `adapters/<target>` packages for new code.
+  The former integration paths remain supported for the longer of 180 days
+  after successor public availability and two later stable minor releases.
+
 - Adopt the `go-library-tools` v1.4.0 schema-v2 cohesion contract and local
   `make cohesion` gate without changing opening-hours API or runtime behavior.
 - Pin reusable CI to the immutable v1.4.0 W14-enforcement workflow and enforce
@@ -27,7 +40,7 @@ Versioning after v1.0.0.
 
 - Document the standalone verification commands and shared gate behavior.
 
-## [1.0.0] - 2026-08-25
+## [1.0.0] - 2026-08-26
 
 ### Fixed
 

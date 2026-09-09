@@ -7,6 +7,9 @@ Invalid values leave a typed error and do not expose input.
 The `postgres.JSONB` wrapper distinguishes nullable database state from a valid
 zero schedule. The root type implements the interfaces selected by pgx JSONB's
 native codec, so no global connection registration is necessary.
+`postgres` remains at its domain-owned path because that nullable schedule
+state is an opening-hours persistence contract, not a generic PostgreSQL
+transport adapter.
 
 Recommended schema:
 

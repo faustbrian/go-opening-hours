@@ -1,5 +1,28 @@
 # Legacy Laravel and Spatie migration
 
+## Go adapter import migration
+
+New consumers should select the target-oriented paths:
+
+| Compatibility path | Canonical path |
+| --- | --- |
+| `openinghourscalendar` | `adapters/calendar` |
+| `openinghoursconfig` | `adapters/config` |
+| `openinghourstemporal` | `adapters/temporal` |
+| `openinghoursvalidation` | `adapters/validation` |
+| `openinghourswire` | `adapters/wire` |
+
+Change the import and any explicit named `Value`, `ValidationError`, or `Codec`
+references in one consumer change. Functions retain their signatures and
+behavior, while sentinels are shared across both paths. The named types are
+deliberately distinct so reflection and `errors.As` keep reporting the path
+the consumer selected. Failed config decoding remains atomic on both paths.
+
+The compatibility paths remain supported for the longer of 180 days after
+successor public availability and two subsequent stable minor releases. Their
+eventual removal additionally requires a new major release and a fresh
+consumer audit.
+
 ## Location structured data
 
 The verified Location shape is weekday-keyed arrays of `{from,to}` strings.

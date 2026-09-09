@@ -1,46 +1,31 @@
-// Package openinghourstemporal provides lossless adapters for
-// temporal/timeofday values.
+// Package openinghourstemporal is the compatibility path for
+// [github.com/faustbrian/go-opening-hours/adapters/temporal].
+//
+// Deprecated: use github.com/faustbrian/go-opening-hours/adapters/temporal.
+// This package remains supported for the longer of 180 days after successor
+// public availability and two subsequently published stable minor releases.
 package openinghourstemporal
 
 import (
-	"errors"
-
 	openinghours "github.com/faustbrian/go-opening-hours"
-	temporal "github.com/faustbrian/go-temporal"
+	canonical "github.com/faustbrian/go-opening-hours/adapters/temporal"
 	"github.com/faustbrian/go-temporal/timeofday"
 )
 
 // ErrLossyMapping reports an interval whose state or bounds cannot be
 // represented without changing semantics.
-var ErrLossyMapping = errors.New("openinghourstemporal: lossy mapping")
+var ErrLossyMapping = canonical.ErrLossyMapping
 
 // RangeFromInterval converts an ordinary or circular start-inclusive,
 // end-exclusive interval.
 func RangeFromInterval(interval timeofday.Interval) (openinghours.Range, error) {
-	if interval.Bounds() != temporal.ClosedOpen ||
-		(interval.Kind() != timeofday.Ordinary && interval.Kind() != timeofday.Circular) {
-		return openinghours.Range{}, ErrLossyMapping
-	}
-	start, err := localTime(interval.Start(), false)
-	if err != nil {
-		return openinghours.Range{}, err
-	}
-	end, _ := localTime(interval.End(), true)
-	return openinghours.NewRange(start, end)
+	return canonical.RangeFromInterval(interval)
 }
 
 // IntervalFromRange converts a range while making fractional precision
 // explicit. Digits must exactly represent both endpoints.
 func IntervalFromRange(value openinghours.Range, digits int) (timeofday.Interval, error) {
-	start, err := temporalTime(value.Start(), digits)
-	if err != nil {
-		return timeofday.Interval{}, err
-	}
-	end, err := temporalTime(value.End(), digits)
-	if err != nil {
-		return timeofday.Interval{}, err
-	}
-	return timeofday.Between(start, end, temporal.ClosedOpen)
+	return canonical.IntervalFromRange(value, digits)
 }
 
 // RuleFromIntervals converts an explicitly bounded interval collection. An
@@ -48,42 +33,5 @@ func IntervalFromRange(value openinghours.Range, digits int) (timeofday.Interval
 func RuleFromIntervals(intervals []timeofday.Interval,
 	policy openinghours.OverlapPolicy,
 ) (openinghours.DayRule, error) {
-	if len(intervals) == 0 {
-		return openinghours.Closed(), nil
-	}
-	if len(intervals) == 1 {
-		switch intervals[0].Kind() {
-		case timeofday.FullDayKind:
-			return openinghours.OpenAllDay(), nil
-		case timeofday.CollapsedKind:
-			return openinghours.Closed(), nil
-		case timeofday.Ordinary, timeofday.Circular:
-		}
-	}
-	ranges := make([]openinghours.Range, 0, len(intervals))
-	for _, interval := range intervals {
-		converted, err := RangeFromInterval(interval)
-		if err != nil {
-			return openinghours.DayRule{}, err
-		}
-		ranges = append(ranges, converted)
-	}
-	return openinghours.OpenRanges(ranges, policy)
-}
-
-func localTime(value timeofday.Time, end bool) (openinghours.LocalTime, error) {
-	if value.IsEndBoundary() {
-		if end {
-			return openinghours.LocalTime{}, nil
-		}
-		return openinghours.LocalTime{}, ErrLossyMapping
-	}
-	hour, minute, second, nanosecond := value.Components()
-	return openinghours.NewLocalTime(hour, minute, second, nanosecond)
-}
-
-func temporalTime(value openinghours.LocalTime, digits int) (timeofday.Time, error) {
-	return timeofday.New(
-		value.Hour(), value.Minute(), value.Second(), value.Nanosecond(), digits,
-	)
+	return canonical.RuleFromIntervals(intervals, policy)
 }

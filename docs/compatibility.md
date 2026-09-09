@@ -16,6 +16,17 @@ fixture compatibility is documented in [legacy migration](legacy-migration.md).
 Track and Postal use the shared Location representation; no unverified provider
 schema is claimed.
 
+## Adapter migration interval
+
+The canonical integration entry points are `adapters/calendar`,
+`adapters/config`, `adapters/temporal`, `adapters/validation`, and
+`adapters/wire`. Their released top-level predecessors remain supported for
+the longer of 180 days after v1.1.0 becomes publicly available and two later
+stable minor releases containing the successors. Both paths preserve behavior
+and shared sentinels during that interval. Named types keep path-specific
+reflection identity, so consumers should migrate imports and type references
+together rather than mixing the two named types.
+
 | Fixture | Imported contract | Proven behavior |
 | --- | --- | --- |
 | Location | weekday `{from,to}` slots | split ranges and explicit closure |

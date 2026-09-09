@@ -1,39 +1,28 @@
-// Package openinghoursvalidation provides a dependency-neutral validator seam
-// suitable for registration with validation once that module is published.
+// Package openinghoursvalidation is the compatibility path for
+// [github.com/faustbrian/go-opening-hours/adapters/validation].
+//
+// Deprecated: use github.com/faustbrian/go-opening-hours/adapters/validation.
+// This package remains supported for the longer of 180 days after successor
+// public availability and two subsequently published stable minor releases.
 package openinghoursvalidation
 
 import (
 	openinghours "github.com/faustbrian/go-opening-hours"
+	canonical "github.com/faustbrian/go-opening-hours/adapters/validation"
 	validation "github.com/faustbrian/go-validation"
 )
 
 // CodeInvalidSchedule is the stable validation violation code.
-const CodeInvalidSchedule = "opening_hours.invalid_schedule"
+const CodeInvalidSchedule = canonical.CodeInvalidSchedule
 
 // Validate proves that a schedule has a lossless strict canonical round trip.
 func Validate(schedule openinghours.Schedule) error {
-	encoded, err := schedule.CanonicalJSON()
-	if err != nil {
-		return err
-	}
-	_, err = openinghours.ParseJSON(encoded)
-
-	return err
+	return canonical.Validate(schedule)
 }
 
 // Validator returns a deterministic validation adapter.
 func Validator() validation.Validator[openinghours.Schedule] {
-	return validation.ValidatorFunc[openinghours.Schedule](func(
-		ctx validation.Context, schedule openinghours.Schedule,
-	) validation.Report {
-		report := validation.NewReport(ctx.Limits())
-		if err := Validate(schedule); err != nil {
-			return report.Add(validation.NewViolation(
-				ctx.Path(), CodeInvalidSchedule, validation.Error, nil, err,
-			))
-		}
-		return report
-	})
+	return canonical.Validator()
 }
 
 // ValidationError reports a canonical round-trip mismatch without data.

@@ -19,6 +19,11 @@ api:
       path: api/baseline.txt
       packages:
         - .
+        - ./adapters/calendar
+        - ./adapters/config
+        - ./adapters/temporal
+        - ./adapters/validation
+        - ./adapters/wire
         - ./compile
         - ./encoding
         - ./openinghourscalendar
