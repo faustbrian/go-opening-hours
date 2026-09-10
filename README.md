@@ -7,11 +7,11 @@
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-opening-hours?sort=semver)](https://github.com/faustbrian/go-opening-hours/releases)
-[![Go](https://img.shields.io/badge/go-1.26.6-00ADD8?logo=go)](https://go.dev/)
+[![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Immutable, deterministic, timezone-safe recurring opening hours and dated
-exceptions for Go 1.26.6 and later.
+exceptions for Go 1.27.0 and later.
 
 Install the stable root module with:
 
