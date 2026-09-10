@@ -1,6 +1,6 @@
 # Compatibility
 
-The minimum supported compiler is Go 1.26.6, the latest stable release at
+The minimum supported compiler is Go 1.27.0, the latest stable release at
 implementation time. Public API changes are checked against `api/baseline.txt`.
 Breaking changes require a new major release; v1 follows
 Semantic Versioning.
