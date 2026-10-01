@@ -1,8 +1,9 @@
 # Security model
 
-This model covers the current source and proposed v2.0.0 release, reviewed
+This model covers the current source and proposed v2.0.1 release, reviewed
 as of 2026-10-01. Published
-v1.1.0 remains the current public release until that release is delivered.
+v1.1.0 remains the current verified stable release until that release is delivered.
+The exposed v2.0.0 Git tag is immutable but did not complete release validation.
 
 ## Trust boundaries
 
