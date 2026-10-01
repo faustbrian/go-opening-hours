@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
-	"github.com/faustbrian/go-opening-hours/openinghourstemporal"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	"github.com/faustbrian/go-opening-hours/v2/openinghourstemporal"
 	temporal "github.com/faustbrian/go-temporal"
 	"github.com/faustbrian/go-temporal/timeofday"
 )

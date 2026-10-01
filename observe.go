@@ -86,12 +86,30 @@ func (s Schedule) ObserveNextTransition(instant time.Time, horizon time.Duration
 	return result, err
 }
 
-func measureElapsed(clock ElapsedClock) func() time.Duration {
-	if clock == nil {
-		return func() time.Duration { return 0 }
+func measureElapsed(clock ElapsedClock) (elapsed func() time.Duration) {
+	zero := func() time.Duration { return 0 }
+	if isNilCapability(clock) {
+		return zero
+	}
+	elapsed = zero
+	defer func() {
+		if recover() != nil {
+			elapsed = zero
+		}
+	}()
+	measurement := clock.Measure()
+	if measurement == nil {
+		return zero
 	}
 
-	return clock.Measure()
+	return func() (duration time.Duration) {
+		defer func() {
+			if recover() != nil {
+				duration = 0
+			}
+		}()
+		return measurement()
+	}
 }
 
 func boundedSearchSteps(horizon time.Duration) int {

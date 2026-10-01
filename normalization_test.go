@@ -3,7 +3,7 @@ package openinghours_test
 import (
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 )
 
 func TestOvernightOverlapPoliciesUseOwnerDayCoordinates(t *testing.T) {

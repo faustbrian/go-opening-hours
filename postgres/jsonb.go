@@ -6,7 +6,7 @@ package postgres
 import (
 	"database/sql/driver"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 )
 
 // JSONB is a nullable immutable schedule database value.

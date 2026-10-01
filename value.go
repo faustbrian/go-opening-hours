@@ -8,7 +8,9 @@ import (
 
 const (
 	nanosecondsPerDay = int64(24 * time.Hour)
-	maxRangesPerDay   = 64
+	// MaxRangesPerDay is the maximum accepted range collection for one day.
+	MaxRangesPerDay = 64
+	maxRangesPerDay = MaxRangesPerDay
 )
 
 // LocalTime is a nanosecond-precision wall-clock time without a date or zone.

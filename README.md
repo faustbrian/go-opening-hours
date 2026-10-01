@@ -5,7 +5,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-opening-hours?sort=semver)](https://github.com/faustbrian/go-opening-hours/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -13,10 +13,15 @@
 Immutable, deterministic, timezone-safe recurring opening hours and dated
 exceptions for Go 1.27.0 and later.
 
-Install the stable root module with:
+This source prepares v2.0.0 at `github.com/faustbrian/go-opening-hours/v2`.
+V2 requires nonempty, valid UTF-8 exception source and revision identities;
+see the [v2 migration guide](docs/v2-migration.md). Published v1.1.0 remains
+available at `github.com/faustbrian/go-opening-hours`.
+
+After v2.0.0 is published, install the v2 root module with:
 
 ```sh
-go get github.com/faustbrian/go-opening-hours@v1.1.0
+go get github.com/faustbrian/go-opening-hours/v2@v2.0.0
 ```
 
 The package models generic availability for service points, storefronts,
@@ -32,7 +37,7 @@ import (
 	"fmt"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 )
 
 func main() {
@@ -70,7 +75,7 @@ no timezone; it never means always open.
 - exact-date replace, add, subtract, and close operations
 - exception priority, source, revision, and optional named set
 - inclusive effective dates and outside-range behavior
-- bounded transition horizons, output counts, parsing, and composition depth
+- exported range, exception, parsing, transition, output, and composition bounds
 - canonical JSON, stable comparison/hash, separate human display summaries
 - SQL/JSONB persistence and native pgx behavior
 - injected clocks and privacy-safe observation callbacks

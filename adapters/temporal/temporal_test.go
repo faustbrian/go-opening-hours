@@ -7,9 +7,9 @@ import (
 	"errors"
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
-	openinghourstemporal "github.com/faustbrian/go-opening-hours/adapters/temporal"
-	legacy "github.com/faustbrian/go-opening-hours/openinghourstemporal"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	openinghourstemporal "github.com/faustbrian/go-opening-hours/v2/adapters/temporal"
+	legacy "github.com/faustbrian/go-opening-hours/v2/openinghourstemporal"
 	temporal "github.com/faustbrian/go-temporal"
 	"github.com/faustbrian/go-temporal/timeofday"
 )
@@ -83,5 +83,31 @@ func TestLossyMappingsAndSpecialRules(t *testing.T) {
 	preciseRange, _ := openinghours.NewRange(preciseStart, preciseEnd)
 	if _, err := openinghourstemporal.IntervalFromRange(preciseRange, 0); err == nil {
 		t.Fatal("lossy end precision accepted")
+	}
+}
+
+func TestRuleFromIntervalsRejectsOversizedCollectionBeforeConversion(t *testing.T) {
+	intervals := make([]timeofday.Interval, openinghours.MaxRangesPerDay, openinghours.MaxRangesPerDay+1)
+	for index := range intervals {
+		minute := index * 20
+		start, err := timeofday.New(minute/60, minute%60, 0, 0, 0)
+		if err != nil {
+			t.Fatal(err)
+		}
+		end, err := timeofday.New((minute+10)/60, (minute+10)%60, 0, 0, 0)
+		if err != nil {
+			t.Fatal(err)
+		}
+		intervals[index], err = timeofday.Between(start, end, temporal.ClosedOpen)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	if rule, err := openinghourstemporal.RuleFromIntervals(intervals, openinghours.RejectOverlap); err != nil || len(rule.Ranges()) != openinghours.MaxRangesPerDay {
+		t.Fatalf("exact range maximum rejected: %v", err)
+	}
+	intervals = append(intervals, timeofday.Interval{})
+	if _, err := openinghourstemporal.RuleFromIntervals(intervals, openinghours.RejectOverlap); !openinghours.IsCode(err, openinghours.CodeLimitExceeded) {
+		t.Fatalf("oversized RuleFromIntervals error = %v", err)
 	}
 }

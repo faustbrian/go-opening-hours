@@ -10,9 +10,9 @@ import (
 	"sync"
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
-	openinghourswire "github.com/faustbrian/go-opening-hours/adapters/wire"
-	legacy "github.com/faustbrian/go-opening-hours/openinghourswire"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	openinghourswire "github.com/faustbrian/go-opening-hours/v2/adapters/wire"
+	legacy "github.com/faustbrian/go-opening-hours/v2/openinghourswire"
 	wire "github.com/faustbrian/go-wire"
 )
 

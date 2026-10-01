@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 )
 
 // Slot is a strict structured local-time interval.
@@ -21,14 +21,14 @@ type ImportLimits struct {
 
 // DefaultImportLimits returns the package-safe structured import limits.
 func DefaultImportLimits() ImportLimits {
-	return ImportLimits{MaximumDays: 7, MaximumRangesPerDay: 64}
+	return ImportLimits{MaximumDays: 7, MaximumRangesPerDay: openinghours.MaxRangesPerDay}
 }
 
 // ImportLocation imports Location's weekday-keyed {from,to} slot structure.
 // A present empty/nil day is closed; an absent day remains inherited.
 func ImportLocation(timezone string, days map[string][]Slot, limits ImportLimits) (openinghours.Schedule, error) {
 	if limits.MaximumDays <= 0 || limits.MaximumDays > 7 ||
-		limits.MaximumRangesPerDay <= 0 || limits.MaximumRangesPerDay > 64 ||
+		limits.MaximumRangesPerDay <= 0 || limits.MaximumRangesPerDay > openinghours.MaxRangesPerDay ||
 		len(days) > limits.MaximumDays {
 		return openinghours.Schedule{}, &ImportError{Kind: "limit"}
 	}
@@ -66,6 +66,16 @@ func ImportLocation(timezone string, days map[string][]Slot, limits ImportLimits
 // ImportSpatie imports strict Spatie weekday arrays. Carrier prose and variable
 // formats are intentionally excluded; only lossless HH:MM-HH:MM values pass.
 func ImportSpatie(timezone string, days map[string][]string, limits ImportLimits) (openinghours.Schedule, error) {
+	if limits.MaximumDays <= 0 || limits.MaximumDays > 7 ||
+		limits.MaximumRangesPerDay <= 0 || limits.MaximumRangesPerDay > openinghours.MaxRangesPerDay ||
+		len(days) > limits.MaximumDays {
+		return openinghours.Schedule{}, &ImportError{Kind: "limit"}
+	}
+	for _, ranges := range days {
+		if len(ranges) > limits.MaximumRangesPerDay {
+			return openinghours.Schedule{}, &ImportError{Kind: "limit"}
+		}
+	}
 	structured := make(map[string][]Slot, len(days))
 	for day, ranges := range days {
 		slots := make([]Slot, 0, len(ranges))

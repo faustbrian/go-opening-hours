@@ -10,9 +10,9 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar"
 	"github.com/faustbrian/go-calendar/business"
-	openinghours "github.com/faustbrian/go-opening-hours"
-	openinghourscalendar "github.com/faustbrian/go-opening-hours/adapters/calendar"
-	legacy "github.com/faustbrian/go-opening-hours/openinghourscalendar"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	openinghourscalendar "github.com/faustbrian/go-opening-hours/v2/adapters/calendar"
+	legacy "github.com/faustbrian/go-opening-hours/v2/openinghourscalendar"
 )
 
 func TestDateConversionAndHolidayClosuresMatchLegacy(t *testing.T) {
@@ -69,6 +69,12 @@ func TestCalendarErrorsAndBoundsMatchLegacy(t *testing.T) {
 	}
 	if _, err := openinghourscalendar.HolidayClosures(businessCalendar, date, date, 0, 0, "source"); !errors.Is(err, openinghourscalendar.ErrInvalidInput) {
 		t.Fatalf("zero bound error = %v", err)
+	}
+	if _, err := openinghourscalendar.HolidayClosures(businessCalendar, date, date, 4097, 0, "source"); !errors.Is(err, openinghourscalendar.ErrExpansionLimit) {
+		t.Fatalf("package maximum error = %v", err)
+	}
+	if got, err := openinghourscalendar.HolidayClosures(businessCalendar, date, date, openinghours.MaxExceptions, 0, "source"); err != nil || len(got) != 1 {
+		t.Fatalf("exact package maximum = %#v, %v", got, err)
 	}
 	end := calendar.MustDate(2026, time.December, 26)
 	if _, err := openinghourscalendar.HolidayClosures(businessCalendar, date, end, 1, 0, "source"); !errors.Is(err, openinghourscalendar.ErrExpansionLimit) {

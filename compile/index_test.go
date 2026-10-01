@@ -6,9 +6,87 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
-	"github.com/faustbrian/go-opening-hours/compile"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	"github.com/faustbrian/go-opening-hours/v2/compile"
 )
+
+func TestMaximumCompositionPreservesCanonicalAndCompiledQueries(t *testing.T) {
+	start, err := openinghours.NewLocalTime(9, 0, 0, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	end, err := openinghours.NewLocalTime(12, 0, 0, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	rangeValue, err := openinghours.NewRange(start, end)
+	if err != nil {
+		t.Fatal(err)
+	}
+	rule, err := openinghours.OpenRanges([]openinghours.Range{rangeValue}, openinghours.RejectOverlap)
+	if err != nil {
+		t.Fatal(err)
+	}
+	exception, err := openinghours.NewException(openinghours.ExceptionConfig{
+		Date:      openinghours.MustDate(2026, time.January, 6),
+		Operation: openinghours.ExceptionReplace, Rule: rule,
+		Source: "calendar", Revision: "2026",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	leaf, err := openinghours.NewSchedule(openinghours.Config{
+		Timezone: "UTC",
+		Weekly: map[time.Weekday]openinghours.DayRule{
+			time.Monday: openinghours.OpenAllDay(), time.Tuesday: rule,
+		},
+		Exceptions: []openinghours.Exception{exception},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	plain, err := openinghours.NewSchedule(openinghours.Config{
+		Timezone: "UTC", Weekly: map[time.Weekday]openinghours.DayRule{time.Monday: openinghours.OpenAllDay()},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	schedule := leaf
+	for depth := 1; depth < openinghours.MaxCompositionDepth; depth++ {
+		schedule, err = schedule.Union(plain)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	instant := time.Date(2026, time.January, 5, 10, 0, 0, 0, time.UTC)
+	if got, err := schedule.IsOpen(instant); err != nil || !got.Open {
+		t.Fatalf("original Monday query = %#v, error=%v", got, err)
+	}
+	encoded, err := schedule.CanonicalJSON()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(encoded) > 12<<10 {
+		t.Fatalf("fixture exceeds the intended 12 KiB scope: %d bytes", len(encoded))
+	}
+	t.Logf("maximum-depth fixture: %d bytes", len(encoded))
+	t.Run("canonical round trip", func(t *testing.T) {
+		decoded, err := openinghours.ParseJSON(encoded)
+		if err != nil || !decoded.Equal(schedule) {
+			t.Fatalf("maximum-depth round trip: error=%v, equal=%t", err, decoded.Equal(schedule))
+		}
+	})
+	t.Run("compiled query", func(t *testing.T) {
+		index, err := compile.New(schedule)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := index.IsOpen(instant)
+		if err != nil || !got.Open || !index.Schedule().Equal(schedule) {
+			t.Fatalf("compiled Monday query = %#v, error=%v, equal=%t", got, err, index.Schedule().Equal(schedule))
+		}
+	})
+}
 
 func TestIndexPreservesQueriesAndIsSafeForConcurrentReads(t *testing.T) {
 	start, _ := openinghours.NewLocalTime(9, 0, 0, 0)

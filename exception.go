@@ -6,7 +6,9 @@ import (
 )
 
 const (
-	maxExceptions      = 4096
+	// MaxExceptions is the maximum accepted exception collection per schedule.
+	MaxExceptions      = 4096
+	maxExceptions      = MaxExceptions
 	maxProvenanceBytes = 128
 )
 
@@ -87,14 +89,16 @@ func NewExceptionSet(name string, input []Exception) (ExceptionSet, error) {
 	if name == "" || len(name) > maxProvenanceBytes || !utf8.ValidString(name) || len(input) == 0 {
 		return ExceptionSet{}, newError("new exception set", CodeInvalidState)
 	}
-	if len(input) > maxExceptions {
+	if len(input) > MaxExceptions {
 		return ExceptionSet{}, newError("new exception set", CodeLimitExceeded)
+	}
+	for _, exception := range input {
+		if !validExceptionIdentity(exception) {
+			return ExceptionSet{}, newError("new exception set", CodeInvalidState)
+		}
 	}
 	exceptions := slices.Clone(input)
 	for index := range exceptions {
-		if !validDate(exceptions[index].date) || exceptions[index].source == "" || exceptions[index].revision == "" {
-			return ExceptionSet{}, newError("new exception set", CodeInvalidState)
-		}
 		exceptions[index].rule = cloneRule(exceptions[index].rule)
 		exceptions[index].set = name
 	}
@@ -133,7 +137,7 @@ func ExpandExceptionRange(config ExceptionRangeConfig) (ExceptionSet, error) {
 	if !validDate(config.Start) || !validDate(config.End) || compareDate(config.Start, config.End) > 0 {
 		return ExceptionSet{}, newError("expand exception range", CodeInvalidDate)
 	}
-	if config.MaximumDates < 1 || config.MaximumDates > maxExceptions {
+	if config.MaximumDates < 1 || config.MaximumDates > MaxExceptions {
 		return ExceptionSet{}, newError("expand exception range", CodeLimitExceeded)
 	}
 	exceptions := make([]Exception, 0, min(config.MaximumDates, 32))
@@ -158,7 +162,7 @@ func ExpandExceptionRange(config ExceptionRangeConfig) (ExceptionSet, error) {
 	return NewExceptionSet(config.Name, exceptions)
 }
 
-// NewException validates an exact-date exception and its bounded provenance.
+// NewException validates an exact-date exception and its bounded UTF-8 provenance.
 func NewException(config ExceptionConfig) (Exception, error) {
 	if !validDate(config.Date) {
 		return Exception{}, newError("new exception", CodeInvalidDate)
@@ -169,7 +173,7 @@ func NewException(config ExceptionConfig) (Exception, error) {
 	if len(config.Source) > maxProvenanceBytes || len(config.Revision) > maxProvenanceBytes {
 		return Exception{}, newError("new exception", CodeLimitExceeded)
 	}
-	if config.Source == "" || config.Revision == "" {
+	if !validProvenance(config.Source) || !validProvenance(config.Revision) {
 		return Exception{}, newError("new exception", CodeInvalidState)
 	}
 	if config.Operation == ExceptionClose {
@@ -186,12 +190,27 @@ func NewException(config ExceptionConfig) (Exception, error) {
 	}, nil
 }
 
+// Stored exceptions are opaque constructor-produced values, but their zero
+// value must not enter either direct or named collections.
+func validExceptionIdentity(exception Exception) bool {
+	return validDate(exception.date) && validProvenance(exception.source) && validProvenance(exception.revision)
+}
+
+func validProvenance(value string) bool {
+	return value != "" && len(value) <= maxProvenanceBytes && utf8.ValidString(value)
+}
+
 func normalizeExceptions(input []Exception, policy ConflictPolicy) ([]Exception, error) {
-	if len(input) > maxExceptions {
+	if len(input) > MaxExceptions {
 		return nil, newError("normalize exceptions", CodeLimitExceeded)
 	}
 	if policy > ResolveCanonical {
 		return nil, newError("normalize exceptions", CodeInvalidState)
+	}
+	for _, exception := range input {
+		if !validExceptionIdentity(exception) {
+			return nil, newError("normalize exceptions", CodeInvalidState)
+		}
 	}
 
 	result := slices.Clone(input)

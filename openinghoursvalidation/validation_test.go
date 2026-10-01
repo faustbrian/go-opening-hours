@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
-	"github.com/faustbrian/go-opening-hours/openinghoursvalidation"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	"github.com/faustbrian/go-opening-hours/v2/openinghoursvalidation"
 	validation "github.com/faustbrian/go-validation"
 )
 

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 )
 
 func mustTime(t testing.TB, hour, minute int) openinghours.LocalTime {
