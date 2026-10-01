@@ -1,10 +1,14 @@
 # V2 migration
 
-Current source prepares v2.0.0; it is not yet a published release. Published
+Current source prepares v2.0.1; it is not yet a published release. Published
 v1.1.0 remains available at its original module path.
 
-After v2.0.0 is published, require
-`github.com/faustbrian/go-opening-hours/v2@v2.0.0` and add `/v2` after
+The v2.0.0 Git tag was exposed before release validation completed and remains
+immutable. It has no verified stable release; wait for validated v2.0.1 rather
+than adopting that tagged snapshot.
+
+After v2.0.1 is published, require
+`github.com/faustbrian/go-opening-hours/v2@v2.0.1` and add `/v2` after
 `go-opening-hours` in every owned package import. This includes the root,
 canonical adapters, compatibility facades, compile, encoding, PostgreSQL,
 and test helpers. All packages remain in one root module on main; package

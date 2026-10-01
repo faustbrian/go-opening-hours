@@ -5,7 +5,17 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+### Release preparation
+
+- Prepare v2.0.1 as the validated v2 release target. The exposed v2.0.0 Git
+  tag remains immutable but did not complete release validation and has no
+  verified stable release. The v2 migration and runtime contracts below remain
+  unchanged.
+
 ## [2.0.0] - 2026-10-01
+
+Tagged snapshot only; release validation did not complete. No verified stable
+GitHub release was published for this tag.
 
 ### Changed
 
