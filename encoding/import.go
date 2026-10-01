@@ -27,10 +27,8 @@ func DefaultImportLimits() ImportLimits {
 // ImportLocation imports Location's weekday-keyed {from,to} slot structure.
 // A present empty/nil day is closed; an absent day remains inherited.
 func ImportLocation(timezone string, days map[string][]Slot, limits ImportLimits) (openinghours.Schedule, error) {
-	if limits.MaximumDays <= 0 || limits.MaximumDays > 7 ||
-		limits.MaximumRangesPerDay <= 0 || limits.MaximumRangesPerDay > openinghours.MaxRangesPerDay ||
-		len(days) > limits.MaximumDays {
-		return openinghours.Schedule{}, &ImportError{Kind: "limit"}
+	if err := admitImportDays(len(days), limits); err != nil {
+		return openinghours.Schedule{}, err
 	}
 	weekly := make(map[time.Weekday]openinghours.DayRule, len(days))
 	for name, slots := range days {
@@ -66,10 +64,8 @@ func ImportLocation(timezone string, days map[string][]Slot, limits ImportLimits
 // ImportSpatie imports strict Spatie weekday arrays. Carrier prose and variable
 // formats are intentionally excluded; only lossless HH:MM-HH:MM values pass.
 func ImportSpatie(timezone string, days map[string][]string, limits ImportLimits) (openinghours.Schedule, error) {
-	if limits.MaximumDays <= 0 || limits.MaximumDays > 7 ||
-		limits.MaximumRangesPerDay <= 0 || limits.MaximumRangesPerDay > openinghours.MaxRangesPerDay ||
-		len(days) > limits.MaximumDays {
-		return openinghours.Schedule{}, &ImportError{Kind: "limit"}
+	if err := admitImportDays(len(days), limits); err != nil {
+		return openinghours.Schedule{}, err
 	}
 	for _, ranges := range days {
 		if len(ranges) > limits.MaximumRangesPerDay {
@@ -90,6 +86,18 @@ func ImportSpatie(timezone string, days map[string][]string, limits ImportLimits
 	}
 
 	return ImportLocation(timezone, structured, limits)
+}
+
+// admitImportDays owns configuration and day-count admission for both public
+// importers, before parsing or retaining their input.
+func admitImportDays(count int, limits ImportLimits) error {
+	if limits.MaximumDays <= 0 || limits.MaximumDays > 7 ||
+		limits.MaximumRangesPerDay <= 0 || limits.MaximumRangesPerDay > openinghours.MaxRangesPerDay ||
+		count > limits.MaximumDays {
+		return &ImportError{Kind: "limit"}
+	}
+
+	return nil
 }
 
 // ImportError is bounded and never includes source payload data.
