@@ -5,12 +5,22 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
-### Release preparation
+## [2.0.1] - 2026-10-01
 
-- Prepare v2.0.1 as the validated v2 release target. The exposed v2.0.0 Git
+### Released
+
+- Publish v2.0.1 as the validated v2 release. The exposed v2.0.0 Git
   tag remains immutable but did not complete release validation and has no
   verified stable release. The v2 migration and runtime contracts below remain
   unchanged.
+- The release source is `6ecdac5c7e268abac3ccc609c74711c9a316a2b0`.
+  Source CI and release rehearsal passed; the clean public-proxy consumer
+  compiled all 15 owned packages and passed focused public behavior tests.
+  Published assets include the source module ZIP, module file, dependency
+  SBOM, maintainer-local provenance, signed checksums, and signer key.
+  The SBOM covers runtime module dependencies, excluding test dependencies,
+  the standard library, and license detection; provenance is not a CI
+  attestation or a claim of SLSA build assurance.
 
 ## [2.0.0] - 2026-10-01
 

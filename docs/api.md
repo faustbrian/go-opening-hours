@@ -1,8 +1,8 @@
 # API reference
 
-This reference describes the proposed v2.0.1 source at
+This reference describes the published v2.0.1 source at
 `github.com/faustbrian/go-opening-hours/v2` as of 2026-10-01;
-v1.1.0 remains the latest verified stable release until v2.0.1 is delivered.
+V2.0.1 is the latest verified stable release; v1.1.0 remains available.
 The exposed v2.0.0 Git tag is immutable but did not complete release validation.
 
 The authoritative symbol reference is the package documentation generated from
