@@ -20,6 +20,10 @@ func New(schedule openinghours.Schedule) (Index, error) {
 	if err != nil {
 		return Index{}, err
 	}
+	return parseIndex(encoded)
+}
+
+func parseIndex(encoded []byte) (Index, error) {
 	owned, err := openinghours.ParseJSON(encoded)
 	if err != nil {
 		return Index{}, err
