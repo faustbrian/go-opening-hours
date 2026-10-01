@@ -25,8 +25,14 @@ func (s *Schedule) Scan(source any) error {
 	var data []byte
 	switch value := source.(type) {
 	case []byte:
+		if len(value) > MaxJSONBytes {
+			return newError("scan", CodeInvalidEncoding)
+		}
 		data = append([]byte(nil), value...)
 	case string:
+		if len(value) > MaxJSONBytes {
+			return newError("scan", CodeInvalidEncoding)
+		}
 		data = []byte(value)
 	default:
 		return newError("scan", CodeInvalidEncoding)

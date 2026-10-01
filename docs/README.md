@@ -27,6 +27,7 @@ to compare related independently adoptable libraries.
 - [Storefronts](storefronts.md)
 - [Support hours](support-hours.md)
 - [Legacy migration](legacy-migration.md)
+- [V2 migration](v2-migration.md)
 - [Persistence](persistence.md)
 - [Owned-module integrations](integrations.md)
 - [Observability](observability.md)

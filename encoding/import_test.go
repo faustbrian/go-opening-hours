@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
-	openinghoursencoding "github.com/faustbrian/go-opening-hours/encoding"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	openinghoursencoding "github.com/faustbrian/go-opening-hours/v2/encoding"
 )
 
 func TestLocationCompatibilityFixture(t *testing.T) {
@@ -226,6 +226,57 @@ func TestImportLocationPreservesEveryPresentEmptyDayAsClosed(t *testing.T) {
 	if !schedule.Equal(want) {
 		t.Fatalf("ImportLocation() omitted one or more explicitly closed days")
 	}
+}
+
+func TestImportSpatieRejectsOversizedCollectionsBeforeConversion(t *testing.T) {
+	sevenDays := map[string][]string{
+		"sunday": nil, "monday": nil, "tuesday": nil, "wednesday": nil,
+		"thursday": nil, "friday": nil, "saturday": nil,
+	}
+	if _, err := openinghoursencoding.ImportSpatie(
+		"UTC", sevenDays, openinghoursencoding.DefaultImportLimits(),
+	); err != nil {
+		t.Fatalf("ImportSpatie rejected exact day maximum: %v", err)
+	}
+	exactRanges := make([]string, openinghours.MaxRangesPerDay, openinghours.MaxRangesPerDay+1)
+	for index := range exactRanges {
+		startMinute := index * 20
+		endMinute := startMinute + 10
+		exactRanges[index] = fmt.Sprintf(
+			"%02d:%02d-%02d:%02d",
+			startMinute/60, startMinute%60, endMinute/60, endMinute%60,
+		)
+	}
+	if _, err := openinghoursencoding.ImportSpatie(
+		"UTC", map[string][]string{"monday": exactRanges},
+		openinghoursencoding.DefaultImportLimits(),
+	); err != nil {
+		t.Fatalf("ImportSpatie rejected exact range maximum: %v", err)
+	}
+
+	for _, test := range []struct {
+		name   string
+		days   map[string][]string
+		limits openinghoursencoding.ImportLimits
+	}{
+		{name: "invalid limits", limits: openinghoursencoding.ImportLimits{}},
+		{name: "too many days", days: map[string][]string{
+			"sunday": nil, "monday": nil, "tuesday": nil, "wednesday": nil,
+			"thursday": nil, "friday": nil, "saturday": nil, "extra": nil,
+		}, limits: openinghoursencoding.DefaultImportLimits()},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := openinghoursencoding.ImportSpatie("UTC", test.days, test.limits)
+			assertImportErrorKind(t, err, "limit")
+		})
+	}
+
+	oversized := append(exactRanges, "invalid")
+	_, err := openinghoursencoding.ImportSpatie(
+		"UTC", map[string][]string{"monday": oversized},
+		openinghoursencoding.DefaultImportLimits(),
+	)
+	assertImportErrorKind(t, err, "limit")
 }
 
 func TestImportSpatieRejectsAmbiguousSeparatorsAsRanges(t *testing.T) {

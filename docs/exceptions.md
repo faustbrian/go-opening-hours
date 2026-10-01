@@ -2,6 +2,10 @@
 
 Exceptions target one exact civil date in the schedule timezone. Each has an
 operation, integer priority, source, revision, and optional named set.
+In v2, source and revision must each be nonempty, valid UTF-8 and at most
+128 bytes. Malformed text returns `CodeInvalidState`; length violations
+retain `CodeLimitExceeded`. Identities are preserved rather than repaired
+or replaced during canonical and SQL persistence.
 
 ```go
 holiday, _ := openinghours.NewException(openinghours.ExceptionConfig{

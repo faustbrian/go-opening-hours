@@ -52,7 +52,7 @@ func Closed() DayRule { return DayRule{state: DayClosed} }
 
 // OpenRanges constructs a canonical ranged rule using the selected policy.
 func OpenRanges(input []Range, policy OverlapPolicy) (DayRule, error) {
-	if len(input) == 0 || len(input) > maxRangesPerDay {
+	if len(input) == 0 || len(input) > MaxRangesPerDay {
 		return DayRule{}, newError("open ranges", CodeLimitExceeded)
 	}
 	if policy > MergeAdjacent {
@@ -225,18 +225,22 @@ func NewSchedule(config Config) (Schedule, error) {
 		}
 		data.weekly[weekday] = cloneRule(rule)
 	}
-	allExceptions := slices.Clone(config.Exceptions)
+	remainingExceptions := MaxExceptions - len(config.Exceptions)
 	for _, set := range config.ExceptionSets {
-		if set.name == "" {
+		if set.name == "" || len(set.exceptions) == 0 {
 			return Schedule{}, newError("new schedule", CodeInvalidState)
 		}
-		if len(set.exceptions) == 0 {
-			return Schedule{}, newError("new schedule", CodeInvalidState)
-		}
-		allExceptions = append(allExceptions, set.exceptions...)
-		if len(allExceptions) > maxExceptions {
+		if len(set.exceptions) > remainingExceptions {
 			return Schedule{}, newError("new schedule", CodeLimitExceeded)
 		}
+		remainingExceptions -= len(set.exceptions)
+	}
+	if remainingExceptions < 0 {
+		return Schedule{}, newError("new schedule", CodeLimitExceeded)
+	}
+	allExceptions := slices.Clone(config.Exceptions)
+	for _, set := range config.ExceptionSets {
+		allExceptions = append(allExceptions, set.exceptions...)
 	}
 	exceptions, err := normalizeExceptions(allExceptions, config.ConflictPolicy)
 	if err != nil {

@@ -260,6 +260,13 @@ func TestSegmentAndScheduleBoundaryMatrix(t *testing.T) {
 		len(schedule.data.exceptions) != maxExceptions {
 		t.Fatalf("maximum exception-set expansion = %d, error=%v", len(schedule.data.exceptions), err)
 	}
+	mixedSet := ExceptionSet{name: "mixed", exceptions: maximumExceptions[maxExceptions-1:]}
+	if schedule, err := NewSchedule(Config{
+		Timezone: "UTC", Exceptions: maximumExceptions[:maxExceptions-1],
+		ExceptionSets: []ExceptionSet{mixedSet},
+	}); err != nil || len(schedule.data.exceptions) != maxExceptions {
+		t.Fatalf("maximum mixed exception expansion = %d, error=%v", len(schedule.data.exceptions), err)
+	}
 }
 
 func TestQueryExplanationAndOverlayBoundaries(t *testing.T) {
@@ -432,6 +439,31 @@ func TestWireBoundaryMatrix(t *testing.T) {
 
 	wire := base.toWire()
 	wire.Version = wireVersion
+	tooManyWeekdays := wire
+	tooManyWeekdays.Weekly = make([]wireWeekday, 8)
+	if _, err := scheduleFromWire(tooManyWeekdays, 1); !IsCode(err, CodeLimitExceeded) {
+		t.Fatalf("oversized weekly wire error = %v", err)
+	}
+	tooManyExceptions := wire
+	tooManyExceptions.Exceptions = make([]wireException, MaxExceptions+1)
+	if _, err := scheduleFromWire(tooManyExceptions, 1); !IsCode(err, CodeLimitExceeded) {
+		t.Fatalf("oversized exception wire error = %v", err)
+	}
+	exactExceptions := wire
+	exactExceptions.Exceptions = make([]wireException, MaxExceptions)
+	if _, err := scheduleFromWire(exactExceptions, 1); !IsCode(err, CodeInvalidDate) {
+		t.Fatalf("exact exception wire error = %v", err)
+	}
+	if _, err := ruleFromWire(wireRule{
+		State: "ranges", Ranges: make([]wireRange, MaxRangesPerDay+1),
+	}); !IsCode(err, CodeLimitExceeded) {
+		t.Fatalf("oversized range wire error = %v", err)
+	}
+	if _, err := ruleFromWire(wireRule{
+		State: "ranges", Ranges: make([]wireRange, MaxRangesPerDay),
+	}); !IsCode(err, CodeInvalidTime) {
+		t.Fatalf("exact range wire error = %v", err)
+	}
 	if _, err := scheduleFromWire(wire, MaxCompositionDepth); err != nil {
 		t.Fatalf("wire at maximum depth error = %v", err)
 	}

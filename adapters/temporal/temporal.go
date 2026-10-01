@@ -5,7 +5,7 @@ package openinghourstemporal
 import (
 	"errors"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 	temporal "github.com/faustbrian/go-temporal"
 	"github.com/faustbrian/go-temporal/timeofday"
 )
@@ -48,6 +48,11 @@ func IntervalFromRange(value openinghours.Range, digits int) (timeofday.Interval
 func RuleFromIntervals(intervals []timeofday.Interval,
 	policy openinghours.OverlapPolicy,
 ) (openinghours.DayRule, error) {
+	if len(intervals) > openinghours.MaxRangesPerDay {
+		return openinghours.DayRule{}, &openinghours.Error{
+			Code: openinghours.CodeLimitExceeded, Op: "convert intervals",
+		}
+	}
 	if len(intervals) == 0 {
 		return openinghours.Closed(), nil
 	}

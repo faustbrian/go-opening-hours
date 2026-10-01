@@ -1,5 +1,9 @@
 # API reference
 
+This reference describes the proposed v2.0.0 source at
+`github.com/faustbrian/go-opening-hours/v2` as of 2026-10-01;
+v1.1.0 remains the latest published release until v2.0.0 is delivered.
+
 The authoritative symbol reference is the package documentation generated from
 the source and checked by `golib api check` against `api/baseline.txt`. The
 baseline and package selection are declared in `.golib.yaml`. Key contracts
@@ -22,9 +26,10 @@ are:
 
 Every constructor returns a typed package `Error` category through `IsCode`.
 Errors contain an operation and stable code only; they do not embed source
-documents or schedules. Limits include 64 ranges/day, 4,096 exceptions, 1 MiB
-JSON, 16 composition levels, 366 elapsed search days, 8,192 output fragments,
-128-byte exception provenance, and 256-byte metadata fields.
+documents or schedules. Limits include `MaxRangesPerDay` (64 ranges/day),
+`MaxExceptions` (4,096 exceptions), `MaxJSONBytes` (1 MiB JSON), 16 composition
+levels, 366 elapsed search days, 8,192 output fragments, 128-byte exception
+provenance, and 256-byte metadata fields.
 
 The zero `Date` is invalid, zero `LocalTime` is midnight, zero `DayRule` is
 inherited, and zero `Schedule` is closed without a timezone.

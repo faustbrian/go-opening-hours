@@ -14,7 +14,9 @@ import (
 const (
 	// MaxJSONBytes bounds canonical and parsed schedule documents.
 	MaxJSONBytes = 1 << 20
-	maxJSONDepth = 32
+	// Each composition adds an object and child schedule. The deepest leaf
+	// adds six edges: array, item, rule, ranges, range, scalar value.
+	maxJSONDepth = 2*(MaxCompositionDepth-1) + 6
 	wireVersion  = 1
 )
 
@@ -254,6 +256,9 @@ func scheduleFromWire(wire wireSchedule, depth int) (Schedule, error) {
 		}
 	}
 
+	if len(wire.Weekly) > 7 || len(wire.Exceptions) > MaxExceptions {
+		return Schedule{}, newError("parse json", CodeLimitExceeded)
+	}
 	weekly := make(map[time.Weekday]DayRule, len(wire.Weekly))
 	for _, item := range wire.Weekly {
 		weekday, ok := parseWeekday(item.Weekday)
@@ -337,6 +342,9 @@ func scheduleFromWire(wire wireSchedule, depth int) (Schedule, error) {
 func ruleFromWire(wire wireRule) (DayRule, error) {
 	if wire.Ranges == nil {
 		return DayRule{}, newError("parse json", CodeInvalidEncoding)
+	}
+	if len(wire.Ranges) > MaxRangesPerDay {
+		return DayRule{}, newError("parse json", CodeLimitExceeded)
 	}
 	switch wire.State {
 	case "inherited":

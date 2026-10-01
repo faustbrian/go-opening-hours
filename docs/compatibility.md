@@ -2,8 +2,10 @@
 
 The minimum supported compiler is Go 1.27.0, the latest stable release at
 implementation time. Public API changes are checked against `api/baseline.txt`.
-Breaking changes require a new major release; v1 follows
-Semantic Versioning.
+Breaking changes require a new major release. Current source prepares v2.0.0
+at `github.com/faustbrian/go-opening-hours/v2`; published v1.1.0 remains
+available under its original module path. The intentional provenance validation
+change and import migration are described in [v2 migration](v2-migration.md).
 
 Canonical wire version is `1`. Decoders reject other versions. Canonical bytes
 are stable for semantically identical construction order within the same wire

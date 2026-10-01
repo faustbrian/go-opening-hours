@@ -5,6 +5,40 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-10-01
+
+### Changed
+
+- Move the root module and all owned package imports to
+  `github.com/faustbrian/go-opening-hours/v2`. Exception source and revision
+  identities must now be nonempty, valid UTF-8 within the existing 128-byte
+  limits; malformed byte strings previously accepted by constructors are
+  rejected with `CodeInvalidState`. See [v2 migration](docs/v2-migration.md).
+
+### Added
+
+- Expose the existing 64-range and 4,096-exception package limits so adapters
+  and callers can reject oversized collections before conversion.
+
+### Security
+
+- Reject oversized SQL, configuration, exception, Spatie, Temporal, and
+  holiday-expansion inputs before package-owned copies or conversions.
+- Preserve constructor validation and first-invalid exception-set precedence
+  while checking the aggregate exception budget before exception copies.
+- Reject invalid zero-value exceptions in direct schedule input, matching
+  named exception-set admission.
+- Preserve exception identity through canonical and SQL persistence by
+  rejecting malformed provenance before construction or collection admission.
+- Keep canonical JSON round trips and compiled queries valid at the full
+  16-level composition limit, including ranged weekly and exception rules;
+  compilation now propagates decoding errors rather than returning a closed
+  index after a failed decode.
+- Treat typed-nil and panicking injected clocks as invalid or unmeasured so
+  optional clock capabilities cannot suppress schedule query results.
+- Document checksum-database enforcement and the remaining caller-owned input,
+  SQL cancellation, and in-memory composition-shape boundaries.
+
 ## [1.1.0] - 2026-09-09
 
 ### Changed

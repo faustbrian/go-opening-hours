@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 )
 
 func scheduleWithMonday(t testing.TB, ranges ...openinghours.Range) openinghours.Schedule {

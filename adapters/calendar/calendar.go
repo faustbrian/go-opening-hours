@@ -7,7 +7,7 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar"
 	"github.com/faustbrian/go-calendar/business"
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 )
 
 var (
@@ -43,6 +43,10 @@ func HolidayClosures(businessCalendar business.Calendar, start, end calendar.Dat
 		start.DaysUntil(end) < 0 || maximumDates <= 0 || source == "" {
 		return nil, ErrInvalidInput
 	}
+	if maximumDates > openinghours.MaxExceptions {
+		return nil, ErrExpansionLimit
+	}
+	revision := businessCalendar.Revision()
 	result := make([]openinghours.Exception, 0)
 	date := start
 	for step := 0; ; step++ {
@@ -53,7 +57,7 @@ func HolidayClosures(businessCalendar business.Calendar, start, end calendar.Dat
 			converted, _ := FromDate(date)
 			exception, err := openinghours.NewException(openinghours.ExceptionConfig{
 				Date: converted, Operation: openinghours.ExceptionClose,
-				Priority: priority, Source: source, Revision: businessCalendar.Revision(),
+				Priority: priority, Source: source, Revision: revision,
 			})
 			if err != nil {
 				return nil, err

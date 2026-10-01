@@ -2,6 +2,7 @@ package openinghours
 
 import (
 	"database/sql/driver"
+	"strings"
 	"testing"
 	"time"
 )
@@ -254,6 +255,47 @@ func TestPersistenceInternalFailureMatrix(t *testing.T) {
 		t.Fatal("Scan accepted invalid JSON")
 	}
 	var _ driver.Valuer = schedule
+}
+
+func TestInputLimitsAndAtomicSQLScan(t *testing.T) {
+	zeroJSON := mustCanonicalJSON(t, Schedule{})
+	maximumBytes := append(append([]byte(nil), zeroJSON...), []byte(strings.Repeat(" ", MaxJSONBytes-len(zeroJSON)))...)
+	var maximumTarget Schedule
+	if err := maximumTarget.Scan(maximumBytes); err != nil {
+		t.Fatalf("maximum byte Scan error = %v", err)
+	}
+	if err := maximumTarget.Scan(string(maximumBytes)); err != nil {
+		t.Fatalf("maximum string Scan error = %v", err)
+	}
+
+	oversizedBytes := make([]byte, MaxJSONBytes+1)
+	retained := internalSchedule(t, Config{})
+	target := retained
+	if err := target.Scan(oversizedBytes); !IsCode(err, CodeInvalidEncoding) || !target.Equal(retained) {
+		t.Fatalf("oversized Scan error = %v", err)
+	}
+	oversizedText := string(oversizedBytes)
+	if err := target.Scan(oversizedText); !IsCode(err, CodeInvalidEncoding) || !target.Equal(retained) {
+		t.Fatalf("oversized string Scan error = %v", err)
+	}
+
+	date := MustDate(2026, time.January, 1)
+	oversizedExceptions := make([]Exception, maxExceptions+1)
+	for index := range oversizedExceptions {
+		oversizedExceptions[index] = Exception{
+			date: date, operation: ExceptionClose, source: "source", revision: "revision",
+		}
+	}
+	if _, err := NewSchedule(Config{Timezone: "UTC", Exceptions: oversizedExceptions}); !IsCode(err, CodeLimitExceeded) {
+		t.Fatalf("oversized NewSchedule error = %v", err)
+	}
+	overflowSet := ExceptionSet{name: "overflow", exceptions: oversizedExceptions[:1]}
+	if _, err := NewSchedule(Config{
+		Timezone: "UTC", Exceptions: oversizedExceptions[:MaxExceptions],
+		ExceptionSets: []ExceptionSet{overflowSet},
+	}); !IsCode(err, CodeLimitExceeded) {
+		t.Fatalf("oversized mixed NewSchedule error = %v", err)
+	}
 }
 
 func TestMalformedCompositionPropagatesQueryErrors(t *testing.T) {

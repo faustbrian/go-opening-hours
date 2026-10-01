@@ -7,16 +7,24 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar"
 	clock "github.com/faustbrian/go-clock"
-	openinghours "github.com/faustbrian/go-opening-hours"
-	openinghoursconfig "github.com/faustbrian/go-opening-hours/adapters/config"
-	openinghoursvalidation "github.com/faustbrian/go-opening-hours/adapters/validation"
-	openinghourswire "github.com/faustbrian/go-opening-hours/adapters/wire"
-	openinghoursencoding "github.com/faustbrian/go-opening-hours/encoding"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	openinghoursconfig "github.com/faustbrian/go-opening-hours/v2/adapters/config"
+	openinghoursvalidation "github.com/faustbrian/go-opening-hours/v2/adapters/validation"
+	openinghourswire "github.com/faustbrian/go-opening-hours/v2/adapters/wire"
+	openinghoursencoding "github.com/faustbrian/go-opening-hours/v2/encoding"
 )
 
 type fixedClock struct{ now time.Time }
 
 func (clock fixedClock) Now() time.Time { return clock.now }
+
+type nilClock struct{}
+
+func (*nilClock) Now() time.Time { panic("typed-nil clock invoked") }
+
+type panicClock struct{}
+
+func (panicClock) Now() time.Time { panic("clock invoked") }
 
 var _ clock.Clock = fixedClock{}
 
@@ -52,6 +60,16 @@ func TestClockCapabilityIsExplicit(t *testing.T) {
 	_, err = schedule.IsOpenNow(nil)
 	if !openinghours.IsCode(err, openinghours.CodeInvalidClock) {
 		t.Fatalf("IsOpenNow(nil) error = %v, want invalid clock", err)
+	}
+}
+
+func TestIsOpenNowRejectsTypedNilClock(t *testing.T) {
+	var clock *nilClock
+	if _, err := (openinghours.Schedule{}).IsOpenNow(clock); !openinghours.IsCode(err, openinghours.CodeInvalidClock) {
+		t.Fatalf("IsOpenNow(typed nil) error = %v", err)
+	}
+	if _, err := (openinghours.Schedule{}).IsOpenNow(panicClock{}); !openinghours.IsCode(err, openinghours.CodeInvalidClock) {
+		t.Fatalf("IsOpenNow(panicking clock) error = %v", err)
 	}
 }
 

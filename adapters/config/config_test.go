@@ -9,9 +9,9 @@ import (
 	"testing"
 
 	configdecode "github.com/faustbrian/go-config/decode"
-	openinghours "github.com/faustbrian/go-opening-hours"
-	openinghoursconfig "github.com/faustbrian/go-opening-hours/adapters/config"
-	legacy "github.com/faustbrian/go-opening-hours/openinghoursconfig"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	openinghoursconfig "github.com/faustbrian/go-opening-hours/v2/adapters/config"
+	legacy "github.com/faustbrian/go-opening-hours/v2/openinghoursconfig"
 )
 
 func TestValueRoundTripAndAtomicFailure(t *testing.T) {
@@ -69,5 +69,36 @@ func TestValueErrorsAndNamedIdentity(t *testing.T) {
 	zero, err := openinghoursconfig.Parse(string(zeroText))
 	if err != nil || !zero.Equal((openinghoursconfig.Value{}).Schedule()) {
 		t.Fatalf("zero Value round trip = %#v, %v", zero, err)
+	}
+}
+
+func TestParseRejectsOversizedStringBeforeConversion(t *testing.T) {
+	zero, err := (openinghours.Schedule{}).CanonicalJSON()
+	if err != nil {
+		t.Fatal(err)
+	}
+	maximum := string(zero) + strings.Repeat(" ", openinghours.MaxJSONBytes-len(zero))
+	if _, err := openinghoursconfig.Parse(maximum); err != nil {
+		t.Fatalf("Parse rejected exact maximum: %v", err)
+	}
+
+	input := strings.Repeat("x", openinghours.MaxJSONBytes+1)
+	if _, err := openinghoursconfig.Parse(input); !openinghours.IsCode(err, openinghours.CodeInvalidEncoding) {
+		t.Fatalf("oversized Parse error = %v", err)
+	}
+	retained, err := openinghours.NewSchedule(openinghours.Config{Timezone: "UTC"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	encoded, err := retained.CanonicalJSON()
+	if err != nil {
+		t.Fatal(err)
+	}
+	var target openinghoursconfig.Value
+	if err := target.UnmarshalConfigValue(string(encoded)); err != nil {
+		t.Fatal(err)
+	}
+	if err := target.UnmarshalConfigValue(input); !openinghours.IsCode(err, openinghours.CodeInvalidEncoding) || !target.Schedule().Equal(retained) {
+		t.Fatalf("oversized value changed receiver: %v", err)
 	}
 }

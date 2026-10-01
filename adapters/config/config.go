@@ -6,7 +6,7 @@ package openinghoursconfig
 import (
 	"errors"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 )
 
 // ErrInvalidValue reports a configuration value that is not canonical JSON
@@ -15,6 +15,11 @@ var ErrInvalidValue = errors.New("openinghoursconfig: invalid value")
 
 // Parse strictly decodes one bounded canonical configuration value.
 func Parse(value string) (openinghours.Schedule, error) {
+	if len(value) > openinghours.MaxJSONBytes {
+		return openinghours.Schedule{}, &openinghours.Error{
+			Code: openinghours.CodeInvalidEncoding, Op: "parse json",
+		}
+	}
 	return openinghours.ParseJSON([]byte(value))
 }
 

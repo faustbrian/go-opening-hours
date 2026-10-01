@@ -1,4 +1,4 @@
-package openinghours // import "github.com/faustbrian/go-opening-hours"
+package openinghours // import "github.com/faustbrian/go-opening-hours/v2"
 
 Package openinghours provides immutable recurring opening-hours schedules, dated
 exceptions, explicit timezone evaluation, bounded search, and stable canonical
@@ -6,6 +6,15 @@ persistence.
 
 CONSTANTS
 
+const (
+	// MaxExceptions is the maximum accepted exception collection per schedule.
+	MaxExceptions = 4096
+)
+const (
+
+	// MaxRangesPerDay is the maximum accepted range collection for one day.
+	MaxRangesPerDay = 64
+)
 const (
 	// MaxJSONBytes bounds canonical and parsed schedule documents.
 	MaxJSONBytes = 1 << 20
@@ -187,7 +196,8 @@ type Exception struct {
     Exception is an immutable exact-date availability operation.
 
 func NewException(config ExceptionConfig) (Exception, error)
-    NewException validates an exact-date exception and its bounded provenance.
+    NewException validates an exact-date exception and its bounded UTF-8
+    provenance.
 
 func (e Exception) Date() Date
     Date returns the exact exception date.
@@ -576,7 +586,7 @@ const (
 	// TransitionClose identifies a boundary whose following instant is closed.
 	TransitionClose
 )
-package openinghourscalendar // import "github.com/faustbrian/go-opening-hours/adapters/calendar"
+package openinghourscalendar // import "github.com/faustbrian/go-opening-hours/v2/adapters/calendar"
 
 Package openinghourscalendar adapts calendar civil dates and bounded
 business-calendar holidays to opening-hours values.
@@ -604,7 +614,7 @@ func HolidayClosures(businessCalendar business.Calendar, start, end calendar.Dat
 func ToDate(date openinghours.Date) (calendar.Date, error)
     ToDate converts a valid opening-hours civil date without timezone inference.
 
-package openinghoursconfig // import "github.com/faustbrian/go-opening-hours/adapters/config"
+package openinghoursconfig // import "github.com/faustbrian/go-opening-hours/v2/adapters/config"
 
 Package openinghoursconfig adapts canonical schedule documents from
 configuration sources while leaving environment and file ownership to the
@@ -642,7 +652,7 @@ func (value Value) Schedule() openinghours.Schedule
 func (value *Value) UnmarshalConfigValue(input any) error
     UnmarshalConfigValue decodes canonical JSON text supplied by config.
 
-package openinghourstemporal // import "github.com/faustbrian/go-opening-hours/adapters/temporal"
+package openinghourstemporal // import "github.com/faustbrian/go-opening-hours/v2/adapters/temporal"
 
 Package openinghourstemporal provides lossless adapters for temporal/timeofday
 values.
@@ -671,7 +681,7 @@ func RuleFromIntervals(intervals []timeofday.Interval,
     An empty or single collapsed interval maps to closed; full day must stand
     alone.
 
-package openinghoursvalidation // import "github.com/faustbrian/go-opening-hours/adapters/validation"
+package openinghoursvalidation // import "github.com/faustbrian/go-opening-hours/v2/adapters/validation"
 
 Package openinghoursvalidation adapts schedule validation to the shared
 validation contract.
@@ -699,7 +709,7 @@ type ValidationError struct{}
 func (*ValidationError) Error() string
     Error returns the stable, data-free diagnostic.
 
-package openinghourswire // import "github.com/faustbrian/go-opening-hours/adapters/wire"
+package openinghourswire // import "github.com/faustbrian/go-opening-hours/v2/adapters/wire"
 
 Package openinghourswire adapts schedules to byte-oriented wire registries.
 
@@ -723,7 +733,7 @@ func (Codec) Decode(data []byte) (openinghours.Schedule, error)
 func (Codec) Encode(schedule openinghours.Schedule) ([]byte, error)
     Encode returns canonical bytes.
 
-package compile // import "github.com/faustbrian/go-opening-hours/compile"
+package compile // import "github.com/faustbrian/go-opening-hours/v2/compile"
 
 Package compile provides an immutable prepared schedule handle for repeated
 queries. The current implementation relies on the root schedule's bounded sorted
@@ -754,7 +764,7 @@ func (index Index) NextTransition(instant time.Time, horizon time.Duration) (ope
 func (index Index) Schedule() openinghours.Schedule
     Schedule returns the immutable prepared schedule value.
 
-package encoding // import "github.com/faustbrian/go-opening-hours/encoding"
+package encoding // import "github.com/faustbrian/go-opening-hours/v2/encoding"
 
 Package encoding exposes the canonical schedule wire contract without shadowing
 human-readable formatting concerns in the root package.
@@ -799,12 +809,12 @@ type Slot struct {
 }
     Slot is a strict structured local-time interval.
 
-package openinghourscalendar // import "github.com/faustbrian/go-opening-hours/openinghourscalendar"
+package openinghourscalendar // import "github.com/faustbrian/go-opening-hours/v2/openinghourscalendar"
 
 Package openinghourscalendar is the compatibility path for
-github.com/faustbrian/go-opening-hours/adapters/calendar.
+github.com/faustbrian/go-opening-hours/v2/adapters/calendar.
 
-Deprecated: use github.com/faustbrian/go-opening-hours/adapters/calendar.
+Deprecated: use github.com/faustbrian/go-opening-hours/v2/adapters/calendar.
 This package remains supported for the longer of 180 days after successor public
 availability and two subsequently published stable minor releases.
 
@@ -831,12 +841,12 @@ func HolidayClosures(businessCalendar business.Calendar, start, end calendar.Dat
 func ToDate(date openinghours.Date) (calendar.Date, error)
     ToDate converts a valid opening-hours civil date without timezone inference.
 
-package openinghoursconfig // import "github.com/faustbrian/go-opening-hours/openinghoursconfig"
+package openinghoursconfig // import "github.com/faustbrian/go-opening-hours/v2/openinghoursconfig"
 
 Package openinghoursconfig is the compatibility path for
-github.com/faustbrian/go-opening-hours/adapters/config.
+github.com/faustbrian/go-opening-hours/v2/adapters/config.
 
-Deprecated: use github.com/faustbrian/go-opening-hours/adapters/config.
+Deprecated: use github.com/faustbrian/go-opening-hours/v2/adapters/config.
 This package remains supported for the longer of 180 days after successor public
 availability and two subsequently published stable minor releases.
 
@@ -872,12 +882,12 @@ func (value Value) Schedule() openinghours.Schedule
 func (value *Value) UnmarshalConfigValue(input any) error
     UnmarshalConfigValue decodes canonical JSON text supplied by config.
 
-package openinghourstemporal // import "github.com/faustbrian/go-opening-hours/openinghourstemporal"
+package openinghourstemporal // import "github.com/faustbrian/go-opening-hours/v2/openinghourstemporal"
 
 Package openinghourstemporal is the compatibility path for
-github.com/faustbrian/go-opening-hours/adapters/temporal.
+github.com/faustbrian/go-opening-hours/v2/adapters/temporal.
 
-Deprecated: use github.com/faustbrian/go-opening-hours/adapters/temporal.
+Deprecated: use github.com/faustbrian/go-opening-hours/v2/adapters/temporal.
 This package remains supported for the longer of 180 days after successor public
 availability and two subsequently published stable minor releases.
 
@@ -905,12 +915,12 @@ func RuleFromIntervals(intervals []timeofday.Interval,
     An empty or single collapsed interval maps to closed; full day must stand
     alone.
 
-package openinghoursvalidation // import "github.com/faustbrian/go-opening-hours/openinghoursvalidation"
+package openinghoursvalidation // import "github.com/faustbrian/go-opening-hours/v2/openinghoursvalidation"
 
 Package openinghoursvalidation is the compatibility path for
-github.com/faustbrian/go-opening-hours/adapters/validation.
+github.com/faustbrian/go-opening-hours/v2/adapters/validation.
 
-Deprecated: use github.com/faustbrian/go-opening-hours/adapters/validation.
+Deprecated: use github.com/faustbrian/go-opening-hours/v2/adapters/validation.
 This package remains supported for the longer of 180 days after successor public
 availability and two subsequently published stable minor releases.
 
@@ -936,12 +946,12 @@ type ValidationError struct{}
 
 func (*ValidationError) Error() string
 
-package openinghourswire // import "github.com/faustbrian/go-opening-hours/openinghourswire"
+package openinghourswire // import "github.com/faustbrian/go-opening-hours/v2/openinghourswire"
 
 Package openinghourswire is the compatibility path for
-github.com/faustbrian/go-opening-hours/adapters/wire.
+github.com/faustbrian/go-opening-hours/v2/adapters/wire.
 
-Deprecated: use github.com/faustbrian/go-opening-hours/adapters/wire.
+Deprecated: use github.com/faustbrian/go-opening-hours/v2/adapters/wire.
 This package remains supported for the longer of 180 days after successor public
 availability and two subsequently published stable minor releases.
 
@@ -965,7 +975,7 @@ func (Codec) Decode(data []byte) (openinghours.Schedule, error)
 func (Codec) Encode(schedule openinghours.Schedule) ([]byte, error)
     Encode returns canonical bytes.
 
-package postgres // import "github.com/faustbrian/go-opening-hours/postgres"
+package postgres // import "github.com/faustbrian/go-opening-hours/v2/postgres"
 
 Package postgres provides nullable JSONB persistence values. The root Schedule
 directly implements database/sql and the interfaces selected by pgx JSON/JSONB

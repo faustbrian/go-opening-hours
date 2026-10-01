@@ -6,7 +6,7 @@ package compile
 import (
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
 )
 
 // Index is safe for concurrent reads because Schedule is immutable.
@@ -20,7 +20,10 @@ func New(schedule openinghours.Schedule) (Index, error) {
 	if err != nil {
 		return Index{}, err
 	}
-	owned, _ := openinghours.ParseJSON(encoded) // CanonicalJSON always emits strict parseable bytes.
+	owned, err := openinghours.ParseJSON(encoded)
+	if err != nil {
+		return Index{}, err
+	}
 
 	return Index{schedule: owned}, nil
 }

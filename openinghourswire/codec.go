@@ -1,14 +1,14 @@
 // Package openinghourswire is the compatibility path for
-// [github.com/faustbrian/go-opening-hours/adapters/wire].
+// [github.com/faustbrian/go-opening-hours/v2/adapters/wire].
 //
-// Deprecated: use github.com/faustbrian/go-opening-hours/adapters/wire. This
+// Deprecated: use github.com/faustbrian/go-opening-hours/v2/adapters/wire. This
 // package remains supported for the longer of 180 days after successor public
 // availability and two subsequently published stable minor releases.
 package openinghourswire
 
 import (
-	openinghours "github.com/faustbrian/go-opening-hours"
-	canonical "github.com/faustbrian/go-opening-hours/adapters/wire"
+	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	canonical "github.com/faustbrian/go-opening-hours/v2/adapters/wire"
 	wire "github.com/faustbrian/go-wire"
 )
 
