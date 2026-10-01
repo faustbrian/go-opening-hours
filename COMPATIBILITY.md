@@ -4,15 +4,15 @@ The repository has one releasable root Go module. Its packages, including
 canonical adapters and compatibility facades, ship under root `v<version>`
 tags and follow semantic versioning together.
 
-Current source prepares v2.0.1 using the required `/v2` module/import suffix
+Published v2.0.1 uses the required `/v2` module/import suffix
 on main, without a version-specific source directory. Published v1.1.0 remains
 available under the original module path. V2 intentionally rejects malformed
 UTF-8 exception source/revision identities previously accepted as structured
 input; see [migration guidance](docs/v2-migration.md).
 
 The exposed v2.0.0 Git tag remains immutable but did not complete release
-validation. It has no verified stable release; v2.0.1 remains an unpublished
-replacement target until its release gates pass.
+validation. It has no verified stable release; published v2.0.1 is the
+validated replacement, not a rewritten tag.
 
 Before `v1`, minor releases MAY contain reviewed breaking changes, but every
 break MUST be documented with migration guidance. Patch releases MUST remain

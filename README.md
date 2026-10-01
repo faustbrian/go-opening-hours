@@ -13,15 +13,16 @@
 Immutable, deterministic, timezone-safe recurring opening hours and dated
 exceptions for Go 1.27.0 and later.
 
-This source prepares v2.0.1 at `github.com/faustbrian/go-opening-hours/v2`.
+The verified stable release is [v2.0.1](https://github.com/faustbrian/go-opening-hours/releases/tag/v2.0.1)
+at `github.com/faustbrian/go-opening-hours/v2`.
 V2 requires nonempty, valid UTF-8 exception source and revision identities;
 see the [v2 migration guide](docs/v2-migration.md). Published v1.1.0 remains
 available at `github.com/faustbrian/go-opening-hours`.
 
 The v2.0.0 Git tag was exposed before release validation completed. It remains
-immutable, but has no verified stable release; wait for validated v2.0.1.
+immutable, but has no verified stable release; use validated v2.0.1.
 
-After v2.0.1 is published, install the v2 root module with:
+Install the v2 root module with:
 
 ```sh
 go get github.com/faustbrian/go-opening-hours/v2@v2.0.1
