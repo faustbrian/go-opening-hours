@@ -4,7 +4,7 @@ go 1.27.0
 
 require (
 	github.com/faustbrian/go-calendar v1.1.0
-	github.com/faustbrian/go-clock v1.0.0
+	github.com/faustbrian/go-clock v1.1.0
 	github.com/faustbrian/go-config v1.0.0
 	github.com/faustbrian/go-temporal v1.1.0
 	github.com/faustbrian/go-validation v1.1.0
