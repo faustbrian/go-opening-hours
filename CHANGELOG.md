@@ -25,6 +25,12 @@ Versioning after v1.0.0.
   contract. Upstream adds the service adapter entry point and retains
   configservice as its compatibility facade.
 
+- Upgrade go-wire from v1.0.0 to v1.0.1 while retaining the public
+  typed format identity and canonical and legacy schedule codecs.
+  The selected module graph updates CBOR to v2.9.3 and MongoDB driver
+  to v2.9.0; those optional codecs are not used by these adapters.
+  The supplier's Go 1.27.0 minimum matches this module's requirement.
+
 ## [2.0.1] - 2026-10-01
 
 ### Released
