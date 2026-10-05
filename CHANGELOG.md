@@ -13,6 +13,13 @@ Versioning after v1.0.0.
   connection-string and date handling changes also apply to the selected
   pgx version.
 
+- Upgrade go-clock from v1.0.0 to v1.2.0 while retaining the narrow
+  injected current-time and elapsed-time capability contracts. The
+  selected dependency adds manual-clock Close, deprecates Shutdown, and
+  changes observed sleep outcomes, closed-clock sleep precedence, and
+  ticker observations for applications using those features directly.
+  Its Go 1.27.0 minimum matches this module's existing requirement.
+
 ## [2.0.1] - 2026-10-01
 
 ### Released
