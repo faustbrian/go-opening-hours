@@ -4,8 +4,10 @@ The repository has one releasable root Go module. Its packages, including
 canonical adapters and compatibility facades, ship under root `v<version>`
 tags and follow semantic versioning together.
 
-Published v2.0.1 uses the required `/v2` module/import suffix
-on main, without a version-specific source directory. Published v1.1.0 remains
+Main prepares the `/v3` module/import suffix without version-specific source
+directories. Its simultaneous Calendar2, Temporal2 and Validation2 adoption
+requires coordinated nominal-type migration; see [v3 preparation](docs/v3-migration.md).
+Public v2.0.2 uses the required `/v2` module/import suffix. Published v1.1.0 remains
 available under the original module path. V2 intentionally rejects malformed
 UTF-8 exception source/revision identities previously accepted as structured
 input; see [migration guidance](docs/v2-migration.md).

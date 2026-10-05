@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	calendar "github.com/faustbrian/go-calendar"
-	"github.com/faustbrian/go-calendar/business"
-	openinghours "github.com/faustbrian/go-opening-hours/v2"
-	"github.com/faustbrian/go-opening-hours/v2/openinghourscalendar"
+	calendar "github.com/faustbrian/go-calendar/v2"
+	"github.com/faustbrian/go-calendar/v2/business"
+	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	"github.com/faustbrian/go-opening-hours/v3/openinghourscalendar"
 )
 
 func TestDateConversionAndHolidayClosures(t *testing.T) {

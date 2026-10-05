@@ -2,7 +2,7 @@
 // shadowing human-readable formatting concerns in the root package.
 package encoding
 
-import openinghours "github.com/faustbrian/go-opening-hours/v2"
+import openinghours "github.com/faustbrian/go-opening-hours/v3"
 
 // Marshal returns canonical versioned JSON.
 func Marshal(schedule openinghours.Schedule) ([]byte, error) {

@@ -1,12 +1,14 @@
 # API reference
 
-This reference describes the published v2.0.1 source at
-`github.com/faustbrian/go-opening-hours/v2` as of 2026-10-01;
-V2.0.1 is the latest verified stable release; v1.1.0 remains available.
+This reference describes prepared main at
+`github.com/faustbrian/go-opening-hours/v3`, not a published release.
+Public v2.0.2 and historical v1.1.0 remain independently available.
 The exposed v2.0.0 Git tag is immutable but did not complete release validation.
 
 The authoritative symbol reference is the package documentation generated from
-the source and checked by `golib api check` against `api/baseline.txt`. The
+the source and selected for `golib api check` against `api/v3.txt`. Historical
+`api/baseline.txt` is retained; the v3 projection matches the public dependency
+graph, while v3 release qualification remains pending. The
 baseline and package selection are declared in `.golib.yaml`. Key contracts
 are:
 

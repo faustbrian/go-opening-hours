@@ -5,7 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgtype"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	openinghours "github.com/faustbrian/go-opening-hours/v3"
 )
 
 func FuzzPGXJSONBCodec(f *testing.F) {

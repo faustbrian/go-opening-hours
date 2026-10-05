@@ -3,7 +3,7 @@ package openinghours
 import (
 	"time"
 
-	calendar "github.com/faustbrian/go-calendar"
+	calendar "github.com/faustbrian/go-calendar/v2"
 )
 
 const (

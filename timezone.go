@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	calendartz "github.com/faustbrian/go-calendar/timezone"
+	calendartz "github.com/faustbrian/go-calendar/v2/timezone"
 )
 
 // LocalResolutionPolicy explicitly resolves DST gaps and folds.
