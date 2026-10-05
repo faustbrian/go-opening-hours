@@ -5,6 +5,14 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade pgx from v5.10.0 to v5.11.0 while retaining native schedule
+  JSONB mapping and nullable persistence contracts. Applications
+  implementing pgx Rows must provide its new TypeMap method; upstream
+  connection-string and date handling changes also apply to the selected
+  pgx version.
+
 ## [2.0.1] - 2026-10-01
 
 ### Released
