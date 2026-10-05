@@ -5,6 +5,8 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-10-05
+
 ### Changed
 
 - Upgrade pgx from v5.10.0 to v5.11.0 while retaining native schedule
