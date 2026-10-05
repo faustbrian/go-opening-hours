@@ -5,14 +5,16 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-10-05
+
 ### Changed
 
-- Prepare `github.com/faustbrian/go-opening-hours/v3` with Calendar v2,
+- Adopt `github.com/faustbrian/go-opening-hours/v3` with Calendar v2,
   Validation v2 and public Temporal v2 dependencies. Migrate date,
   interval and validator imports together across canonical and retained
   adapters. Schedule semantics, resource limits and wire version 1 remain
-  unchanged. Public dependencies are verified; Opening v3 publication
-  still awaits its own release qualification.
+  unchanged. Historical Opening v1 and v2 module graphs remain independently
+  usable.
 
 ## [2.0.2] - 2026-10-05
 
