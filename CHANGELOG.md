@@ -20,6 +20,11 @@ Versioning after v1.0.0.
   ticker observations for applications using those features directly.
   Its Go 1.27.0 minimum matches this module's existing requirement.
 
+- Upgrade go-config from v1.0.0 to v1.1.0 while retaining canonical
+  and legacy configuration-value adapters and their unchanged decoder
+  contract. Upstream adds the service adapter entry point and retains
+  configservice as its compatibility facade.
+
 ## [2.0.1] - 2026-10-01
 
 ### Released
