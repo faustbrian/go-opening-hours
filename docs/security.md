@@ -1,8 +1,13 @@
 # Security model
 
-This model covers the current source and published v2.0.1 release, reviewed
-as of 2026-10-01. V2.0.1 is the current verified stable release; v1.1.0 remains
-available under its original module path.
+Version: `OPENINGHOURS-TM-3.0-development`.
+
+This model covers the prepared v3 source and retained published v2 controls.
+Public v2.0.2 remains available under its original module path, as does
+v1.1.0. The v3 nominal dependency migration does not establish new security
+qualification: public v2 dependencies are verified, while Opening v3 affected
+native gates and release evidence remain pending. See
+[v3 preparation](v3-migration.md).
 The exposed v2.0.0 Git tag is immutable but did not complete release validation.
 
 ## Trust boundaries

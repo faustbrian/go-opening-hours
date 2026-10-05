@@ -13,7 +13,10 @@
 Immutable, deterministic, timezone-safe recurring opening hours and dated
 exceptions for Go 1.27.0 and later.
 
-The v2 root module is `github.com/faustbrian/go-opening-hours/v2`.
+Main prepares `github.com/faustbrian/go-opening-hours/v3` with verified public
+v2 dependencies; Opening v3 publication still awaits release qualification.
+See the [v3 preparation guide](docs/v3-migration.md). The retained public
+v2 root module is `github.com/faustbrian/go-opening-hours/v2`.
 Stable releases are available on [GitHub](https://github.com/faustbrian/go-opening-hours/releases).
 V2 requires nonempty, valid UTF-8 exception source and revision identities;
 see the [v2 migration guide](docs/v2-migration.md). Published v1.1.0 remains
@@ -34,6 +37,9 @@ book appointments, plan workforces, or decide whether an order is eligible.
 
 ## Five-minute start
 
+This example uses prepared main's v3 imports; installable v2 usage remains
+documented in the [v2 migration guide](docs/v2-migration.md).
+
 ```go
 package main
 
@@ -41,7 +47,7 @@ import (
 	"fmt"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v2"
+	openinghours "github.com/faustbrian/go-opening-hours/v3"
 )
 
 func main() {

@@ -6,8 +6,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgtype"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v2"
-	"github.com/faustbrian/go-opening-hours/v2/postgres"
+	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	"github.com/faustbrian/go-opening-hours/v3/postgres"
 )
 
 func testSchedule(t testing.TB) openinghours.Schedule {

@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v2"
-	"github.com/faustbrian/go-opening-hours/v2/openinghoursvalidation"
-	validation "github.com/faustbrian/go-validation"
+	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	"github.com/faustbrian/go-opening-hours/v3/openinghoursvalidation"
+	validation "github.com/faustbrian/go-validation/v2"
 )
 
 func TestValidateAndError(t *testing.T) {

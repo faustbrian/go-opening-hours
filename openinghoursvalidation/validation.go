@@ -1,15 +1,15 @@
 // Package openinghoursvalidation is the compatibility path for
-// [github.com/faustbrian/go-opening-hours/v2/adapters/validation].
+// [github.com/faustbrian/go-opening-hours/v3/adapters/validation].
 //
-// Deprecated: use github.com/faustbrian/go-opening-hours/v2/adapters/validation.
+// Deprecated: use github.com/faustbrian/go-opening-hours/v3/adapters/validation.
 // This package remains supported for the longer of 180 days after successor
 // public availability and two subsequently published stable minor releases.
 package openinghoursvalidation
 
 import (
-	openinghours "github.com/faustbrian/go-opening-hours/v2"
-	canonical "github.com/faustbrian/go-opening-hours/v2/adapters/validation"
-	validation "github.com/faustbrian/go-validation"
+	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	canonical "github.com/faustbrian/go-opening-hours/v3/adapters/validation"
+	validation "github.com/faustbrian/go-validation/v2"
 )
 
 // CodeInvalidSchedule is the stable validation violation code.

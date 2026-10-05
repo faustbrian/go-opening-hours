@@ -28,6 +28,7 @@ to compare related independently adoptable libraries.
 - [Support hours](support-hours.md)
 - [Legacy migration](legacy-migration.md)
 - [V2 migration](v2-migration.md)
+- [V3 preparation and migration](v3-migration.md)
 - [Persistence](persistence.md)
 - [Owned-module integrations](integrations.md)
 - [Observability](observability.md)

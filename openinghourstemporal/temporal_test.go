@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v2"
-	"github.com/faustbrian/go-opening-hours/v2/openinghourstemporal"
-	temporal "github.com/faustbrian/go-temporal"
-	"github.com/faustbrian/go-temporal/timeofday"
+	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	"github.com/faustbrian/go-opening-hours/v3/openinghourstemporal"
+	temporal "github.com/faustbrian/go-temporal/v2"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 func TestRangeAndRuleConversionsAreLossless(t *testing.T) {

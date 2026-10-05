@@ -1,15 +1,15 @@
 // Package openinghourstemporal is the compatibility path for
-// [github.com/faustbrian/go-opening-hours/v2/adapters/temporal].
+// [github.com/faustbrian/go-opening-hours/v3/adapters/temporal].
 //
-// Deprecated: use github.com/faustbrian/go-opening-hours/v2/adapters/temporal.
+// Deprecated: use github.com/faustbrian/go-opening-hours/v3/adapters/temporal.
 // This package remains supported for the longer of 180 days after successor
 // public availability and two subsequently published stable minor releases.
 package openinghourstemporal
 
 import (
-	openinghours "github.com/faustbrian/go-opening-hours/v2"
-	canonical "github.com/faustbrian/go-opening-hours/v2/adapters/temporal"
-	"github.com/faustbrian/go-temporal/timeofday"
+	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	canonical "github.com/faustbrian/go-opening-hours/v3/adapters/temporal"
+	"github.com/faustbrian/go-temporal/v2/timeofday"
 )
 
 // ErrLossyMapping reports an interval whose state or bounds cannot be
