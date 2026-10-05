@@ -5,12 +5,6 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
-### Changed
-
-- Adopt public `go-config/v2` v2.0.0 for canonical and legacy configuration
-  integration tests, retaining schedule decoding and atomic validation
-  assertions. Production adapters keep their structural value-unmarshal seam.
-
 ## [2.0.2] - 2026-10-05
 
 ### Changed
@@ -32,6 +26,10 @@ Versioning after v1.0.0.
   and legacy configuration-value adapters and their unchanged decoder
   contract. Upstream adds the service adapter entry point and retains
   configservice as its compatibility facade.
+
+- Adopt public `go-config/v2` v2.0.0 for canonical and legacy configuration
+  integration tests, retaining schedule decoding and atomic validation
+  assertions. Production adapters keep their structural value-unmarshal seam.
 
 - Upgrade go-wire from v1.0.0 to v1.0.1 while retaining the public
   typed format identity and canonical and legacy schedule codecs.
