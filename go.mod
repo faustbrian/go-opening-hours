@@ -8,7 +8,7 @@ require (
 	github.com/faustbrian/go-config v1.1.0
 	github.com/faustbrian/go-temporal v1.1.0
 	github.com/faustbrian/go-validation v1.1.0
-	github.com/faustbrian/go-wire v1.0.0
+	github.com/faustbrian/go-wire v1.0.1
 	github.com/jackc/pgx/v5 v5.11.0
 )
 
