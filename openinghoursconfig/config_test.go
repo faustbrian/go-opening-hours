@@ -3,7 +3,7 @@ package openinghoursconfig_test
 import (
 	"testing"
 
-	configdecode "github.com/faustbrian/go-config/decode"
+	configdecode "github.com/faustbrian/go-config/v2/decode"
 	openinghours "github.com/faustbrian/go-opening-hours/v2"
 	"github.com/faustbrian/go-opening-hours/v2/openinghoursconfig"
 )

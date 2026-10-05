@@ -202,7 +202,7 @@
       "owned_dependencies": [
         "github.com/faustbrian/go-calendar",
         "github.com/faustbrian/go-clock",
-        "github.com/faustbrian/go-config",
+        "github.com/faustbrian/go-config/v2",
         "github.com/faustbrian/go-temporal",
         "github.com/faustbrian/go-validation",
         "github.com/faustbrian/go-wire"
