@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	configdecode "github.com/faustbrian/go-config/decode"
+	configdecode "github.com/faustbrian/go-config/v2/decode"
 	openinghours "github.com/faustbrian/go-opening-hours/v2"
 	openinghoursconfig "github.com/faustbrian/go-opening-hours/v2/adapters/config"
 	legacy "github.com/faustbrian/go-opening-hours/v2/openinghoursconfig"

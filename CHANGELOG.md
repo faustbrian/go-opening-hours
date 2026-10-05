@@ -5,6 +5,12 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Adopt public `go-config/v2` v2.0.0 for canonical and legacy configuration
+  integration tests, retaining schedule decoding and atomic validation
+  assertions. Production adapters keep their structural value-unmarshal seam.
+
 ## [2.0.2] - 2026-10-05
 
 ### Changed
