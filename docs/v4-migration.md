@@ -13,7 +13,7 @@ are not interchangeable; do not mix the old and new adapter graphs.
 
 The registry name remains `opening-hours+json;v=1`. Opening's `Codec` still
 uses the stricter package-owned canonical parser, not a general Wire JSON
-codec. Canonical bytes, invalid-input errors, and schedule roundtrips are
+codec. Canonical bytes, invalid-input errors, and schedule round trips are
 unchanged. Canonical and retained `Codec` types remain deliberately distinct,
 and the compatibility retention interval is unchanged. Calendar v2,
 Config v2, Temporal v2, Validation v2, pgx v5, and Go 1.27 remain selected.
