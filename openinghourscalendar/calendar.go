@@ -1,7 +1,7 @@
 // Package openinghourscalendar is the compatibility path for
-// [github.com/faustbrian/go-opening-hours/v3/adapters/calendar].
+// [github.com/faustbrian/go-opening-hours/v4/adapters/calendar].
 //
-// Deprecated: use github.com/faustbrian/go-opening-hours/v3/adapters/calendar.
+// Deprecated: use github.com/faustbrian/go-opening-hours/v4/adapters/calendar.
 // This package remains supported for the longer of 180 days after successor
 // public availability and two subsequently published stable minor releases.
 package openinghourscalendar
@@ -9,8 +9,8 @@ package openinghourscalendar
 import (
 	calendar "github.com/faustbrian/go-calendar/v2"
 	"github.com/faustbrian/go-calendar/v2/business"
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	canonical "github.com/faustbrian/go-opening-hours/v3/adapters/calendar"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	canonical "github.com/faustbrian/go-opening-hours/v4/adapters/calendar"
 )
 
 var (

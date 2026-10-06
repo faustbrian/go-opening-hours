@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
 )
 
 // Methods deliberately do not dereference the receiver: rejecting a nil

@@ -3,7 +3,7 @@
 package openinghoursvalidation
 
 import (
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
 	validation "github.com/faustbrian/go-validation/v2"
 )
 

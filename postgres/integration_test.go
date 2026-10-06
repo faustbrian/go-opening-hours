@@ -9,7 +9,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
 )
 
 func TestLivePostgreSQLJSONBRoundTrip(t *testing.T) {

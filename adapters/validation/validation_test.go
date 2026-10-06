@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	openinghoursvalidation "github.com/faustbrian/go-opening-hours/v3/adapters/validation"
-	legacy "github.com/faustbrian/go-opening-hours/v3/openinghoursvalidation"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghoursvalidation "github.com/faustbrian/go-opening-hours/v4/adapters/validation"
+	legacy "github.com/faustbrian/go-opening-hours/v4/openinghoursvalidation"
 	validation "github.com/faustbrian/go-validation/v2"
 )
 

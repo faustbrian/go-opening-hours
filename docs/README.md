@@ -29,6 +29,7 @@ to compare related independently adoptable libraries.
 - [Legacy migration](legacy-migration.md)
 - [V2 migration](v2-migration.md)
 - [V3 preparation and migration](v3-migration.md)
+- [V4 preparation and Wire v3 migration](v4-migration.md)
 - [Persistence](persistence.md)
 - [Owned-module integrations](integrations.md)
 - [Observability](observability.md)

@@ -7,9 +7,9 @@ import (
 	"errors"
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	openinghourstemporal "github.com/faustbrian/go-opening-hours/v3/adapters/temporal"
-	legacy "github.com/faustbrian/go-opening-hours/v3/openinghourstemporal"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghourstemporal "github.com/faustbrian/go-opening-hours/v4/adapters/temporal"
+	legacy "github.com/faustbrian/go-opening-hours/v4/openinghourstemporal"
 	temporal "github.com/faustbrian/go-temporal/v2"
 	"github.com/faustbrian/go-temporal/v2/timeofday"
 )

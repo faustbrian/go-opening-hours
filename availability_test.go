@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
 )
 
 func mustRange(t testing.TB, startHour, startMinute, endHour, endMinute int) openinghours.Range {

@@ -10,9 +10,9 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar/v2"
 	"github.com/faustbrian/go-calendar/v2/business"
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	openinghourscalendar "github.com/faustbrian/go-opening-hours/v3/adapters/calendar"
-	legacy "github.com/faustbrian/go-opening-hours/v3/openinghourscalendar"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghourscalendar "github.com/faustbrian/go-opening-hours/v4/adapters/calendar"
+	legacy "github.com/faustbrian/go-opening-hours/v4/openinghourscalendar"
 )
 
 func TestDateConversionAndHolidayClosuresMatchLegacy(t *testing.T) {

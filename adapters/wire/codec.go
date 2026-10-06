@@ -2,8 +2,8 @@
 package openinghourswire
 
 import (
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	wire "github.com/faustbrian/go-wire"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	wire "github.com/faustbrian/go-wire/v3"
 )
 
 // Format is the stable registry name for canonical opening-hours JSON.

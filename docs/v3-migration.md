@@ -1,5 +1,10 @@
 # V3 preparation and migration
 
+This is the historical v3 preparation record. Opening v3.0.0 is now publicly
+available under `/v3`; the pending-release statements below describe that
+earlier preparation state. Current main prepares v4; see
+[the v4 migration guide](v4-migration.md).
+
 Main prepares `github.com/faustbrian/go-opening-hours/v3`; it is not a
 published or release-qualified version. Public Opening v2.0.2 remains
 available under `/v2`, and historical v1 graphs remain independently usable.
