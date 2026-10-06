@@ -5,6 +5,8 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-10-06
+
 ### Changed
 
 - Prepare `github.com/faustbrian/go-opening-hours/v4` with public Wire v3.0.0.
