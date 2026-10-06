@@ -5,6 +5,15 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Prepare `github.com/faustbrian/go-opening-hours/v4` with public Wire v3.0.0.
+  Migrate all Opening imports to `/v4` and Wire imports to `/v3` together:
+  canonical and retained `WireFormat` constants now use Wire v3's named
+  `Format` type. Canonical JSON version 1, strict decoding, schedule behavior,
+  and distinct compatibility codecs remain unchanged; see the
+  [v4 migration guide](docs/v4-migration.md).
+
 ## [3.0.0] - 2026-10-05
 
 ### Changed

@@ -1,14 +1,14 @@
 // Package openinghoursconfig is the compatibility path for
-// [github.com/faustbrian/go-opening-hours/v3/adapters/config].
+// [github.com/faustbrian/go-opening-hours/v4/adapters/config].
 //
-// Deprecated: use github.com/faustbrian/go-opening-hours/v3/adapters/config.
+// Deprecated: use github.com/faustbrian/go-opening-hours/v4/adapters/config.
 // This package remains supported for the longer of 180 days after successor
 // public availability and two subsequently published stable minor releases.
 package openinghoursconfig
 
 import (
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	canonical "github.com/faustbrian/go-opening-hours/v3/adapters/config"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	canonical "github.com/faustbrian/go-opening-hours/v4/adapters/config"
 )
 
 // ErrInvalidValue reports a configuration value that is not canonical JSON

@@ -1,8 +1,8 @@
 # Compatibility
 
 The minimum supported compiler is Go 1.27.0, the latest stable release at
-implementation time. Prepared v3 uses `api/v3.txt`; historical
-`api/baseline.txt` remains unchanged. Breaking changes require a new major
+implementation time. Prepared v4 uses `api/v4.txt`; historical
+`api/baseline.txt` and `api/v3.txt` remain unchanged. Breaking changes require a new major
 release. Public v2.0.2 is available
 at `github.com/faustbrian/go-opening-hours/v2`; published v1.1.0 remains
 available under its original module path. The intentional provenance validation
@@ -10,9 +10,9 @@ change and import migration are described in [v2 migration](v2-migration.md).
 The exposed v2.0.0 Git tag remains immutable; it is not a verified stable
 release. V2.0.1 is the validated replacement release, not a rewritten tag.
 
-Main prepares v3 with Calendar2, Temporal2 and Validation2 nominal types.
-Public dependency resolution is verified. Opening v3 release qualification
-remains pending; see [v3 preparation](v3-migration.md).
+Main prepares v4 with Wire3, Calendar2, Temporal2 and Validation2 nominal
+types. Opening v3.0.0 remains available under `/v3`; Opening v4 release
+qualification remains pending; see [v4 preparation](v4-migration.md).
 
 Canonical wire version is `1`. Decoders reject other versions. Canonical bytes
 are stable for semantically identical construction order within the same wire

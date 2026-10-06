@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	configdecode "github.com/faustbrian/go-config/v2/decode"
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	"github.com/faustbrian/go-opening-hours/v3/openinghoursconfig"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	"github.com/faustbrian/go-opening-hours/v4/openinghoursconfig"
 )
 
 func TestParse(t *testing.T) {

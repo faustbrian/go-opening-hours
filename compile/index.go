@@ -6,7 +6,7 @@ package compile
 import (
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
 )
 
 // Index is safe for concurrent reads because Schedule is immutable.

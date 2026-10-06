@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	"github.com/faustbrian/go-opening-hours/v3/compile"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	"github.com/faustbrian/go-opening-hours/v4/compile"
 )
 
 func TestMaximumCompositionPreservesCanonicalAndCompiledQueries(t *testing.T) {

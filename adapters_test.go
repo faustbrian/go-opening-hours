@@ -7,11 +7,11 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar/v2"
 	clock "github.com/faustbrian/go-clock"
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	openinghoursconfig "github.com/faustbrian/go-opening-hours/v3/adapters/config"
-	openinghoursvalidation "github.com/faustbrian/go-opening-hours/v3/adapters/validation"
-	openinghourswire "github.com/faustbrian/go-opening-hours/v3/adapters/wire"
-	openinghoursencoding "github.com/faustbrian/go-opening-hours/v3/encoding"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghoursconfig "github.com/faustbrian/go-opening-hours/v4/adapters/config"
+	openinghoursvalidation "github.com/faustbrian/go-opening-hours/v4/adapters/validation"
+	openinghourswire "github.com/faustbrian/go-opening-hours/v4/adapters/wire"
+	openinghoursencoding "github.com/faustbrian/go-opening-hours/v4/encoding"
 )
 
 type fixedClock struct{ now time.Time }

@@ -10,10 +10,16 @@ import (
 	"sync"
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v3"
-	openinghourswire "github.com/faustbrian/go-opening-hours/v3/adapters/wire"
-	legacy "github.com/faustbrian/go-opening-hours/v3/openinghourswire"
-	wire "github.com/faustbrian/go-wire"
+	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghourswire "github.com/faustbrian/go-opening-hours/v4/adapters/wire"
+	legacy "github.com/faustbrian/go-opening-hours/v4/openinghourswire"
+	wire "github.com/faustbrian/go-wire/v3"
+)
+
+// These assignments preserve the public nominal identity, not only its string value.
+var (
+	_ wire.Format = openinghourswire.WireFormat
+	_ wire.Format = legacy.WireFormat
 )
 
 func TestCodecRoundTripAndNamedIdentity(t *testing.T) {
