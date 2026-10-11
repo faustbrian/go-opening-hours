@@ -34,12 +34,14 @@ depth cap.
 The prepared `compile.Index` owns an immutable canonical copy and relies on the
 root's sorted exception index. It has no cache, lock, or cleanup lifecycle.
 
-The shared `golib check` benchmark gate runs the seven benchmark categories:
+The explicit `make check-full` benchmark gate runs the seven benchmark categories:
 construction, normalization, daily lookup, transition search, large exception
 sets, composition, and canonical encoding. Results are machine-specific and
 are not contractual latency guarantees.
 
-Mutation testing runs in a disposable repository copy and enforces a minimum
-score of 0.65. Override `MUTATION_MIN_SCORE` only to raise the release threshold;
-lowering it changes the repository's release policy and must be reviewed like
-any other gate change.
+Mutation testing remains explicit local or selected scheduled/release assurance,
+not an ordinary PR prerequisite. The public verifier uses a disposable
+repository copy and retains the mutation imports declared in `.golib.yaml`;
+this routing change does not change the full mutation contract.
+See [contributor verification](../CONTRIBUTING.md#verification) for a focused
+optional package selection and the full qualification boundary.

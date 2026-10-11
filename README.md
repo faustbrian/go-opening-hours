@@ -3,7 +3,7 @@
 [![CI](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml)
 [![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
-[![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Mutation](https://img.shields.io/badge/mutation-local_and_scheduled-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-opening-hours?sort=semver)](https://github.com/faustbrian/go-opening-hours/releases)
@@ -127,14 +127,15 @@ and its [Domain utilities family](https://github.com/faustbrian/go-library-tools
 ## Local verification
 
 ```sh
-make check
+go test ./...
 ```
 
-`make check` runs the complete shared-library contract, including formatting,
-tests, race detection, exact coverage, mutation verification, fuzzing,
-benchmarks, API compatibility, documentation, security, and the typed timezone
-regression operation. Package-specific services are task-owned by the shared
-tool; PostgreSQL integration is enabled by the module manifest.
+`make check` and `make ci` use bounded local checks with the pinned public
+verifier; `make check-full` retains full assurance. The manifest-aware Make
+route retains PostgreSQL and integration-tag requirements, unlike untagged Go
+tests. See [contributor verification](CONTRIBUTING.md#verification) for fuzz
+seeds versus active exploration, optional local mutation and timezone/database
+qualification.
 
 ## Support and policy
 
