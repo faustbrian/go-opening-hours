@@ -1,6 +1,10 @@
 // Package compile provides an immutable prepared schedule handle for repeated
 // queries. The current implementation relies on the root schedule's bounded
 // sorted exception index and adds no cache, lock, goroutine, or global state.
+// Use New to validate/copy canonical representation, then query the value.
+// Zero Index wraps a closed zero schedule. There is no performance improvement
+// claim beyond delegation; timezone data and pointer receiver ownership remain
+// those of the root package.
 package compile
 
 import (

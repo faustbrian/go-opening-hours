@@ -13,7 +13,10 @@ func (s Schedule) Value() (driver.Value, error) {
 }
 
 // Scan implements sql.Scanner for JSON/JSONB bytes, strings, and NULL. NULL
-// produces the fail-closed zero schedule.
+// produces the fail-closed zero schedule. Non-nil input is bounded to MaxJSONBytes
+// and decoded before assignment, leaving the previous receiver unchanged on
+// failure. A nil receiver returns CodeInvalidState. Calls mutate caller storage
+// and need external synchronization; no DB or connection lifecycle is owned.
 func (s *Schedule) Scan(source any) error {
 	if s == nil {
 		return newError("scan", CodeInvalidState)

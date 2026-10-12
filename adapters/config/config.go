@@ -1,6 +1,9 @@
 // Package openinghoursconfig adapts canonical schedule documents from
 // configuration sources while leaving environment and file ownership to the
 // caller.
+// Use Parse for a bounded document or NewValue for the config value seam.
+// Returned schedules are immutable, but decoding mutates Value and needs
+// external synchronization; this package performs no environment or file IO.
 package openinghoursconfig
 
 import (
@@ -32,7 +35,9 @@ func NewValue(schedule openinghours.Schedule) Value { return Value{schedule: sch
 // Schedule returns the decoded immutable schedule.
 func (value Value) Schedule() openinghours.Schedule { return value.schedule }
 
-// UnmarshalConfigValue decodes canonical JSON text supplied by config.
+// UnmarshalConfigValue accepts only a string and assigns after successful Parse.
+// Nil receiver/non-string inputs return ErrInvalidValue; parse errors propagate
+// without replacing the old schedule. Callers synchronize mutable Value access.
 func (value *Value) UnmarshalConfigValue(input any) error {
 	if value == nil {
 		return ErrInvalidValue

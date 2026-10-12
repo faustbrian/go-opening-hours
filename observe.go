@@ -29,19 +29,30 @@ const (
 // Observation contains only bounded operational data. It intentionally has no
 // schedule label, source, revision, date, timezone, or customer fields.
 type Observation struct {
-	Operation   Operation
-	Outcome     Outcome
-	RangeCount  int
+	// Operation identifies the observed query or search.
+	Operation Operation
+	// Outcome records success classification or an error without embedding diagnostic text.
+	Outcome Outcome
+	// RangeCount is the number of separately evaluated effective fragments for ObserveIsOpen, or
+	// zero if unavailable.
+	RangeCount int
+	// SearchSteps is a horizon-based estimate capped at 367, not a measured count of candidate
+	// evaluations.
 	SearchSteps int
-	Duration    time.Duration
+	// Duration is caller-supplied elapsed measurement; absent/panicking capabilities report zero.
+	Duration time.Duration
 }
 
 // Observer receives one completed observation outside any lock. Panics are
-// contained and cannot alter the query result.
+// contained and cannot alter the query result. Nil is ignored. Calls are
+// synchronous: blocking code has no cancellation bound and remains caller-owned;
+// concurrent observations may invoke the observer concurrently.
 type Observer func(Observation)
 
 // ObserveIsOpen runs IsOpen and reports bounded operational data. A nil clock
-// disables elapsed measurement and reports a zero duration.
+// disables elapsed measurement and reports a zero duration. Typed nil, panic or
+// a nil measurement also means zero. Measurement covers IsOpen itself, excluding
+// the separate RangeCount query and observer callback; collaborator work may block.
 func (s Schedule) ObserveIsOpen(instant time.Time, elapsedClock ElapsedClock, observer Observer) (Availability, error) {
 	elapsed := measureElapsed(elapsedClock)
 	result, err := s.IsOpen(instant)
@@ -69,7 +80,9 @@ func (s Schedule) ObserveIsOpen(instant time.Time, elapsedClock ElapsedClock, ob
 }
 
 // ObserveNextTransition runs a bounded transition search and reports its
-// outcome. A nil clock disables elapsed measurement and reports a zero duration.
+// outcome. A nil/panicking elapsed capability reports zero duration. SearchSteps
+// estimates horizon-day cardinality rather than actual candidate visits; observer
+// callback work is outside the measured query and remains synchronous.
 func (s Schedule) ObserveNextTransition(instant time.Time, horizon time.Duration, elapsedClock ElapsedClock, observer Observer) (Transition, error) {
 	elapsed := measureElapsed(elapsedClock)
 	result, err := s.NextTransition(instant, horizon)

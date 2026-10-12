@@ -28,17 +28,25 @@ const (
 	RuleOutsideEffective
 )
 
-// Explanation reports bounded, non-sensitive rule provenance.
+// Explanation reports bounded caller-supplied rule provenance, not a complete
+// causal trace or automatic redaction. Do not put secret data in identities.
 type Explanation struct {
-	Rule     RuleKind
+	// Rule identifies the broad rule source, not a complete decision trace.
+	Rule RuleKind
+	// Timezone is the schedule zone name, empty for a zero schedule.
 	Timezone string
-	Source   string
+	// Source is the final applied exception's caller-supplied provenance, not secret-redacted text.
+	Source string
+	// Revision is that final exception's opaque revision, not authenticated proof.
 	Revision string
 }
 
 // Availability is the explained result of a point query.
 type Availability struct {
-	Open        bool
+	// Open reports availability at the queried instant; ranges are start-inclusive/end-exclusive.
+	Open bool
+	// Explanation describes the broad source even for closed outcomes; exception provenance
+	// names the last operation, not every contributor.
 	Explanation Explanation
 }
 
@@ -114,6 +122,9 @@ func (s Schedule) effectiveSegments(date Date) ([]segment, []Exception, error) {
 	if validDate(previousDate) {
 		previousOwned = s.ownedSegments(previousDate)
 	}
+	// Evaluate yesterday's owned exceptions before importing its spill, then
+	// apply today's exceptions to the union. Otherwise a current-date closure
+	// could accidentally leave an overnight opening visible.
 	spillSegments := clipSegments(previousOwned, nanosecondsPerDay, 2*nanosecondsPerDay, -nanosecondsPerDay)
 	combined := unionSegments(current, spillSegments)
 	exceptions := s.exceptionsFor(date)
@@ -135,6 +146,9 @@ func (s Schedule) spillContains(date Date, point int64) bool {
 	return contains(spill, point)
 }
 
+// Overlay uses explicitness, not just openness: explicit closed masks a whole
+// date, inherited leaves the left untouched except for incoming right spill.
+// TestOverlayIncomingSpillOverridesOnlySpillInterval protects the spill mask.
 func (s Schedule) overlayMask(date Date) ([]segment, error) {
 	inside, err := s.withinEffective(date)
 	if err != nil {

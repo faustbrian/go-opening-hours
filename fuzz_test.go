@@ -7,6 +7,7 @@ import (
 	openinghours "github.com/faustbrian/go-opening-hours/v4"
 )
 
+// FuzzParseJSON feeds arbitrary bytes into the bounded parser; every accepted schedule must canonically reparse with Equal identity. There is no separate harness size cap.
 func FuzzParseJSON(f *testing.F) {
 	schedule, _ := openinghours.NewSchedule(openinghours.Config{Timezone: "UTC"})
 	canonical, _ := schedule.CanonicalJSON()
@@ -28,6 +29,7 @@ func FuzzParseJSON(f *testing.F) {
 	})
 }
 
+// FuzzTextAndSQLScan requires text, SQL bytes and SQL strings to agree on acceptance and accepted representation; parser/scanner limits own admission.
 func FuzzTextAndSQLScan(f *testing.F) {
 	schedule, _ := openinghours.NewSchedule(openinghours.Config{Timezone: "UTC"})
 	canonical, _ := schedule.MarshalText()
@@ -47,6 +49,7 @@ func FuzzTextAndSQLScan(f *testing.F) {
 	})
 }
 
+// FuzzRangeConstruction feeds arbitrary endpoint components, checks equal endpoints are rejected and valid distinct endpoints remain exact.
 func FuzzRangeConstruction(f *testing.F) {
 	f.Add(9, 0, 17, 0)
 	f.Add(22, 0, 2, 0)
@@ -69,6 +72,7 @@ func FuzzRangeConstruction(f *testing.F) {
 	})
 }
 
+// FuzzLocalResolution feeds valid civil components into Helsinki reject/shift policies without panic; it is not an independent all-IANA conformance oracle.
 func FuzzLocalResolution(f *testing.F) {
 	f.Add(2026, int(time.March), 29, 3, 30)
 	f.Fuzz(func(t *testing.T, year, month, day, hour, minute int) {
@@ -86,6 +90,7 @@ func FuzzLocalResolution(f *testing.F) {
 	})
 }
 
+// FuzzScheduleConstruction varies weekday bytes while reducing state/policy to supported enums; it exercises constructor admission, not unsupported policy bytes.
 func FuzzScheduleConstruction(f *testing.F) {
 	f.Add(uint8(time.Monday), uint8(openinghours.DayClosed), uint8(openinghours.RejectOverlap))
 	f.Fuzz(func(t *testing.T, weekday, state, policy uint8) {
@@ -110,6 +115,7 @@ func FuzzScheduleConstruction(f *testing.F) {
 	})
 }
 
+// FuzzCompositionAndBoundedSearch constructs a bounded UTC union from modulo-24 hours and searches a 1–48-hour horizon; it checks panic-free successful composition, not completeness of found transitions.
 func FuzzCompositionAndBoundedSearch(f *testing.F) {
 	f.Add(uint8(9), uint8(17), uint8(24))
 	f.Fuzz(func(t *testing.T, startHour, endHour, horizonHours uint8) {

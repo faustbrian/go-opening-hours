@@ -1,4 +1,7 @@
 // Package openinghourswire adapts schedules to byte-oriented wire registries.
+// Use the stateless Codec and WireFormat for wire-edition 1 JSON. This adapter
+// owns no registry registration, transport, authentication or resource close
+// lifecycle; encoding contains caller provenance and decoding borrows input.
 package openinghourswire
 
 import (

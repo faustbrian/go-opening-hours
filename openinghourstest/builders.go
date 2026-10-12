@@ -1,4 +1,7 @@
-// Package openinghourstest provides panic-on-error builders for static tests.
+// Package openinghourstest provides fail-the-test builders for static fixtures.
+// Use Time, Range and Weekly with a nonnil testing.TB; failures call Fatalf
+// rather than panic. Weekly constructs UTC values and the helpers own no
+// external fixtures or cleanup lifecycle.
 package openinghourstest
 
 import (

@@ -77,7 +77,10 @@ var weekdayNames = [...]string{
 	"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
 }
 
-// CanonicalJSON returns stable, compact, versioned JSON.
+// CanonicalJSON returns new stable compact wire-edition 1 JSON bytes, bounded by
+// MaxJSONBytes after encoding. They include caller metadata/exception provenance,
+// not automatically redacted content. Stability is representation identity, not
+// frozen timezone rules, authentication or arbitrary algebraic equivalence.
 func (s Schedule) CanonicalJSON() ([]byte, error) {
 	encoded, _ := json.Marshal(s.toWire()) // wireSchedule has no failing JSON values.
 	if len(encoded) > MaxJSONBytes {
@@ -203,7 +206,13 @@ func formatLocalTime(localTime LocalTime) string {
 	return base + "." + strings.TrimRight(fmt.Sprintf("%09d", localTime.Nanosecond()), "0")
 }
 
-// ParseJSON strictly parses a bounded canonical schedule document.
+// ParseJSON accepts one UTF-8 wire-edition 1 document of at most MaxJSONBytes,
+// rejecting duplicate keys, unknown fields, excess nesting and invalid evaluated
+// schedule fields. A zero-schedule envelope ignores metadata/effective/outside
+// values; compositions reconstruct operand policies rather than outer wrapper
+// fields. It borrows input only during the call. Accepted whitespace/key ordering
+// need not be canonical bytes; CanonicalJSON normalizes them. Errors return zero
+// without rendering input data.
 func ParseJSON(data []byte) (Schedule, error) {
 	if len(data) > MaxJSONBytes || !utf8.Valid(data) || validateJSON(data) != nil {
 		return Schedule{}, newError("parse json", CodeInvalidEncoding)
@@ -527,7 +536,9 @@ func (s Schedule) Compare(other Schedule) (int, error) {
 	return bytes.Compare(left, right), nil
 }
 
-// Hash returns the SHA-256 hash of the canonical schedule encoding.
+// Hash returns the unkeyed SHA-256 of the canonical representation, including
+// provenance/tree shape, or all-zero bytes when encoding exceeds limits. It is
+// neither authentication nor proof of equivalent evaluated availability.
 func (s Schedule) Hash() [sha256.Size]byte {
 	encoded, err := s.CanonicalJSON()
 	if err != nil {
@@ -540,7 +551,9 @@ func (s Schedule) Hash() [sha256.Size]byte {
 // MarshalJSON implements json.Marshaler with the canonical encoding.
 func (s Schedule) MarshalJSON() ([]byte, error) { return s.CanonicalJSON() }
 
-// UnmarshalJSON implements json.Unmarshaler using the strict parser.
+// UnmarshalJSON decodes before replacing caller-owned storage; any error leaves
+// the receiver unchanged. Nil returns CodeInvalidState and concurrent receiver
+// mutation requires external synchronization.
 func (s *Schedule) UnmarshalJSON(data []byte) error {
 	if s == nil {
 		return newError("unmarshal json", CodeInvalidState)
@@ -560,7 +573,8 @@ func (s Schedule) MarshalText() ([]byte, error) { return s.CanonicalJSON() }
 // UnmarshalText implements encoding.TextUnmarshaler using the strict parser.
 func (s *Schedule) UnmarshalText(data []byte) error { return s.UnmarshalJSON(data) }
 
-// String returns canonical JSON or a bounded error marker.
+// String returns canonical JSON, including caller metadata/provenance, or a
+// fixed error marker. It is not a secret-safe logging/redaction representation.
 func (s Schedule) String() string {
 	encoded, err := s.CanonicalJSON()
 	if err != nil {

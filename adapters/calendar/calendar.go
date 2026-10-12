@@ -1,5 +1,8 @@
 // Package openinghourscalendar adapts calendar civil dates and bounded
 // business-calendar holidays to opening-hours values.
+// Use HolidayClosures with an explicit traversal bound; calendars, holiday
+// datasets and synchronous calendar work remain caller-owned. No clock,
+// network lookup or connection lifecycle is started by this adapter.
 package openinghourscalendar
 
 import (
@@ -35,7 +38,10 @@ func ToDate(date openinghours.Date) (calendar.Date, error) {
 }
 
 // HolidayClosures resolves holidays in an inclusive, explicitly bounded civil
-// date range to deterministic exact-date closure exceptions.
+// date range to deterministic exact-date closure exceptions. maximumDates bounds
+// all traversed dates, not just holidays, and must be 1–MaxExceptions. No partial
+// exceptions are returned on failure; priority/provenance errors are observed
+// only when a holiday exception is constructed. Calendar work is synchronous.
 func HolidayClosures(businessCalendar business.Calendar, start, end calendar.Date,
 	maximumDates, priority int, source string,
 ) ([]openinghours.Exception, error) {

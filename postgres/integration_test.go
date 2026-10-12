@@ -12,6 +12,9 @@ import (
 	openinghours "github.com/faustbrian/go-opening-hours/v4"
 )
 
+// This tagged test exercises a real server, unlike the in-process pgx codec
+// fixtures. Background contexts supply no per-operation cancellation; the caller
+// owns disposable service credentials and the enclosing test-process budget.
 func TestLivePostgreSQLJSONBRoundTrip(t *testing.T) {
 	url := os.Getenv("POSTGRES_URL")
 	if url == "" {

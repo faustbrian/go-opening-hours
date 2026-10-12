@@ -9,7 +9,7 @@ in `[00:00,24:00)`. `00:00-00:00` is invalid; full-day opening is a state.
 | --- | --- | --- |
 | inherited or omitted weekday | `Inherited` or zero `DayRule` | inherited; closed without a lower source |
 | empty ranged input | `OpenRanges([]Range{}, ...)` | `CodeLimitExceeded`; never all-day |
-| explicit closure | `Closed` | closed, even when lower-precedence spill exists |
+| explicit weekly closure | `Closed` | no opening owned today; preceding-date spill can still arrive until a dated close removes it |
 | full day | `OpenAllDay` | one explicit all-day state, not `00:00-00:00` |
 | single ordinary range | any valid overlap policy | one `[start,end)` range |
 | multiple disjoint ranges | any valid overlap policy | sorted by start then end |

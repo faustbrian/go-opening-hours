@@ -9,13 +9,17 @@ import (
 
 // Slot is a strict structured local-time interval.
 type Slot struct {
+	// From is a local time accepted by the Go 15:04 parser, without a date or zone.
 	From string `json:"from"`
-	To   string `json:"to"`
+	// To is the exclusive local endpoint; an earlier endpoint represents overnight ownership.
+	To string `json:"to"`
 }
 
 // ImportLimits makes structured input cardinality explicit.
 type ImportLimits struct {
-	MaximumDays         int
+	// MaximumDays must be 1–7; it bounds the provided weekday map cardinality, not an elapsed horizon.
+	MaximumDays int
+	// MaximumRangesPerDay must be 1–MaxRangesPerDay; zero limits do not select defaults.
 	MaximumRangesPerDay int
 }
 
@@ -62,7 +66,9 @@ func ImportLocation(timezone string, days map[string][]Slot, limits ImportLimits
 }
 
 // ImportSpatie imports strict Spatie weekday arrays. Carrier prose and variable
-// formats are intentionally excluded; only lossless HH:MM-HH:MM values pass.
+// formats are intentionally excluded. It requires exactly one hyphen separator
+// and time-only endpoints accepted by Go's 15:04 parser, then normalizes into
+// copied schedule rules. Limits are explicit, not automatically defaulted.
 func ImportSpatie(timezone string, days map[string][]string, limits ImportLimits) (openinghours.Schedule, error) {
 	if err := admitImportDays(len(days), limits); err != nil {
 		return openinghours.Schedule{}, err
@@ -101,8 +107,12 @@ func admitImportDays(count int, limits ImportLimits) error {
 }
 
 // ImportError is bounded and never includes source payload data.
-type ImportError struct{ Kind string }
+type ImportError struct {
+	// Kind is the fixed admission category for package-created errors; custom values are caller-owned.
+	Kind string
+}
 
+// Error renders Kind without source input; a nil receiver is not supported.
 func (e *ImportError) Error() string { return "opening hours import: " + e.Kind }
 
 func importRange(from, to string) (openinghours.Range, error) {

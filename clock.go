@@ -15,7 +15,9 @@ type Clock = clock.Clock
 // helpers accept it separately so measuring a query never reads wall time.
 type ElapsedClock = clock.ElapsedClock
 
-// IsOpenNow evaluates an injected clock's current instant.
+// IsOpenNow evaluates an injected clock's current instant. Nil/typed-nil
+// capabilities and panicking Now calls return CodeInvalidClock without exposing
+// panic data. The synchronous borrowed clock may block and is not canceled.
 func (s Schedule) IsOpenNow(clock Clock) (Availability, error) {
 	if isNilCapability(clock) {
 		return Availability{}, newError("is open now", CodeInvalidClock)

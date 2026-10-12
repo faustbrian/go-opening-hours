@@ -1,5 +1,8 @@
 // Package openinghoursconfig is the compatibility path for
 // [github.com/faustbrian/go-opening-hours/v4/adapters/config].
+// Calls delegate to the canonical adapter with the same ownership/resource
+// limits; path-specific named types and shared sentinel identities are retained.
+// No external source or background lifecycle is added here.
 //
 // Deprecated: use github.com/faustbrian/go-opening-hours/v4/adapters/config.
 // This package remains supported for the longer of 180 days after successor
@@ -31,7 +34,9 @@ func NewValue(schedule openinghours.Schedule) Value {
 // Schedule returns the decoded immutable schedule.
 func (value Value) Schedule() openinghours.Schedule { return value.value.Schedule() }
 
-// UnmarshalConfigValue decodes canonical JSON text supplied by config.
+// UnmarshalConfigValue delegates through a temporary value, leaving the previous
+// schedule unchanged on any failure. Nil returns ErrInvalidValue; mutable Value
+// access requires caller synchronization.
 func (value *Value) UnmarshalConfigValue(input any) error {
 	if value == nil {
 		return ErrInvalidValue

@@ -27,7 +27,9 @@ are:
 | canonical adapters | `adapters/calendar`, `adapters/config`, `adapters/temporal`, `adapters/validation`, `adapters/wire` |
 | compatibility paths | `openinghourscalendar`, `openinghoursconfig`, `openinghourstemporal`, `openinghoursvalidation`, `openinghourswire` |
 
-Every constructor returns a typed package `Error` category through `IsCode`.
+Root constructors with error results return typed package `Error` categories
+through `IsCode`; `MustDate` panics on invalid static input and adapter errors
+retain their own documented identities.
 Errors contain an operation and stable code only; they do not embed source
 documents or schedules. Limits include `MaxRangesPerDay` (64 ranges/day),
 `MaxExceptions` (4,096 exceptions), `MaxJSONBytes` (1 MiB JSON), 16 composition

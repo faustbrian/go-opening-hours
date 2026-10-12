@@ -1,5 +1,8 @@
 // Package openinghourscalendar is the compatibility path for
 // [github.com/faustbrian/go-opening-hours/v4/adapters/calendar].
+// Calls delegate to the canonical adapter with the same ownership/resource
+// limits; path-specific named types and shared sentinel identities are retained.
+// No external source or background lifecycle is added here.
 //
 // Deprecated: use github.com/faustbrian/go-opening-hours/v4/adapters/calendar.
 // This package remains supported for the longer of 180 days after successor

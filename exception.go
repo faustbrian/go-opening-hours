@@ -38,12 +38,20 @@ const (
 
 // ExceptionConfig is copied by NewException.
 type ExceptionConfig struct {
-	Date      Date
+	// Date is the exact owned civil date.
+	Date Date
+	// Operation selects replace/add/subtract/close; zero selects replace.
 	Operation ExceptionOperation
-	Rule      DayRule
-	Priority  int
-	Source    string
-	Revision  string
+	// Rule supplies ranged/all-day availability except close, which requires the zero inherited rule.
+	Rule DayRule
+	// Priority is from -1000000 through 1000000; later, higher-priority operations are applied
+	// after earlier ones.
+	Priority int
+	// Source is required UTF-8 provenance of 1–128 bytes, not authenticated authority.
+	Source string
+	// Revision is required UTF-8 provenance of 1–128 bytes; source/revision must be unique per
+	// date in a schedule.
+	Revision string
 }
 
 // Exception is an immutable exact-date availability operation.
@@ -121,15 +129,26 @@ func (set ExceptionSet) Exceptions() []Exception {
 
 // ExceptionRangeConfig expands a bounded inclusive civil-date range.
 type ExceptionRangeConfig struct {
-	Name         string
-	Start        Date
-	End          Date
+	// Name is the required UTF-8 set identity of 1–128 bytes.
+	Name string
+	// Start is the inclusive first civil date.
+	Start Date
+	// End is the inclusive last civil date, not earlier than Start.
+	End Date
+	// MaximumDates bounds expanded dates to 1–MaxExceptions; exceeding it returns no partial set.
 	MaximumDates int
-	Operation    ExceptionOperation
-	Rule         DayRule
-	Priority     int
-	Source       string
-	Revision     string
+	// Operation selects replace/add/subtract/close; zero selects replace.
+	Operation ExceptionOperation
+	// Rule supplies ranged/all-day availability except close, which requires the zero inherited rule.
+	Rule DayRule
+	// Priority is from -1000000 through 1000000; later, higher-priority operations are applied
+	// after earlier ones.
+	Priority int
+	// Source is required UTF-8 provenance of 1–128 bytes, not authenticated authority.
+	Source string
+	// Revision is required UTF-8 provenance of 1–128 bytes; source/revision must be unique per
+	// date in a schedule.
+	Revision string
 }
 
 // ExpandExceptionRange resolves a multi-day rule to deterministic exact dates.
@@ -162,7 +181,10 @@ func ExpandExceptionRange(config ExceptionRangeConfig) (ExceptionSet, error) {
 	return NewExceptionSet(config.Name, exceptions)
 }
 
-// NewException validates an exact-date exception and its bounded UTF-8 provenance.
+// NewException validates an exact-date operation and copies its rule ranges.
+// Source/revision require 1–128 UTF-8 bytes, not secret-free or authenticated text.
+// Priority is bounded; close requires an inherited rule, while other operations
+// require ranged/all-day rules. Failed admission returns a zero Exception.
 func NewException(config ExceptionConfig) (Exception, error) {
 	if !validDate(config.Date) {
 		return Exception{}, newError("new exception", CodeInvalidDate)
@@ -244,6 +266,9 @@ func normalizeExceptions(input []Exception, policy ConflictPolicy) ([]Exception,
 	return result, nil
 }
 
+// Apply order is ascending priority, then source/revision/operation. Higher
+// priorities run later, rather than selecting only a single winning exception.
+// TestExceptionPrecedenceIsStableAcrossEveryInsertionOrder guards this ordering.
 func compareException(left, right Exception) int {
 	if comparison := compareDate(left.date, right.date); comparison != 0 {
 		return comparison

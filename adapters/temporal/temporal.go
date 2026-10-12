@@ -1,5 +1,8 @@
 // Package openinghourstemporal provides lossless adapters for
 // temporal/timeofday values.
+// Use RangeFromInterval/RuleFromIntervals for input and IntervalFromRange
+// for explicitly selected precision. Conversions retain no input collections
+// and perform no timezone/clock resolution or background work.
 package openinghourstemporal
 
 import (

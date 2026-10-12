@@ -1,6 +1,9 @@
 // Package postgres provides nullable JSONB persistence values. The root
 // Schedule directly implements database/sql and the interfaces selected by
 // pgx JSON/JSONB codecs, so no connection-global type registration is needed.
+// Use New for a valid nullable value, or zero JSONB for SQL NULL. Callers
+// own DB connections, transactions and receiver synchronization; this package
+// opens no service and performs no server migration or type-map registration.
 package postgres
 
 import (
@@ -9,7 +12,9 @@ import (
 	openinghours "github.com/faustbrian/go-opening-hours/v4"
 )
 
-// JSONB is a nullable immutable schedule database value.
+// JSONB is a nullable database wrapper around an immutable Schedule. Zero means
+// SQL NULL, which is distinct from New(Schedule{}), a valid closed schedule.
+// Scan mutates caller-owned wrapper storage; concurrent mutation needs locking.
 type JSONB struct {
 	schedule openinghours.Schedule
 	valid    bool
@@ -34,7 +39,9 @@ func (j JSONB) Value() (driver.Value, error) {
 	return j.schedule.Value()
 }
 
-// Scan implements sql.Scanner and pgx JSONB scanning.
+// Scan implements sql.Scanner/pgx JSONB scanning, copying/decoding before
+// assignment. NULL resets validity; malformed input leaves the prior wrapper
+// unchanged. Nil receivers return the root CodeInvalidState error.
 func (j *JSONB) Scan(source any) error {
 	if j == nil {
 		var schedule *openinghours.Schedule

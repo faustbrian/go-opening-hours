@@ -10,8 +10,11 @@ const maxMetadataBytes = 256
 
 // Metadata carries bounded provenance and has no interval semantics.
 type Metadata struct {
-	Label    string
-	Source   string
+	// Label is caller-supplied UTF-8 text of at most 256 bytes, not automatically redacted.
+	Label string
+	// Source is bounded UTF-8 provenance, not authenticated authority.
+	Source string
+	// Revision is an opaque bounded UTF-8 identity; it is not a content hash or freshness proof.
 	Revision string
 }
 
@@ -60,7 +63,10 @@ func (s Schedule) Metadata() Metadata {
 // Revision returns the opaque bounded revision identifier.
 func (s Schedule) Revision() string { return s.Metadata().Revision }
 
-// SemanticallyEqual compares interval semantics while ignoring metadata only.
+// SemanticallyEqual compares canonical wire representations after clearing
+// schedule metadata recursively. Exception provenance, timezone, effective
+// policies and composition shape remain significant; this is not a proof of
+// arbitrary algebraic/point-set equivalence.
 func (s Schedule) SemanticallyEqual(other Schedule) bool {
 	left := s.toWire()
 	right := other.toWire()

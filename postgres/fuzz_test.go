@@ -8,6 +8,7 @@ import (
 	openinghours "github.com/faustbrian/go-opening-hours/v4"
 )
 
+// FuzzPGXJSONBCodec checks accepted pgx JSONB text plans canonically round-trip with Equal identity; it uses in-process driver plans, not a PostgreSQL server.
 func FuzzPGXJSONBCodec(f *testing.F) {
 	schedule := testSchedule(f)
 	canonical, _ := schedule.CanonicalJSON()

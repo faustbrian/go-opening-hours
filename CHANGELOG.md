@@ -5,6 +5,12 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Clarify copied schedule ownership, boundary-policy DST expansion, adapter
+  admission, representation equality and synchronous observation limits.
+  Stored formats and calendar behavior are unchanged.
+
 ## [4.0.0] - 2026-10-06
 
 ### Changed

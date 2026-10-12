@@ -5,7 +5,10 @@ optional observer afterward. They accept a separate `clock` `ElapsedClock`
 for monotonic duration measurement. Passing a nil elapsed clock explicitly
 disables measurement and reports a zero duration; the package never reads the
 process clock implicitly. Observation fields are limited to operation, outcome,
-range count, bounded search steps, and duration.
+range count, bounded search-step estimate, and duration. `SearchSteps` is derived
+from the horizon (capped at 367), not counted candidate visits; `RangeCount` comes
+from a separate effective-range query. Duration excludes that extra query and
+observer delivery, and trusts the injected elapsed function's value.
 
 No label, source, revision, date, timezone, customer identifier, or schedule
 content is present. Callbacks run without locks. A callback panic is recovered

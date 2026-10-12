@@ -11,15 +11,22 @@ const maxOutputRanges = 8192
 // date. EndAtDayBoundary distinguishes midnight at the end from midnight at
 // the start of the date.
 type DailyRange struct {
-	Start            LocalTime
-	End              LocalTime
+	// Start is the inclusive local/absolute endpoint.
+	Start LocalTime
+	// End is the exclusive endpoint; DailyRange midnight requires EndAtDayBoundary to
+	// distinguish the end of the date.
+	End LocalTime
+	// EndAtDayBoundary marks the date-end midnight represented by zero End, not a zero-length
+	// interval.
 	EndAtDayBoundary bool
 }
 
 // InstantRange is a start-inclusive, end-exclusive absolute interval.
 type InstantRange struct {
+	// Start is the inclusive local/absolute endpoint.
 	Start time.Time
-	End   time.Time
+	// End is the exclusive absolute endpoint.
+	End time.Time
 }
 
 // EffectiveRanges returns normalized availability fragments for one civil date.
@@ -55,7 +62,11 @@ func (s Schedule) EffectiveRanges(date Date) ([]DailyRange, error) {
 }
 
 // EffectiveInstantRanges returns clipped absolute availability within a bounded
-// interval of at most 366 elapsed days.
+// interval of at most 366 elapsed days. Civil fragments are expanded by choosing
+// an earlier opening/later closing in folds and shifting gap boundaries forward;
+// this is a boundary-policy expansion, not point-query sampling. At most 8192
+// collected fragments are admitted before normalization; errors discard partial
+// results. Returned ranges are detached and sorted/merged.
 func (s Schedule) EffectiveInstantRanges(start, end time.Time) ([]InstantRange, error) {
 	if !end.After(start) || end.Sub(start) > maxSearchHorizon {
 		return nil, newError("effective instant ranges", CodeInvalidInterval)
@@ -142,7 +153,9 @@ func earliestInstant(left, right time.Time) time.Time {
 	return right
 }
 
-// OpenDuration returns elapsed open time within a bounded absolute interval.
+// OpenDuration sums elapsed duration of EffectiveInstantRanges' boundary-policy
+// expansion, not nominal wall-clock hours. It inherits that method's bounds and
+// DST interpretation, which may differ from independently sampled point queries.
 func (s Schedule) OpenDuration(start, end time.Time) (time.Duration, error) {
 	ranges, err := s.EffectiveInstantRanges(start, end)
 	if err != nil {

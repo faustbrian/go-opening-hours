@@ -1,5 +1,8 @@
 // Package encoding exposes the canonical schedule wire contract without
 // shadowing human-readable formatting concerns in the root package.
+// Use Marshal/Unmarshal for wire-edition 1 documents, or ImportLocation and
+// ImportSpatie for bounded weekday structures. The parser normalizes accepted
+// documents; this package owns no provider transport, authorization or file IO.
 package encoding
 
 import openinghours "github.com/faustbrian/go-opening-hours/v4"

@@ -20,13 +20,20 @@ const (
 
 // Transition is an explained availability boundary.
 type Transition struct {
-	Instant     time.Time
-	Kind        TransitionKind
+	// Instant is the selected absolute boundary.
+	Instant time.Time
+	// Kind reports availability immediately after the boundary.
+	Kind TransitionKind
+	// Explanation is post-boundary provenance for forward searches; PreviousTransition uses
+	// pre-boundary provenance for closing.
 	Explanation Explanation
 }
 
-// NextTransition finds the first availability boundary strictly after instant.
-// The horizon must be positive and no greater than 366 elapsed days.
+// NextTransition finds the first resolved civil-range endpoint after instant
+// whose before/after IsOpen values differ. The horizon is positive and at most
+// 366 elapsed days; exhaustion returns CodeSearchExhausted. It does not enumerate
+// timezone-offset jumps or every fold occurrence, so it can omit wall-membership
+// changes at those instants. See docs/timezones.md for the documented fold limit.
 func (s Schedule) NextTransition(instant time.Time, horizon time.Duration) (Transition, error) {
 	if horizon <= 0 || horizon > maxSearchHorizon {
 		return Transition{}, newError("next transition", CodeInvalidHorizon)
@@ -88,12 +95,14 @@ func (s Schedule) NextTransition(instant time.Time, horizon time.Duration) (Tran
 	return Transition{}, newError("next transition", CodeSearchExhausted)
 }
 
-// NextOpening finds the first opening boundary strictly after instant.
+// NextOpening selects the next opening among NextTransition's endpoint
+// candidates within the same bounded horizon; it inherits its fold-search limit.
 func (s Schedule) NextOpening(instant time.Time, horizon time.Duration) (Transition, error) {
 	return s.nextTransitionOfKind(instant, horizon, TransitionOpen)
 }
 
-// NextClosing finds the first closing boundary strictly after instant.
+// NextClosing selects the next closing among NextTransition's endpoint
+// candidates within the same bounded horizon; it inherits its fold-search limit.
 func (s Schedule) NextClosing(instant time.Time, horizon time.Duration) (Transition, error) {
 	return s.nextTransitionOfKind(instant, horizon, TransitionClose)
 }
@@ -126,8 +135,11 @@ func advanceTransitionCursor(cursor time.Time, transition Transition, deadline t
 	return transition.Instant
 }
 
-// PreviousTransition finds the nearest availability boundary strictly before
-// instant within a positive horizon of at most 366 elapsed days.
+// PreviousTransition finds the nearest resolved endpoint before instant whose
+// before/after IsOpen values differ, within a positive horizon of at most 366
+// elapsed days. Like NextTransition, it does not enumerate timezone-offset jumps
+// or every fold occurrence and can omit changes there. Closing explanations use
+// the pre-boundary result; opening explanations use the post-boundary result.
 func (s Schedule) PreviousTransition(instant time.Time, horizon time.Duration) (Transition, error) {
 	if horizon <= 0 || horizon > maxSearchHorizon {
 		return Transition{}, newError("previous transition", CodeInvalidHorizon)
@@ -189,6 +201,10 @@ func (s Schedule) PreviousTransition(instant time.Time, horizon time.Duration) (
 	return Transition{}, newError("previous transition", CodeSearchExhausted)
 }
 
+// Interval expansion resolves folds to an earlier opening/later closing and
+// shifts gaps forward, unlike caller-selected ResolveLocal policy. Point queries
+// still evaluate wall membership independently; do not equate this boundary
+// expansion with enumerating every possible timezone-offset transition.
 func (s Schedule) resolveBoundary(date Date, nanosecond int64, opening bool) (time.Time, error) {
 	if nanosecond == nanosecondsPerDay {
 		var err error

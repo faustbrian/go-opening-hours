@@ -41,4 +41,4 @@ together rather than mixing the two named types.
 | Location | weekday `{from,to}` slots | split ranges and explicit closure |
 | Track | shared Location slots | start-inclusive/end-exclusive boundary |
 | Postal | shared Location slots | owner-day overnight spill and closing |
-| Spatie | strict `HH:MM-HH:MM` arrays | weekday opening and closed empty day |
+| Spatie | single-hyphen time-only arrays parsed with Go `15:04` endpoints | weekday opening and closed empty day |

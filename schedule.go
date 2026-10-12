@@ -50,7 +50,10 @@ func OpenAllDay() DayRule { return DayRule{state: DayOpenAllDay} }
 // Closed returns an explicit closure rule.
 func Closed() DayRule { return DayRule{state: DayClosed} }
 
-// OpenRanges constructs a canonical ranged rule using the selected policy.
+// OpenRanges copies, validates and normalizes 1–MaxRangesPerDay input ranges
+// under the selected overlap/adjacency policy. Nil/empty input is not all-day.
+// Exactly one midnight-owned 24-hour merge becomes OpenAllDay; other merges
+// spanning 24 civil hours or more return CodeDayBoundaryOverflow.
 func OpenRanges(input []Range, policy OverlapPolicy) (DayRule, error) {
 	if len(input) == 0 || len(input) > MaxRangesPerDay {
 		return DayRule{}, newError("open ranges", CodeLimitExceeded)
@@ -67,6 +70,9 @@ func OpenRanges(input []Range, policy OverlapPolicy) (DayRule, error) {
 	}
 	slices.SortFunc(ranges, compareRange)
 
+	// Owner-day coordinates put an overnight end beyond 24:00. Circular sorting
+	// would conflate next-date spill with intervals owned earlier today; the
+	// overnight policy/overflow tests protect this distinction.
 	type linearRange struct{ start, end int64 }
 	normalized := make([]linearRange, 0, len(ranges))
 	for _, item := range ranges {
@@ -148,14 +154,29 @@ func compareRange(left, right Range) int {
 
 // Config is copied by NewSchedule.
 type Config struct {
-	Timezone         string
-	Weekly           map[time.Weekday]DayRule
-	Exceptions       []Exception
-	ExceptionSets    []ExceptionSet
-	ConflictPolicy   ConflictPolicy
-	Metadata         Metadata
-	EffectiveStart   *Date
-	EffectiveEnd     *Date
+	// Timezone is the explicit location name admitted by calendar/timezone, with no
+	// process-local fallback.
+	Timezone string
+	// Weekly is copied with nested range slices; absent/inherited days are closed without a
+	// lower source.
+	Weekly map[time.Weekday]DayRule
+	// Exceptions is copied and normalized with nested rule slices; total flattened exceptions
+	// must be at most MaxExceptions.
+	Exceptions []Exception
+	// ExceptionSets is flattened into copied exceptions; every set must be named and nonempty.
+	ExceptionSets []ExceptionSet
+	// ConflictPolicy defaults to RejectAmbiguous; ResolveCanonical selects deterministic
+	// equal-priority provenance order.
+	ConflictPolicy ConflictPolicy
+	// Metadata is copied bounded provenance, not secret classification or authentication.
+	Metadata Metadata
+	// EffectiveStart is an optional inclusive civil-date bound; the pointed value is copied.
+	EffectiveStart *Date
+	// EffectiveEnd is an optional inclusive civil-date bound; when both exist, it must not
+	// precede EffectiveStart.
+	EffectiveEnd *Date
+	// OutsideEffective defaults to OutsideClosed; OutsideError rejects evaluation outside
+	// configured dates.
 	OutsideEffective OutsideEffectivePolicy
 }
 
@@ -175,12 +196,18 @@ type scheduleData struct {
 }
 
 // Schedule is an immutable availability value. Its zero value is closed and
-// carries no timezone; it never means always open.
+// carries no timezone; it never means always open. Constructed values may be
+// shared for concurrent queries/algebra. Mutating a caller's *Schedule through
+// Scan/Unmarshal is a distinct ownership boundary requiring synchronization.
 type Schedule struct {
 	data *scheduleData
 }
 
-// NewSchedule validates and copies all caller-owned input.
+// NewSchedule validates and copies caller collections, nested rule slices and
+// effective-date values without retaining mutable input containers. Nil weekly
+// input is permitted. It admits an explicit installed location, at most 64 ranges
+// per day and 4096 total direct/named exceptions; errors return a zero Schedule.
+// Caller inputs must not be modified concurrently during construction.
 func NewSchedule(config Config) (Schedule, error) {
 	location, err := calendartz.LoadLocation(config.Timezone)
 	if err != nil {
@@ -259,12 +286,16 @@ func cloneRule(rule DayRule) DayRule {
 
 // DayResult is a detached result safe for caller mutation.
 type DayResult struct {
-	State  DayState
+	// State is the resolved weekly state, not dated/composed availability.
+	State DayState
+	// Ranges is a detached canonical range slice, safe for caller mutation.
 	Ranges []Range
 }
 
 // Ranges resolves the effective weekly rule for date. Missing and inherited
-// weekly rules are closed because there is no lower-precedence source.
+// weekly rules are closed because there is no lower-precedence source. This is
+// not EffectiveRanges: dated exceptions, incoming spill, composition and
+// effective-date bounds are not evaluated here. Returned ranges are copied.
 func (s Schedule) Ranges(date Date) (DayResult, error) {
 	if !validDate(date) {
 		return DayResult{}, newError("ranges", CodeInvalidDate)

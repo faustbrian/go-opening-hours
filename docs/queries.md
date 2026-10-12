@@ -6,7 +6,8 @@
 - `EffectiveRanges` returns fragments for one civil date.
 - `EffectiveInstantRanges` clips absolute intervals to a caller range.
 - `NextTransition`, `NextOpening`, `NextClosing`, and `PreviousTransition`
-  search strictly beyond/before the supplied instant.
+  search resolved civil-range endpoints strictly beyond/before the supplied
+  instant; they do not enumerate every timezone-offset or fold-occurrence change.
 - `OpenDuration` sums elapsed, not wall-clock, duration.
 
 All instant intervals must be positive and no longer than 366 elapsed days.

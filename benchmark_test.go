@@ -8,6 +8,7 @@ import (
 	openinghours "github.com/faustbrian/go-opening-hours/v4"
 )
 
+// BenchmarkConstruction measures building one Helsinki weekly rule, including location loading and copies; endpoint/rule setup is outside the repeated body.
 func BenchmarkConstruction(b *testing.B) {
 	start, _ := openinghours.NewLocalTime(9, 0, 0, 0)
 	end, _ := openinghours.NewLocalTime(17, 0, 0, 0)
@@ -22,6 +23,7 @@ func BenchmarkConstruction(b *testing.B) {
 	}
 }
 
+// BenchmarkDailyLookup measures one UTC Monday instant query against a prepared schedule; workload size and timezone must match before comparing results.
 func BenchmarkDailyLookup(b *testing.B) {
 	schedule := scheduleWithMonday(b, mustRange(b, 9, 0, 17, 0))
 	instant := time.Date(2026, time.January, 5, 12, 0, 0, 0, time.UTC)
@@ -31,6 +33,7 @@ func BenchmarkDailyLookup(b *testing.B) {
 	}
 }
 
+// BenchmarkTransitionSearch measures one 24-hour UTC forward search on a one-range schedule, not full-horizon or DST performance.
 func BenchmarkTransitionSearch(b *testing.B) {
 	schedule := scheduleWithMonday(b, mustRange(b, 9, 0, 17, 0))
 	instant := time.Date(2026, time.January, 5, 8, 0, 0, 0, time.UTC)
@@ -40,6 +43,7 @@ func BenchmarkTransitionSearch(b *testing.B) {
 	}
 }
 
+// BenchmarkCanonicalEncoding measures JSON allocation/encoding of one weekly UTC rule; it does not include persistence or transport.
 func BenchmarkCanonicalEncoding(b *testing.B) {
 	schedule := scheduleWithMonday(b, mustRange(b, 9, 0, 17, 0))
 	b.ReportAllocs()
@@ -48,6 +52,7 @@ func BenchmarkCanonicalEncoding(b *testing.B) {
 	}
 }
 
+// BenchmarkNormalization measures overlap/adjacency merging of three local ranges; construction of endpoints is outside repeated work.
 func BenchmarkNormalization(b *testing.B) {
 	ranges := []openinghours.Range{
 		mustRange(b, 9, 0, 12, 0), mustRange(b, 11, 0, 14, 0),
@@ -59,6 +64,7 @@ func BenchmarkNormalization(b *testing.B) {
 	}
 }
 
+// BenchmarkLargeExceptionLookup measures one query with 1000 seeded exact-date closures; initialization is excluded by ResetTimer.
 func BenchmarkLargeExceptionLookup(b *testing.B) {
 	exceptions := make([]openinghours.Exception, 1000)
 	start := time.Date(2026, time.January, 1, 0, 0, 0, 0, time.UTC)
@@ -81,6 +87,7 @@ func BenchmarkLargeExceptionLookup(b *testing.B) {
 	}
 }
 
+// BenchmarkComposition measures immutable intersection construction, not expansion/query cost or expression-tree equivalence.
 func BenchmarkComposition(b *testing.B) {
 	left := scheduleWithMonday(b, mustRange(b, 9, 0, 17, 0))
 	right := scheduleWithMonday(b, mustRange(b, 12, 0, 20, 0))

@@ -35,8 +35,10 @@ const (
 
 // ResolvedLocal records the instant and DST classification selected by policy.
 type ResolvedLocal struct {
+	// Instant is the selected absolute time in the schedule location.
 	Instant time.Time
-	Kind    LocalKind
+	// Kind distinguishes exact, selected fold or shifted gap resolution.
+	Kind LocalKind
 }
 
 // IsOpenLocal resolves a civil date and wall-clock time under the explicit DST
@@ -63,7 +65,10 @@ func (s Schedule) IsOpenLocal(date Date, localTime LocalTime, policy LocalResolu
 }
 
 // ResolveLocal converts a civil date and wall-clock time in the schedule zone.
-// Gaps and folds are never resolved without the caller-selected policy.
+// Gaps and folds are never resolved without the caller-selected policy. Exact
+// occurrences succeed under every valid policy. PreferEarlier/PreferLater only
+// select folds; only ShiftForward handles gaps and it rejects folds. A zero
+// Schedule has no zone and fails with CodeInvalidTimezone.
 func (s Schedule) ResolveLocal(date Date, localTime LocalTime, policy LocalResolutionPolicy) (ResolvedLocal, error) {
 	if !validDate(date) {
 		return ResolvedLocal{}, newError("resolve local", CodeInvalidDate)
@@ -108,6 +113,9 @@ func (s Schedule) ResolveLocal(date Date, localTime LocalTime, policy LocalResol
 	return ResolvedLocal{}, newError("resolve local", CodeNonexistentLocalTime)
 }
 
+// Go may normalize a gap to either side. Compare synthetic UTC wall fields to
+// that normalized wall reading, then advance only a negative displacement;
+// TestResolveLocalShiftForwardHandlesZonesNormalizedBeforeTheGap protects this.
 func shiftForwardGap(location *time.Location, date Date, localTime LocalTime) time.Time {
 	wall := time.Date(
 		date.Year(), date.Month(), date.Day(),

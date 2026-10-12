@@ -55,12 +55,16 @@ const (
 	CodeDayBoundaryOverflow Code = "day_boundary_overflow"
 )
 
-// Error is a bounded package error. It never embeds schedule or input data.
+// Error is a typed package diagnostic. Package-created errors use fixed safe
+// operation/category text and never embed schedule or input payloads.
 type Error struct {
+	// Code is the stable failure category; package-created values contain no input payload.
 	Code Code
-	Op   string
+	// Op names the failing operation; callers constructing Error must keep it bounded and secret-safe.
+	Op string
 }
 
+// Error renders the operation/category pair; a nil receiver is not supported.
 func (e *Error) Error() string {
 	return fmt.Sprintf("openinghours: %s: %s", e.Op, e.Code)
 }

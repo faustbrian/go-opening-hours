@@ -41,6 +41,9 @@ func (s Schedule) Overlay(other Schedule) (Schedule, error) {
 	return s.compose(other, compositionOverlay)
 }
 
+// Share immutable operands rather than flattening rule/exception precedence.
+// The wrapper has no inherited metadata/effective bounds of its own; operand
+// evaluation preserves their policies and canonical identity retains tree shape.
 func (s Schedule) compose(other Schedule, operation compositionOperation) (Schedule, error) {
 	if s.data == nil || other.data == nil || s.data.timezone != other.data.timezone {
 		return Schedule{}, newError("compose", CodeTimezoneMismatch)

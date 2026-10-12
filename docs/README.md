@@ -15,6 +15,8 @@ to compare related independently adoptable libraries.
 
 ## Formal contracts
 
+- [Source contract audit](source-documentation-audit.md)
+
 - [API reference](api.md)
 - [Exception precedence](precedence.md)
 - [Normalization and boundaries](normalization.md)
