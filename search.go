@@ -43,8 +43,10 @@ func (s Schedule) NextTransition(instant time.Time, horizon time.Duration) (Tran
 	}
 	deadline := instant.Add(horizon)
 
-	localized := instant.In(s.data.location)
-	date, _ := NewDate(localized.Year(), localized.Month(), localized.Day())
+	date, err := s.instantDate(instant)
+	if err != nil {
+		return Transition{}, err
+	}
 	localizedDeadline := deadline.In(s.data.location)
 	lastDate, _ := NewDate(localizedDeadline.Year(), localizedDeadline.Month(), localizedDeadline.Day())
 	transitions, err := s.transitionCandidates(date, lastDate, instant, deadline)
@@ -134,8 +136,10 @@ func (s Schedule) PreviousTransition(instant time.Time, horizon time.Duration) (
 		return Transition{}, newError("previous transition", CodeSearchExhausted)
 	}
 	oldest := instant.Add(-horizon)
-	localized := instant.In(s.data.location)
-	date, _ := NewDate(localized.Year(), localized.Month(), localized.Day())
+	date, err := s.instantDate(instant)
+	if err != nil {
+		return Transition{}, err
+	}
 	localizedOldest := oldest.In(s.data.location)
 	firstDate, firstDateErr := NewDate(localizedOldest.Year(), localizedOldest.Month(), localizedOldest.Day())
 	if firstDateErr != nil {

@@ -1,0 +1,17 @@
+{
+  "source": "https://github.com/golang/go/blob/022c8636110ebac86a9b88724cda168ed713c21f/lib/time/zoneinfo.zip",
+  "go_tag": "go1.27.2",
+  "git_commit": "022c8636110ebac86a9b88724cda168ed713c21f",
+  "archive_sha256": "b2d18a7c8fa8142097a48c99609fb3c92db5ee98bc740294e57eab8ae9f94779",
+  "entry": "Etc/GMT-1",
+  "tzif_sha256": "4bcd52f59d3e57ed01e54fb44b43e76f1f1fbf6887b701352eb95993e7242eda",
+  "attribution": "Go lib/time/README: compiled from IANA Time Zone Database, public domain. No separately inferred IANA release edition.",
+  "acquisition_date": "2026-10-13",
+  "acquisition": "Copied unchanged from the local Go 1.27.2 archive after its full SHA256 matched the already authenticated immutable upstream archive. No new IANA edition or historical fixture producer is inferred.",
+  "observed_tzif_64bit_layout": {
+    "transition_count": 0,
+    "type_count": 1,
+    "utc_offset_seconds": 3600
+  },
+  "regeneration": "Verify the recorded immutable Go archive SHA256, then extract Etc/GMT-1 unchanged. The native regression checks fixed offset and unbounded ZoneBounds under its explicitly selected fixture; this is not universal runtime timezone conformance."
+}

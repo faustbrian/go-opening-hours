@@ -74,12 +74,14 @@ func (s Schedule) EffectiveInstantRanges(start, end time.Time) ([]InstantRange, 
 	if s.data == nil {
 		return []InstantRange{}, nil
 	}
+	if _, err := s.instantDate(start); err != nil {
+		return nil, err
+	}
 	result := make([]InstantRange, 0, 16)
 	for cursor := start; cursor.Before(end); {
-		_, zoneEnd := cursor.In(s.data.location).ZoneBounds()
 		until := end
-		if !zoneEnd.IsZero() && zoneEnd.After(cursor) && zoneEnd.Before(until) {
-			until = zoneEnd
+		if boundary, ok := s.nextOffsetBoundary(cursor, end); ok {
+			until = boundary
 		}
 		var err error
 		result, err = s.appendConstantOffsetRanges(result, cursor, until)
@@ -91,7 +93,7 @@ func (s Schedule) EffectiveInstantRanges(start, end time.Time) ([]InstantRange, 
 	return normalizeInstantRanges(result), nil
 }
 
-// Within one native ZoneBounds span the wall-to-instant mapping is affine.
+// Within one constant-offset span the wall-to-instant mapping is affine.
 // Intersect civil fragments with that span instead of resolving ambiguous or
 // nonexistent endpoints. A fold is visited twice; a gap's missing wall times
 // are never visited. Native offset boundaries also retain revisited civil dates.

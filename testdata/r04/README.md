@@ -29,3 +29,16 @@ Python zoneinfo independently confirms local March4 23:30/23:45 correspond to
 15:30Z/15:45Z. In-process private-provider tests use those exact bytes to prove
 forward/backward search and instant expansion over reversed and intermediate
 civil date bounds; they do not claim a new public timezone-injection API.
+
+The same unchanged New York input also exercises its POSIX extension across
+2028's leap-year end and the March 11, 2029 spring jump. Independent Python
+`zoneinfo` endpoint checks place the exception's open interval at 07:00–07:30Z;
+these selected endpoint checks do not expand the recorded 2026 oracle corpus.
+
+`zoneinfo/Etc/GMT-1` is an unchanged 114-byte entry from the same authenticated
+Go 1.27.2 archive. `fixed-zone-source.json` separately records archive/entry
+identity and acquisition. Its authoritative 64-bit TZif block has no transitions
+and a constant +3600 offset; native provider controls verify those properties.
+The public year-one range regression admits exactly 8192 real collected fragments
+and rejects an additional fragment without exposing partial ranges or duration.
+A zero native zone-end sentinel must not manufacture a partition or quota cost.

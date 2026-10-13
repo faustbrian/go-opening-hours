@@ -8,8 +8,8 @@ import "time"
 func (s Schedule) transitionCandidates(first, last Date, start, end time.Time) ([]Transition, error) {
 	candidates := make([]Transition, 0, 16)
 	for cursor := start; cursor.Before(end); {
-		_, boundary := cursor.In(s.data.location).ZoneBounds()
-		if boundary.IsZero() || !boundary.After(cursor) || boundary.After(end) {
+		boundary, ok := s.nextOffsetBoundary(cursor, end)
+		if !ok {
 			break
 		}
 		candidates = append(candidates, Transition{Instant: boundary})

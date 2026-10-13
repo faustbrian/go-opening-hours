@@ -143,7 +143,7 @@ func (s Schedule) IsOpen(instant time.Time) (Availability, error) {
 		return Availability{Explanation: Explanation{Rule: RuleNone}}, nil
 	}
 	localized := instant.In(s.data.location)
-	date, err := NewDate(localized.Year(), localized.Month(), localized.Day())
+	date, err := s.instantDate(instant)
 	if err != nil {
 		return Availability{}, err
 	}

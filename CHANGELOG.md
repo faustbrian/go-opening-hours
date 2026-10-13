@@ -5,6 +5,15 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Keep bounded transition searches, instant ranges and elapsed duration aligned
+  with point membership across POSIX timezone-extension year boundaries,
+  including the last day of a leap year. Same-offset annual bookkeeping does
+  not consume collected-fragment quota. Reject out-of-civil-domain query starts
+  before offset traversal, including huge instants on 32-bit hosts; canonical
+  storage and explicit local resolution policies are unchanged.
+
 ## [5.0.0] - 2026-10-13
 
 Recorded as a prepared release candidate on this date; publication is a separate

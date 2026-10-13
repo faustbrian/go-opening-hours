@@ -48,6 +48,18 @@ the cursor; `PreviousTransition` returns the nearest change strictly before it.
 An offset jump that does not change availability is not a schedule transition.
 Search horizons remain bounded to 366 elapsed days.
 
+Native timezone bounds can include annual POSIX-extension bookkeeping with no
+UTC-offset change. Queries skip those bookkeeping boundaries and resume lookup
+after a stale leap-year end. Only actual offset changes partition expansion or
+add transition candidates. For the selected New York input, a March 11, 2029
+02:30–03:30 exception opens at 07:00Z after the spring jump and closes at
+07:30Z, even when the bounded query starts on December 31, 2028.
+Non-zero schedules reject starting instants outside local civil years 1–9999
+with `CodeInvalidDate` before traversing offset bounds. This admission uses
+absolute seconds rather than narrowing a huge caller-supplied year to a machine
+integer. A reverse horizon may still extend before the earliest civil date;
+existing year-one boundary searches and zero-schedule behavior are retained.
+
 The regression corpus attributes exact New York TZif bytes to the official
 Go 1.27.2 source archive and compares these selected cases with an independent
 Python `zoneinfo` wall-membership oracle. That is a bounded regression proof,
