@@ -5,7 +5,16 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+## [5.0.0] - 2026-10-13
+
+Recorded as a prepared release candidate on this date; publication is a separate
+step. Public adoption requires the v5.0.0 tag and release.
+
 ### Fixed
+
+- Preserve earlier supported transition candidates when an admitted forward
+  search horizon extends beyond civil year 9999, matching reverse search's
+  existing year-one boundary handling.
 
 - Keep bounded transition searches, instant ranges and elapsed duration aligned
   with point membership across POSIX timezone-extension year boundaries,
@@ -13,13 +22,7 @@ Versioning after v1.0.0.
   not consume collected-fragment quota. Reject out-of-civil-domain query starts
   before offset traversal, including huge instants on 32-bit hosts; canonical
   storage and explicit local resolution policies are unchanged.
-
-## [5.0.0] - 2026-10-13
-
-Recorded as a prepared release candidate on this date; publication is a separate
-step. Public adoption requires the v5.0.0 tag and release.
-
-### Fixed
+  ([78702b0b0a](https://github.com/faustbrian/go-opening-hours/commit/78702b0b0ad9ab68fb57cda09fe144a9937531bc))
 
 - Restore first/nearest actual availability transitions across timezone-offset
   jumps and repeated fold endpoints, including typed searches and prepared
@@ -38,6 +41,7 @@ step. Public adoption requires the v5.0.0 tag and release.
   from `/v4` to `/v5` together after publication; public v4 stays unchanged.
   Go 1.27, dependency versions, explicit local resolution and canonical JSON
   version 1 are retained. See the [v5 migration guide](docs/v5-migration.md).
+  ([ba3ea5c821](https://github.com/faustbrian/go-opening-hours/commit/ba3ea5c82173085f08cc332ba5d06ce744ba213e))
 - Clarify copied schedule ownership, point-membership DST expansion, adapter
   admission, representation equality and synchronous observation limits.
   Stored formats and calendar behavior are unchanged by this documentation-only
@@ -59,6 +63,12 @@ step. Public adoption requires the v5.0.0 tag and release.
   stays Go 1.27.0. Ordinary bounded checks and explicit full/release gates remain
   separate; these changes are verification maintenance, not supplier repins or
   runtime fixes. ([f3beee84e8](https://github.com/faustbrian/go-opening-hours/commit/f3beee84e889c09a0c838ccfa8aad9fda1eb39ee), [3d7170435c](https://github.com/faustbrian/go-opening-hours/commit/3d7170435cce222c3770693731741f6e655c4f50), [b312297180](https://github.com/faustbrian/go-opening-hours/commit/b31229718005f68f508694699fb20bd76e457fb5), [46d206ac47](https://github.com/faustbrian/go-opening-hours/commit/46d206ac471a6985105eb0578bec036583890528))
+
+Prepared source accountability covers the 12 non-merge commits from public
+`v4.0.0` (`a78aeaf2f39171fe079d14e962f7a4ecf8ffcc12`) through
+`78702b0b0ad9ab68fb57cda09fe144a9937531bc`, each linked once above.
+The current forward-horizon repair and release alignment are outside that
+frozen history range.
 
 ## [4.0.0] - 2026-10-06
 

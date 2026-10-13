@@ -48,7 +48,12 @@ func (s Schedule) NextTransition(instant time.Time, horizon time.Duration) (Tran
 		return Transition{}, err
 	}
 	localizedDeadline := deadline.In(s.data.location)
-	lastDate, _ := NewDate(localizedDeadline.Year(), localizedDeadline.Month(), localizedDeadline.Day())
+	lastDate, lastDateErr := NewDate(localizedDeadline.Year(), localizedDeadline.Month(), localizedDeadline.Day())
+	if lastDateErr != nil {
+		// An admitted forward horizon can extend past the last civil year;
+		// keep earlier supported candidate dates, as reverse search does at year one.
+		lastDate = MustDate(9999, time.December, 31)
+	}
 	transitions, err := s.transitionCandidates(date, lastDate, instant, deadline)
 	if err != nil {
 		return Transition{}, err

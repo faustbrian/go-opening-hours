@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "packages": [
+    {
+      "module_directory": ".",
+      "package_directory": ".",
+      "source_digest": "e7e7bdd60045875159fd9524de1281a8825c397e424f3e04d27e17e59f180ead",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "390cf4085a0063fe5dcaa29ce942ea4cb8c7876347da90376b65dc8c5c811104",
+      "mutations": [
+        {
+          "file_name": "offset_boundaries.go",
+          "type": "CONDITIONALS_BOUNDARY",
+          "line": 42,
+          "column": 34,
+          "contract_domain": "Data-race-free supported immutable Schedule instant admission and public queries on 32-bit and 64-bit Go1.27.2, including retained Local and fixed native zone offsets",
+          "reason": "Independently reviewed 2026-10-13 by /root/schema_repair at main78702b0b0ad9ab68fb57cda09fe144a9937531bc; unchanged offset_boundaries.go67a0a78267f7c2ab07cc89466add9f44a92b12aea5790fcee6e89daa6c9599f1/value.go630a31d794adb8f3ad3bf8328f41dc948a4890f105b28769ebdefe1d320cd786/errors.god9925ec09758a085419d16e2bfc6d519870fa549369923e0fa90c83bbdaa7099 remain applicable after forward search clamps only its outer candidate bound. Replacing seconds>=maximum with > differs only at seconds==maximum. If the existing lower guard rejects, both return identically. Otherwise maximum=UTC10000Jan1Unix-int64(selectedOffset), so native localization cancels that same immutable offset modulo2^64 to UTC civil year10000, January1. Year10000 is representable on both int widths; pinned Calendar/v2v2.0.0 NewDate rejects before narrowing and openinghours.NewDate maps it to exactly the same zeroDate and Error{Op:new date,Code:invalid_date}, with identical public message, no Unwrap/cause or exposed Calendar sentinel. Every supported public caller returns the same zero availability/transition, nil ranges or zero duration and error before effective schedule work; caller-owned instrumentation observes the same outcome. No I/O/provider callback/state effect is introduced; elapsed validation timing/allocation cost is not a guaranteed equality contract. Original full38454657800 remains FAILED; this is source mathematical proof and producer-reported original/copied equality controls, not a new native campaign pass. No other operator is accepted, especially42:23 OR-to-AND, which is viable even on64bit with a lawful wide Local offset. Expires2026-11-13 or any earlier offset/bound expression, public admission/query domain, NewDate/Error mapping, Calendar admission/version, immutable location/Go1.27.2 Unix/Zone/absSec/Year semantics, source/dependency, producer/verifier or tool-policy change. Source/verifier bindings remain mandatory."
+        }
+      ]
+    }
+  ]
+}

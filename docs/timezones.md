@@ -59,6 +59,9 @@ with `CodeInvalidDate` before traversing offset bounds. This admission uses
 absolute seconds rather than narrowing a huge caller-supplied year to a machine
 integer. A reverse horizon may still extend before the earliest civil date;
 existing year-one boundary searches and zero-schedule behavior are retained.
+An admitted forward horizon may likewise extend beyond year 9999. Candidate
+collection stops at the last supported civil date without discarding an earlier
+in-domain transition; the elapsed horizon and strict instant ordering still apply.
 
 The regression corpus attributes exact New York TZif bytes to the official
 Go 1.27.2 source archive and compares these selected cases with an independent

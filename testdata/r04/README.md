@@ -1,5 +1,12 @@
 # Selected fold regression input
 
+`zoneinfo/Etc/GMT+1` is an unchanged 113-byte negative-offset entry from the
+same authenticated Go 1.27.2 archive. `negative-fixed-zone-source.json` records
+its identity separately; both TZif blocks contain no transitions and its
+64-bit block has one UTC-offset type, -3600 seconds. The selected regression
+uses public startup ZONEINFO to retain a valid late-year-9999 local instant.
+This addition does not update the existing corpus or infer another IANA edition.
+
 `zoneinfo/America/New_York` is copied byte-for-byte from official Go1.27.2
 `lib/time/zoneinfo.zip` at commit022c8636110ebac86a9b88724cda168ed713c21f.
 `source.json` records the authenticated archive and entry SHA256. `README.upstream`
