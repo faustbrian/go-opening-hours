@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml)
 [![Documentation](https://img.shields.io/badge/docs-adoption_and_API-blue)](docs/index.md)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours/v2)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours/v4.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours/v4)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-opening-hours?sort=semver)](https://github.com/faustbrian/go-opening-hours/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -10,9 +10,9 @@
 Immutable, deterministic, timezone-safe recurring opening hours and dated
 exceptions for Go 1.27.0 and later.
 
-Main prepares `github.com/faustbrian/go-opening-hours/v4` with public
-Wire v3 and retained public v2 dependencies; Opening v4 awaits release
-qualification. See the [v4 migration guide](docs/v4-migration.md).
+The published v4.0.0 module is `github.com/faustbrian/go-opening-hours/v4`,
+with public Wire v3 and retained public v2 dependencies. See the
+[v4 migration guide](docs/v4-migration.md).
 Public Opening v3.0.0 remains available at `/v3`, and the retained public
 v2 root module is `github.com/faustbrian/go-opening-hours/v2`.
 Stable releases are available on [GitHub](https://github.com/faustbrian/go-opening-hours/releases).
@@ -23,7 +23,7 @@ available at `github.com/faustbrian/go-opening-hours`.
 The v2.0.0 Git tag was exposed before release validation completed. It remains
 immutable, but has no verified stable release; use a validated v2 release.
 
-Install the v2 root module with:
+Existing v2 applications can pin a validated v2 release with:
 
 ```sh
 go get github.com/faustbrian/go-opening-hours/v2@v2.0.2
@@ -45,7 +45,7 @@ examples, operational constraints, and contributor references.
 
 ## Five-minute start
 
-This example uses prepared main's v4 imports; installable v2 usage remains
+This example uses the published v4 imports; retained v2 usage remains
 documented in the [v2 migration guide](docs/v2-migration.md).
 
 ```go
