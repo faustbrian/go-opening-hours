@@ -1,4 +1,4 @@
-module github.com/faustbrian/go-opening-hours/v4
+module github.com/faustbrian/go-opening-hours/v5
 
 go 1.27.0
 

@@ -17,13 +17,15 @@ oracle does not assert global timezone conformance.
 
 Tests launch their own bounded process with this ZONEINFO directory before
 startup so cached environment selection cannot silently use installed zone data.
-The corpus covers actual point transitions separately from original boundary
-expansion (2h) and its differing point integral (90min).
+The corpus covers actual point transitions, disjoint instant expansion and
+the 90-minute point-membership integral. The original contiguous two-hour
+envelope was reproduced before the selected expansion-policy repair; its
+historical source remains in Git rather than as a contradictory current assertion.
 
 `zoneinfo/Antarctica/Casey` comes from the same authenticated official archive;
 its entry hash is recorded in `source.json`. The selected 2010-03-04T15:00Z
 three-hour fold moves local time from March5 02:00+11 to March4 23:00+08.
 Python zoneinfo independently confirms local March4 23:30/23:45 correspond to
 15:30Z/15:45Z. In-process private-provider tests use those exact bytes to prove
-forward/backward search over reversed civil date bounds; they do not claim a
-new public timezone-injection API or a duration-policy change.
+forward/backward search and instant expansion over reversed and intermediate
+civil date bounds; they do not claim a new public timezone-injection API.

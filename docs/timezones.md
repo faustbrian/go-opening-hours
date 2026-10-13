@@ -13,25 +13,31 @@ require a policy and resolve civil fields to an instant before evaluation.
 | spring gap | error | error | error | shift by gap |
 | autumn fold | ambiguous error | first instant | second instant | ambiguous error |
 
-Range expansion uses earlier resolution for an ambiguous opening and later
-resolution for an ambiguous closing, so `01:30-02:30` across a fall fold covers
-both repeated occurrences. Gap boundaries shift forward. A skipped civil date
-therefore contributes no elapsed interval when both boundaries collapse.
+Range expansion represents exactly the instants whose local wall fields match
+the effective civil ranges. It visits both fold occurrences independently and
+excludes missing gap times. A skipped civil date contributes no elapsed interval.
+This does not change explicit `ResolveLocal`/`IsOpenLocal` resolution policies.
 
 The package delegates bounded zone loading and exact/fold occurrence resolution
 to `calendar/timezone`, which in turn uses Go's installed IANA database.
 Opening-hours adds only the explicit `ShiftForward` schedule policy for gaps.
 Canonical encoding stores the zone identity, not a frozen rule snapshot.
 
-## Point transitions and boundary expansion
+## Agreement of point queries, expansion and duration
 
 Point queries test the instant's local wall-clock membership. Interval expansion
-instead resolves an ambiguous opening earlier and closing later. These are not
-universally equivalent across a fold: for New York's Sunday 01:30–02:30 rule on
-2026-11-01, `IsOpen` is false at 06:00Z (the clock returns to 01:00 EST), while
-`EffectiveInstantRanges(05:30Z,07:30Z)` includes that instant. `OpenDuration`
-continues to sum this two-hour boundary-policy expansion, not the 90-minute
-point-membership integral. The expansion and duration policies are unchanged.
+uses that same membership. For New York's Sunday 01:30–02:30 rule on 2026-11-01,
+`IsOpen` is false at 06:00Z when the clock returns to 01:00 EST.
+`EffectiveInstantRanges(05:30Z,07:30Z)` returns `[05:30Z,06:00Z)` and
+`[06:30Z,07:30Z)`, and `OpenDuration` is 90 minutes. Clipping to the closed
+`[06:00Z,06:30Z)` period returns no intervals and zero duration. An all-day rule
+still spans the entire 25-hour fold day, because the offset jump does not close it.
+
+The Unreleased point-membership policy supersedes the former contiguous
+earlier-opening/later-closing envelope and gap-boundary shifting used by interval
+expansion. Applications depending on that envelope must change their duration
+and expansion expectations when adopting the repaired release. Canonical bytes
+and explicit local resolution policies are unchanged.
 
 Transition search follows actual point membership: it includes timezone-offset
 jumps and both occurrences of a folded civil endpoint, then checks point values

@@ -23,3 +23,7 @@ Config v2, Temporal v2, Validation v2, pgx v5, and Go 1.27 remain selected.
 Historical `api/baseline.txt` and `api/v3.txt` remain unchanged; the maintained
 v4 API projection is `api/v4.txt`. This migration does not rewrite historical
 tags or module graphs. Select the published `v4.0.0` root tag when adopting v4.
+
+
+Current main prepares v5 with a breaking timezone expansion correction; see
+the [v5 migration guide](v5-migration.md). Published v4 remains unchanged.

@@ -11,7 +11,7 @@
 - `NextTransition`, `NextOpening`, `NextClosing`, and `PreviousTransition`
   search actual point-availability changes strictly beyond/before the supplied
   instant, including offset jumps and both occurrences of folded endpoints.
-  They use point membership, not interval expansion's boundary envelope.
+  They use the same civil point membership as interval expansion and duration.
 - `OpenDuration` sums elapsed, not wall-clock, duration.
 
 All instant intervals must be positive and no longer than 366 elapsed days.

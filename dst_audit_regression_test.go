@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
-	prepared "github.com/faustbrian/go-opening-hours/v4/compile"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
+	prepared "github.com/faustbrian/go-opening-hours/v5/compile"
 )
 
 type r04OraclePoint struct {
@@ -86,29 +86,32 @@ func TestR04WallPointMembershipMatchesIndependentOracle(t *testing.T) {
 	}
 }
 
-// Original docs explicitly select earlier opening/later closing expansion.
-// This characterization does not assert an unselected point-integral contract.
-func TestR04OriginalBoundaryExpansionCharacterization(t *testing.T) {
+// The original earlier-opening/later-closing envelope covered two hours and
+// included a closed repeated period. The selected policy now requires exact
+// point membership; retain that historical countercase without requiring it.
+func TestR04ExpansionExcludesHistoricallyClosedFoldPeriod(t *testing.T) {
 	if r04RunWithPinnedZone(t) {
 		return
 	}
 	schedule, oracle := r04Fixture(t)
 	start, end := oracle.Transitions[0].Instant, oracle.Transitions[3].Instant
 	ranges, err := schedule.EffectiveInstantRanges(start, end)
-	if err != nil || len(ranges) != 1 || !ranges[0].Start.Equal(start) || !ranges[0].End.Equal(end) {
-		t.Fatalf("original boundary expansion %#v %v", ranges, err)
+	if err != nil || len(ranges) != 2 || !ranges[0].Start.Equal(start) || !ranges[1].End.Equal(end) {
+		t.Fatalf("point expansion %#v %v", ranges, err)
 	}
 	fold := oracle.Transitions[1].Instant
 	state, err := schedule.IsOpen(fold)
 	if err != nil || state.Open {
 		t.Fatal("fold wall state should be closed")
 	}
-	if fold.Before(ranges[0].Start) || !fold.Before(ranges[0].End) {
-		t.Fatal("original expansion no longer contains closed wall instant")
+	for _, interval := range ranges {
+		if !fold.Before(interval.Start) && fold.Before(interval.End) {
+			t.Fatal("expansion includes historically closed wall instant")
+		}
 	}
 	duration, err := schedule.OpenDuration(start, end)
-	if err != nil || duration != 2*time.Hour {
-		t.Fatalf("original expansion duration %s %v", duration, err)
+	if err != nil || duration != 90*time.Minute {
+		t.Fatalf("point expansion duration %s %v", duration, err)
 	}
 }
 

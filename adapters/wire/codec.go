@@ -5,7 +5,7 @@
 package openinghourswire
 
 import (
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
 	wire "github.com/faustbrian/go-wire/v3"
 )
 

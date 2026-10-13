@@ -9,7 +9,7 @@ package openinghoursconfig
 import (
 	"errors"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
 )
 
 // ErrInvalidValue reports a configuration value that is not canonical JSON

@@ -47,3 +47,5 @@ certify every current main revision or a deployed application.
 ## Related next steps
 
 [Contributor setup and checks](../CONTRIBUTING.md), [Compatibility policy](../COMPATIBILITY.md), [Release history](../CHANGELOG.md), [Private vulnerability reporting](../SECURITY.md), [Support](../SUPPORT.md).
+
+- [V5 point-membership migration](v5-migration.md).

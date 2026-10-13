@@ -9,12 +9,22 @@ Versioning after v1.0.0.
 
 - Restore first/nearest actual availability transitions across timezone-offset
   jumps and repeated fold endpoints, including typed searches and prepared
-  indexes. Point queries and earlier-opening/later-closing interval expansion
-  remain unchanged; `OpenDuration` still sums the expansion envelope.
+  indexes.
+- Make instant expansion and elapsed duration agree with civil point membership
+  across folds and gaps. New York's 2026-11-01 Sunday 01:30–02:30 rule expands
+  to two open intervals totaling 90 minutes, not the former contiguous two-hour
+  envelope. Consumers relying on that envelope must adopt the point-membership
+  policy; explicit local resolution policies and stored canonical bytes remain
+  unchanged.
 
 ### Changed
 
-- Clarify copied schedule ownership, boundary-policy DST expansion, adapter
+- Prepare `github.com/faustbrian/go-opening-hours/v5` for the breaking
+  point-membership expansion policy. Migrate all owned root and adapter imports
+  from `/v4` to `/v5` together after publication; public v4 stays unchanged.
+  Go 1.27, dependency versions, explicit local resolution and canonical JSON
+  version 1 are retained. See the [v5 migration guide](docs/v5-migration.md).
+- Clarify copied schedule ownership, point-membership DST expansion, adapter
   admission, representation equality and synchronous observation limits.
   Stored formats and calendar behavior are unchanged.
 

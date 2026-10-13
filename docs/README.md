@@ -44,3 +44,5 @@ to compare related independently adoptable libraries.
 - [Troubleshooting](troubleshooting.md)
 - [FAQ](faq.md)
 - [Roadmap](roadmap.md)
+
+- [V5 point-membership migration](v5-migration.md).

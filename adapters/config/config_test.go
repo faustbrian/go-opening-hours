@@ -9,9 +9,9 @@ import (
 	"testing"
 
 	configdecode "github.com/faustbrian/go-config/v2/decode"
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
-	openinghoursconfig "github.com/faustbrian/go-opening-hours/v4/adapters/config"
-	legacy "github.com/faustbrian/go-opening-hours/v4/openinghoursconfig"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
+	openinghoursconfig "github.com/faustbrian/go-opening-hours/v5/adapters/config"
+	legacy "github.com/faustbrian/go-opening-hours/v5/openinghoursconfig"
 )
 
 func TestValueRoundTripAndAtomicFailure(t *testing.T) {

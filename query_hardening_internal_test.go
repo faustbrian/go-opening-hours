@@ -208,12 +208,9 @@ func TestDSTResolutionFailureMatrixAndGapBoundary(t *testing.T) {
 
 	gapDate := MustDate(2026, time.March, 29)
 	gapTime := internalTime(t, 3, 30)
-	boundary, err := schedule.resolveBoundary(gapDate, gapTime.nanosecond, true)
-	if err != nil || !boundary.Equal(time.Date(2026, time.March, 29, 1, 30, 0, 0, time.UTC)) {
-		t.Fatalf("gap boundary = %s error=%v", boundary, err)
-	}
-	if _, err := schedule.resolveBoundary(MustDate(9999, time.December, 31), nanosecondsPerDay, false); !IsCode(err, CodeInvalidDate) {
-		t.Fatalf("overflow boundary error = %v", err)
+	resolved, err = schedule.ResolveLocal(gapDate, gapTime, ShiftForward)
+	if err != nil || !resolved.Instant.Equal(time.Date(2026, time.March, 29, 1, 30, 0, 0, time.UTC)) {
+		t.Fatalf("explicit gap resolution = %#v error=%v", resolved, err)
 	}
 }
 
@@ -420,8 +417,8 @@ func TestRangeCardinalityAndCivilBoundaryLimits(t *testing.T) {
 		t.Fatalf("daily fragmentation error = %v", err)
 	}
 	dayStart := time.Date(2026, time.January, 1, 0, 0, 0, 0, time.UTC)
-	if _, err := fragmented.EffectiveInstantRanges(dayStart, dayStart.Add(time.Minute)); !IsCode(err, CodeLimitExceeded) {
-		t.Fatalf("instant fragmentation error = %v", err)
+	if ranges, err := fragmented.EffectiveInstantRanges(dayStart, dayStart.Add(time.Minute)); !IsCode(err, CodeLimitExceeded) || ranges != nil {
+		t.Fatalf("instant fragmentation result = %#v error = %v", ranges, err)
 	}
 	effectiveStart := MustDate(2026, time.January, 2)
 	failing := internalSchedule(t, Config{EffectiveStart: &effectiveStart, OutsideEffective: OutsideError})
@@ -439,13 +436,10 @@ func TestRangeCardinalityAndCivilBoundaryLimits(t *testing.T) {
 	if _, err := full.EffectiveInstantRanges(maximumStart, maximumStart.Add(time.Hour)); !IsCode(err, CodeInvalidDate) {
 		t.Fatalf("maximum-date boundary error = %v", err)
 	}
-	if _, err := full.resolveBoundary(maximum, nanosecondsPerDay, false); !IsCode(err, CodeInvalidDate) {
-		t.Fatalf("maximum boundary error = %v", err)
-	}
 	if _, err := empty.OpenDuration(dayStart, dayStart); !IsCode(err, CodeInvalidInterval) {
 		t.Fatalf("OpenDuration invalid interval error = %v", err)
 	}
-	if _, err := empty.resolveBoundary(date, -1, true); !IsCode(err, CodeInvalidTime) {
+	if _, err := empty.ResolveLocal(date, LocalTime{nanosecond: -1}, PreferEarlier); !IsCode(err, CodeInvalidTime) {
 		t.Fatalf("invalid resolved boundary error = %v", err)
 	}
 

@@ -32,8 +32,8 @@ type Transition struct {
 // NextTransition finds the first actual point-availability change strictly after
 // instant. Candidates include civil endpoints in both fold occurrences and
 // timezone-offset discontinuities. The positive horizon is at most 366 elapsed
-// days; exhaustion returns CodeSearchExhausted. Interval expansion uses a
-// separate boundary policy; see docs/timezones.md.
+// days; exhaustion returns CodeSearchExhausted. Interval expansion and duration
+// use the same civil point membership; see docs/timezones.md.
 func (s Schedule) NextTransition(instant time.Time, horizon time.Duration) (Transition, error) {
 	if horizon <= 0 || horizon > maxSearchHorizon {
 		return Transition{}, newError("next transition", CodeInvalidHorizon)
@@ -171,33 +171,4 @@ func (s Schedule) PreviousTransition(instant time.Time, horizon time.Duration) (
 	}
 
 	return Transition{}, newError("previous transition", CodeSearchExhausted)
-}
-
-// Interval expansion resolves folds to an earlier opening/later closing and
-// shifts gaps forward, unlike caller-selected ResolveLocal policy. Point queries
-// still evaluate wall membership independently; do not equate this boundary
-// expansion with enumerating every possible timezone-offset transition.
-func (s Schedule) resolveBoundary(date Date, nanosecond int64, opening bool) (time.Time, error) {
-	if nanosecond == nanosecondsPerDay {
-		var err error
-		date, err = addDate(date, 1)
-		if err != nil {
-			return time.Time{}, err
-		}
-		nanosecond = 0
-	}
-	localTime := LocalTime{nanosecond: nanosecond}
-	policy := PreferLater
-	if opening {
-		policy = PreferEarlier
-	}
-	resolved, err := s.ResolveLocal(date, localTime, policy)
-	if IsCode(err, CodeNonexistentLocalTime) {
-		resolved, err = s.ResolveLocal(date, localTime, ShiftForward)
-	}
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	return resolved.Instant, nil
 }

@@ -3,8 +3,8 @@ package openinghourswire_test
 import (
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
-	"github.com/faustbrian/go-opening-hours/v4/openinghourswire"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
+	"github.com/faustbrian/go-opening-hours/v5/openinghourswire"
 	wire "github.com/faustbrian/go-wire/v3"
 )
 

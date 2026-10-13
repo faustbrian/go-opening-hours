@@ -9,7 +9,7 @@ package postgres
 import (
 	"database/sql/driver"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
 )
 
 // JSONB is a nullable database wrapper around an immutable Schedule. Zero means

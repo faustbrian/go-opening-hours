@@ -5,7 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgtype"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
 )
 
 // FuzzPGXJSONBCodec checks accepted pgx JSONB text plans canonically round-trip with Equal identity; it uses in-process driver plans, not a PostgreSQL server.

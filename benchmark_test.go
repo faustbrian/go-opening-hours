@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
 )
 
 // BenchmarkConstruction measures building one Helsinki weekly rule, including location loading and copies; endpoint/rule setup is outside the repeated body.

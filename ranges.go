@@ -62,11 +62,11 @@ func (s Schedule) EffectiveRanges(date Date) ([]DailyRange, error) {
 }
 
 // EffectiveInstantRanges returns clipped absolute availability within a bounded
-// interval of at most 366 elapsed days. Civil fragments are expanded by choosing
-// an earlier opening/later closing in folds and shifting gap boundaries forward;
-// this is a boundary-policy expansion, not point-query sampling. At most 8192
-// collected fragments are admitted before normalization; errors discard partial
-// results. Returned ranges are detached and sorted/merged.
+// interval of at most 366 elapsed days. Ranges represent exactly IsOpen's civil
+// point membership: folds may produce disjoint intervals and gaps contribute
+// only existing wall times. At most 8192 collected fragments are admitted before
+// normalization; errors discard partial results. Returned ranges are detached
+// and sorted/merged.
 func (s Schedule) EffectiveInstantRanges(start, end time.Time) ([]InstantRange, error) {
 	if !end.After(start) || end.Sub(start) > maxSearchHorizon {
 		return nil, newError("effective instant ranges", CodeInvalidInterval)
@@ -74,12 +74,34 @@ func (s Schedule) EffectiveInstantRanges(start, end time.Time) ([]InstantRange, 
 	if s.data == nil {
 		return []InstantRange{}, nil
 	}
+	result := make([]InstantRange, 0, 16)
+	for cursor := start; cursor.Before(end); {
+		_, zoneEnd := cursor.In(s.data.location).ZoneBounds()
+		until := end
+		if !zoneEnd.IsZero() && zoneEnd.After(cursor) && zoneEnd.Before(until) {
+			until = zoneEnd
+		}
+		var err error
+		result, err = s.appendConstantOffsetRanges(result, cursor, until)
+		if err != nil {
+			return nil, err
+		}
+		cursor = until
+	}
+	return normalizeInstantRanges(result), nil
+}
+
+// Within one native ZoneBounds span the wall-to-instant mapping is affine.
+// Intersect civil fragments with that span instead of resolving ambiguous or
+// nonexistent endpoints. A fold is visited twice; a gap's missing wall times
+// are never visited. Native offset boundaries also retain revisited civil dates.
+func (s Schedule) appendConstantOffsetRanges(result []InstantRange, start, end time.Time) ([]InstantRange, error) {
 	localized := start.In(s.data.location)
 	first, _ := NewDate(localized.Year(), localized.Month(), localized.Day())
+	_, offset := localized.Zone()
 	localizedEnd := end.Add(-time.Nanosecond).In(s.data.location)
 	last, _ := NewDate(localizedEnd.Year(), localizedEnd.Month(), localizedEnd.Day())
 	dayCount := first.DaysUntil(last) + 1
-	result := make([]InstantRange, 0, 16)
 	for step := range dayCount {
 		date, _ := addDate(first, step)
 		segments, _, err := s.effectiveSegments(date)
@@ -87,13 +109,17 @@ func (s Schedule) EffectiveInstantRanges(start, end time.Time) ([]InstantRange, 
 			return nil, err
 		}
 		for _, item := range segments {
-			// Effective segments are clipped to a valid date, so an opening
-			// boundary cannot cross the civil-date domain.
-			opening, _ := s.resolveBoundary(date, item.start, true)
-			closing, err := s.resolveBoundary(date, item.end, false)
-			if err != nil {
-				return nil, err
+			// Preserve the civil-date domain even when a caller clips an
+			// all-day fragment before its out-of-domain closing boundary.
+			if item.end == nanosecondsPerDay {
+				if _, err := addDate(date, 1); err != nil {
+					return nil, err
+				}
 			}
+			midnight := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, time.UTC)
+			midnight = midnight.Add(-time.Duration(offset) * time.Second)
+			opening := midnight.Add(time.Duration(item.start))
+			closing := midnight.Add(time.Duration(item.end))
 			opening = latestInstant(opening, start)
 			closing = earliestInstant(closing, end)
 			if opening.Before(closing) {
@@ -105,7 +131,7 @@ func (s Schedule) EffectiveInstantRanges(start, end time.Time) ([]InstantRange, 
 		}
 	}
 
-	return normalizeInstantRanges(result), nil
+	return result, nil
 }
 
 func normalizeInstantRanges(input []InstantRange) []InstantRange {
@@ -153,9 +179,9 @@ func earliestInstant(left, right time.Time) time.Time {
 	return right
 }
 
-// OpenDuration sums elapsed duration of EffectiveInstantRanges' boundary-policy
-// expansion, not nominal wall-clock hours. It inherits that method's bounds and
-// DST interpretation, which may differ from independently sampled point queries.
+// OpenDuration sums elapsed duration of EffectiveInstantRanges' actual open
+// intervals, not nominal wall-clock hours. It inherits that method's bounds and
+// agrees with IsOpen's civil point membership across gaps and folds.
 func (s Schedule) OpenDuration(start, end time.Time) (time.Duration, error) {
 	ranges, err := s.EffectiveInstantRanges(start, end)
 	if err != nil {

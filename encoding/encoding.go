@@ -5,7 +5,7 @@
 // documents; this package owns no provider transport, authorization or file IO.
 package encoding
 
-import openinghours "github.com/faustbrian/go-opening-hours/v4"
+import openinghours "github.com/faustbrian/go-opening-hours/v5"
 
 // Marshal returns canonical versioned JSON.
 func Marshal(schedule openinghours.Schedule) ([]byte, error) {

@@ -8,7 +8,7 @@ package openinghourstemporal
 import (
 	"errors"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
 	temporal "github.com/faustbrian/go-temporal/v2"
 	"github.com/faustbrian/go-temporal/v2/timeofday"
 )

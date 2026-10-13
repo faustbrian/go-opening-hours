@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml)
 [![Documentation](https://img.shields.io/badge/docs-adoption_and_API-blue)](docs/index.md)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours/v4.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours/v4)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours/v5.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours/v5)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-opening-hours?sort=semver)](https://github.com/faustbrian/go-opening-hours/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -10,9 +10,10 @@
 Immutable, deterministic, timezone-safe recurring opening hours and dated
 exceptions for Go 1.27.0 and later.
 
-The published v4.0.0 module is `github.com/faustbrian/go-opening-hours/v4`,
-with public Wire v3 and retained public v2 dependencies. See the
-[v4 migration guide](docs/v4-migration.md).
+Current main prepares `github.com/faustbrian/go-opening-hours/v5` with exact
+civil point-membership expansion and duration. V5 is not published yet; see the
+[v5 migration guide](docs/v5-migration.md). Published v4.0.0 remains independently
+available under `/v4` with its original interval-expansion policy.
 Public Opening v3.0.0 remains available at `/v3`, and the retained public
 v2 root module is `github.com/faustbrian/go-opening-hours/v2`.
 Stable releases are available on [GitHub](https://github.com/faustbrian/go-opening-hours/releases).
@@ -35,9 +36,9 @@ book appointments, plan workforces, or decide whether an order is eligible.
 
 ## Adoption entry points
 
-The root module is `github.com/faustbrian/go-opening-hours/v4` (stable).
-It requires Go 1.27.0. Pin the published `v4.0.0` root tag
-with `go get github.com/faustbrian/go-opening-hours/v4@v4.0.0`.
+The prepared root module is `github.com/faustbrian/go-opening-hours/v5`.
+It requires Go 1.27.0. Adopt v5 only after its public release is available;
+the latest published v4 cohort remains `v4.0.0` under `/v4`.
 Root subpackages share this module; they need no separate installation.
 
 Start with the [documentation map](docs/index.md) for package selection,
@@ -45,7 +46,7 @@ examples, operational constraints, and contributor references.
 
 ## Five-minute start
 
-This example uses the published v4 imports; retained v2 usage remains
+This example uses the prepared v5 imports; retained v2 usage remains
 documented in the [v2 migration guide](docs/v2-migration.md).
 
 ```go
@@ -55,7 +56,7 @@ import (
 	"fmt"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
 )
 
 func main() {

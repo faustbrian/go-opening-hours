@@ -7,8 +7,8 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar/v2"
 	"github.com/faustbrian/go-calendar/v2/business"
-	openinghours "github.com/faustbrian/go-opening-hours/v4"
-	"github.com/faustbrian/go-opening-hours/v4/openinghourscalendar"
+	openinghours "github.com/faustbrian/go-opening-hours/v5"
+	"github.com/faustbrian/go-opening-hours/v5/openinghourscalendar"
 )
 
 func TestDateConversionAndHolidayClosures(t *testing.T) {

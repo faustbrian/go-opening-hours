@@ -2,7 +2,7 @@ package openinghours
 
 import "time"
 
-// Search follows point membership, not resolveBoundary's expansion envelope.
+// Search follows civil point membership, as do interval expansion and duration.
 // Include every zone discontinuity and both realizations of a folded endpoint;
 // callers retain only candidates whose before/after point states differ.
 func (s Schedule) transitionCandidates(first, last Date, start, end time.Time) ([]Transition, error) {

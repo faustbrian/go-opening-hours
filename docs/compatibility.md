@@ -3,16 +3,19 @@
 [Documentation map](index.md) · [Repository README](../README.md)
 [Next: API reference](api.md)
 
-The minimum supported compiler is Go 1.27.0. Published v4 uses `api/v4.txt`;
-historical `api/baseline.txt` and `api/v3.txt` remain unchanged. Breaking
+The minimum supported compiler is Go 1.27.0. Current main prepares v5 with
+`api/v5.txt`; the published v4 projection is retained at `api/v4.txt`.
+Historical `api/baseline.txt` and `api/v3.txt` remain unchanged. Breaking
 changes require a new major release. Public v2.0.2 is available at `github.com/faustbrian/go-opening-hours/v2`; published v1.1.0 remains
 available under its original module path. The intentional provenance validation
 change and import migration are described in [v2 migration](v2-migration.md).
 The exposed v2.0.0 Git tag remains immutable; it is not a verified stable
 release. V2.0.1 is the validated replacement release, not a rewritten tag.
 
-Published Opening v4.0.0 uses Wire3, Calendar2, Temporal2 and Validation2
-nominal types. Opening v3.0.0 remains available under `/v3`; see the
+Prepared v5 and published v4.0.0 use Wire3, Calendar2, Temporal2 and Validation2
+nominal types. V5 is not published yet and changes interval expansion/duration
+to exact civil point membership; see the [v5 migration guide](v5-migration.md).
+Opening v3.0.0 remains available under `/v3`; see the
 [v4 migration guide](v4-migration.md) before changing the imported cohort.
 
 Canonical wire version is `1`. Decoders reject other versions. Canonical bytes
