@@ -1,5 +1,8 @@
 # Formal exception and overlay precedence
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Evaluation for civil date `D` is deterministic:
 
 1. Evaluate the weekly rule owned by `D`.

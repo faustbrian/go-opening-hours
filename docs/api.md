@@ -1,5 +1,8 @@
 # API reference
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: Security model](security.md)
+
 This reference describes prepared main at
 `github.com/faustbrian/go-opening-hours/v4`, not a published release.
 Public v3.0.0, v2.0.2 and historical v1.1.0 remain independently available.

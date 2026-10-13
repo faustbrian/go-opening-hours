@@ -1,5 +1,8 @@
 # V4 preparation and Wire v3 migration
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Main prepares `github.com/faustbrian/go-opening-hours/v4`. The candidate
 requires its own release qualification; public Opening v3.0.0 remains
 available under `/v3`.

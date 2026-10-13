@@ -1,5 +1,8 @@
 # FAQ
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 ## Does an empty schedule mean always open?
 
 No. The zero schedule and inherited root days are closed.

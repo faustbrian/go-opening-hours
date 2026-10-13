@@ -1,5 +1,8 @@
 # Overnight ranges in five minutes
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 An end earlier than the start is an overnight range owned by the start date:
 `22:00-02:00` on Monday represents Monday 22:00 through Tuesday 02:00.
 

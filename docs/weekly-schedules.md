@@ -1,5 +1,8 @@
 # Weekly schedules in five minutes
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 A schedule has one IANA timezone and seven independent weekly rule slots. A
 missing map key is inherited. At the root schedule, inherited resolves closed;
 inside overlay it means “leave the lower-precedence schedule unchanged.”

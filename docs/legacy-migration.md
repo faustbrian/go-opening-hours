@@ -1,5 +1,8 @@
 # Legacy Laravel and Spatie migration
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 ## Go adapter import migration
 
 New consumers should select the target-oriented paths:

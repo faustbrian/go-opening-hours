@@ -1,5 +1,8 @@
 # Security model
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Version: `OPENINGHOURS-TM-3.0-development`.
 
 This model covers the prepared v3 source and retained published v2 controls.

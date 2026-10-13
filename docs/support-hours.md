@@ -1,5 +1,8 @@
 # Support-hours adoption
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Support desks often cross midnight and operate in a business timezone distinct
 from the caller. Store that timezone explicitly and let the start date own an
 overnight shift. Use dated subtraction for maintenance and replacement for an

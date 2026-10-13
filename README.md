@@ -1,10 +1,7 @@
 # opening-hours
 
 [![CI](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml)
-[![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
-[![Mutation](https://img.shields.io/badge/mutation-local_and_scheduled-blue)](CONTRIBUTING.md#verification)
-[![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
+[![Documentation](https://img.shields.io/badge/docs-adoption_and_API-blue)](docs/index.md)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-opening-hours?sort=semver)](https://github.com/faustbrian/go-opening-hours/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
@@ -35,6 +32,16 @@ go get github.com/faustbrian/go-opening-hours/v2@v2.0.2
 The package models generic availability for service points, storefronts,
 offices, pickup locations, and support desks. It does not parse carrier prose,
 book appointments, plan workforces, or decide whether an order is eligible.
+
+## Adoption entry points
+
+The root module is `github.com/faustbrian/go-opening-hours/v4` (stable).
+It requires Go 1.27.0. Pin the published `v4.0.0` root tag
+with `go get github.com/faustbrian/go-opening-hours/v4@v4.0.0`.
+Root subpackages share this module; they need no separate installation.
+
+Start with the [documentation map](docs/index.md) for package selection,
+examples, operational constraints, and contributor references.
 
 ## Five-minute start
 

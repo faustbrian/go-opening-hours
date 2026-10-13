@@ -1,5 +1,8 @@
 # Availability queries in five minutes
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 - `IsOpen` evaluates an instant in the schedule timezone.
 - `IsOpenLocal` resolves civil fields using its required DST policy and then
   evaluates the selected instant.

@@ -1,5 +1,8 @@
 # Source documentation audit
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 ## Scope and acceptance
 
 Comments/documentation-only pass from fresh main

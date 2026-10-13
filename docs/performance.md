@@ -1,5 +1,8 @@
 # Performance and complexity
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 | Operation | Complexity | Bound |
 | --- | --- | --- |
 | construction | `O(R log R + E log E)` | 64/day, 4,096 exceptions |

@@ -1,5 +1,8 @@
 # Compatibility
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 The minimum supported compiler is Go 1.27.0, the latest stable release at
 implementation time. Prepared v4 uses `api/v4.txt`; historical
 `api/baseline.txt` and `api/v3.txt` remain unchanged. Breaking changes require a new major

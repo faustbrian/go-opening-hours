@@ -1,5 +1,8 @@
 # Owned-module integrations
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 The package keeps each owned capability at an explicit adapter boundary:
 
 - `Clock` and `ElapsedClock` alias narrow `clock` capabilities. Transition

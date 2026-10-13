@@ -1,5 +1,8 @@
 # Timezones and DST in five minutes
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Every non-zero schedule loads an explicit IANA location. `IsOpen(time.Time)`
 starts from an instant and is unambiguous. `IsOpenLocal` and `ResolveLocal`
 require a policy and resolve civil fields to an instant before evaluation.

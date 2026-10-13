@@ -1,5 +1,8 @@
 # Service-point adoption
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Store one schedule per service point with the point's physical IANA timezone.
 Model ordinary collection windows in weekly rules and public holidays or
 temporary closures as dated exceptions. Keep carrier payload interpretation in

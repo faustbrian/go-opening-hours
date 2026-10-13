@@ -1,5 +1,8 @@
 # Persistence
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 `Schedule.Value` emits canonical JSON bytes and `Schedule.Scan` accepts JSONB
 bytes, strings, or SQL `NULL`. `NULL` becomes the fail-closed zero schedule.
 Invalid values leave a typed error and do not expose input.

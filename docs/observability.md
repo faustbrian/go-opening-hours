@@ -1,5 +1,8 @@
 # Observability
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 `ObserveIsOpen` and `ObserveNextTransition` execute normal queries and call an
 optional observer afterward. They accept a separate `clock` `ElapsedClock`
 for monotonic duration measurement. Passing a nil elapsed clock explicitly

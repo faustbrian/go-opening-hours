@@ -1,5 +1,8 @@
 # Roadmap
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 ## Before v1
 
 - Keep the completed local hardening matrix and evidence current.

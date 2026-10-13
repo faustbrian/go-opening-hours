@@ -1,5 +1,8 @@
 # Storefront adoption
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 Use weekly rules for public trading hours, named exception sets for holiday
 calendars, and high-priority exact-date rules for emergency closures. Use
 metadata for a bounded source/revision, not customer-facing translations.

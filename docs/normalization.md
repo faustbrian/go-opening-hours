@@ -1,5 +1,8 @@
 # Formal normalization and boundary contract
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 All intervals use `[start,end)`. Local times have nanosecond precision and lie
 in `[00:00,24:00)`. `00:00-00:00` is invalid; full-day opening is a state.
 

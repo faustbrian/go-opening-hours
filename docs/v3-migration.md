@@ -1,5 +1,8 @@
 # V3 preparation and migration
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 This is the historical v3 preparation record. Opening v3.0.0 is now publicly
 available under `/v3`; the pending-release statements below describe that
 earlier preparation state. Current main prepares v4; see

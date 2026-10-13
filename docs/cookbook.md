@@ -1,5 +1,8 @@
 # Cookbook
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 ## Holiday closure
 
 Create `ExceptionClose` with the holiday date, source, revision, and priority.

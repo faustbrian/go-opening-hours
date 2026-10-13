@@ -1,5 +1,8 @@
 # Architecture
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 The root owns immutable schedule semantics, not external transports or business
 policy. `Date` aliases the immutable `calendar` civil value, while
 `LocalTime` remains distinct from both dates and instants. Schedule construction

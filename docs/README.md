@@ -1,5 +1,8 @@
 # Documentation
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: Documentation map](index.md)
+
 This package belongs to Golib's versioned
 [Domain utilities family](https://github.com/faustbrian/go-library-tools/blob/v1.6.2/docs/ecosystem/design-language.md#package-families-and-selection).
 Use the [ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.6.2/docs/ecosystem/README.md)

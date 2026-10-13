@@ -1,5 +1,8 @@
 # V2 migration
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 V2.0.1 is the published, verified stable release. Published
 v1.1.0 remains available at its original module path.
 

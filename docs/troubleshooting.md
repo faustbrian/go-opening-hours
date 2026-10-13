@@ -1,5 +1,8 @@
 # Troubleshooting
 
+[Documentation map](index.md) · [Repository README](../README.md)
+[Next: API reference](api.md)
+
 | Symptom | Cause | Action |
 | --- | --- | --- |
 | `invalid_timezone` | empty/unknown IANA identity | install tzdata or correct identity |
