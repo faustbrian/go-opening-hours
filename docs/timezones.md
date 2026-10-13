@@ -23,20 +23,27 @@ to `calendar/timezone`, which in turn uses Go's installed IANA database.
 Opening-hours adds only the explicit `ShiftForward` schedule policy for gaps.
 Canonical encoding stores the zone identity, not a frozen rule snapshot.
 
-## Boundary expansion and search limit
+## Point transitions and boundary expansion
 
 Point queries test the instant's local wall-clock membership. Interval expansion
 instead resolves an ambiguous opening earlier and closing later. These are not
 universally equivalent across a fold: for New York's Sunday 01:30–02:30 rule on
 2026-11-01, `IsOpen` is false at 06:00Z (the clock returns to 01:00 EST), while
 `EffectiveInstantRanges(05:30Z,07:30Z)` includes that instant. `OpenDuration`
-sums this boundary-policy expansion, not an exhaustive point-membership integral.
+continues to sum this two-hour boundary-policy expansion, not the 90-minute
+point-membership integral. The expansion and duration policies are unchanged.
 
-Transition search enumerates those resolved range endpoints and checks point
-values immediately before/after them. It does not generate all offset jumps or
-repeat every folded endpoint. In the same example, `NextTransition` from 05:59Z
-returns the 07:30Z closing endpoint rather than the 06:00Z wall-membership change.
-Do not treat this API as an exhaustive DST transition stream. These observations
-use Go 1.27.2 on darwin/arm64 with the installed New York timezone data; no frozen
-IANA edition or general conformance is asserted. Correcting that runtime boundary
-would require a separate calendar/search change and focused behavioral coverage.
+Transition search follows actual point membership: it includes timezone-offset
+jumps and both occurrences of a folded civil endpoint, then checks point values
+immediately before/at each candidate. In this example the state changes are
+05:30Z opening, 06:00Z closing, 06:30Z opening and 07:30Z closing.
+`NextTransition`/typed searches return the first matching change strictly after
+the cursor; `PreviousTransition` returns the nearest change strictly before it.
+An offset jump that does not change availability is not a schedule transition.
+Search horizons remain bounded to 366 elapsed days.
+
+The regression corpus attributes exact New York TZif bytes to the official
+Go 1.27.2 source archive and compares these selected cases with an independent
+Python `zoneinfo` wall-membership oracle. That is a bounded regression proof,
+not a claim of a frozen runtime IANA edition or universal timezone conformance.
+Runtime schedules still use the deployment's installed timezone data.

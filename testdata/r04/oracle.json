@@ -1,0 +1,70 @@
+{
+  "transitions": [
+    {
+      "instant": "2026-11-01T05:30:00Z",
+      "open": true
+    },
+    {
+      "instant": "2026-11-01T06:00:00Z",
+      "open": false
+    },
+    {
+      "instant": "2026-11-01T06:30:00Z",
+      "open": true
+    },
+    {
+      "instant": "2026-11-01T07:30:00Z",
+      "open": false
+    }
+  ],
+  "states": [
+    {
+      "instant": "2026-11-01T05:29:59.999999Z",
+      "open": false
+    },
+    {
+      "instant": "2026-11-01T05:30:00Z",
+      "open": true
+    },
+    {
+      "instant": "2026-11-01T05:30:00.000001Z",
+      "open": true
+    },
+    {
+      "instant": "2026-11-01T05:59:59.999999Z",
+      "open": true
+    },
+    {
+      "instant": "2026-11-01T06:00:00Z",
+      "open": false
+    },
+    {
+      "instant": "2026-11-01T06:00:00.000001Z",
+      "open": false
+    },
+    {
+      "instant": "2026-11-01T06:29:59.999999Z",
+      "open": false
+    },
+    {
+      "instant": "2026-11-01T06:30:00Z",
+      "open": true
+    },
+    {
+      "instant": "2026-11-01T06:30:00.000001Z",
+      "open": true
+    },
+    {
+      "instant": "2026-11-01T07:29:59.999999Z",
+      "open": true
+    },
+    {
+      "instant": "2026-11-01T07:30:00Z",
+      "open": false
+    },
+    {
+      "instant": "2026-11-01T07:30:00.000001Z",
+      "open": false
+    }
+  ]
+}

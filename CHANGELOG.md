@@ -5,6 +5,13 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Restore first/nearest actual availability transitions across timezone-offset
+  jumps and repeated fold endpoints, including typed searches and prepared
+  indexes. Point queries and earlier-opening/later-closing interval expansion
+  remain unchanged; `OpenDuration` still sums the expansion envelope.
+
 ### Changed
 
 - Clarify copied schedule ownership, boundary-policy DST expansion, adapter

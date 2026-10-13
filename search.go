@@ -29,11 +29,11 @@ type Transition struct {
 	Explanation Explanation
 }
 
-// NextTransition finds the first resolved civil-range endpoint after instant
-// whose before/after IsOpen values differ. The horizon is positive and at most
-// 366 elapsed days; exhaustion returns CodeSearchExhausted. It does not enumerate
-// timezone-offset jumps or every fold occurrence, so it can omit wall-membership
-// changes at those instants. See docs/timezones.md for the documented fold limit.
+// NextTransition finds the first actual point-availability change strictly after
+// instant. Candidates include civil endpoints in both fold occurrences and
+// timezone-offset discontinuities. The positive horizon is at most 366 elapsed
+// days; exhaustion returns CodeSearchExhausted. Interval expansion uses a
+// separate boundary policy; see docs/timezones.md.
 func (s Schedule) NextTransition(instant time.Time, horizon time.Duration) (Transition, error) {
 	if horizon <= 0 || horizon > maxSearchHorizon {
 		return Transition{}, newError("next transition", CodeInvalidHorizon)
@@ -47,25 +47,11 @@ func (s Schedule) NextTransition(instant time.Time, horizon time.Duration) (Tran
 	date, _ := NewDate(localized.Year(), localized.Month(), localized.Day())
 	localizedDeadline := deadline.In(s.data.location)
 	lastDate, _ := NewDate(localizedDeadline.Year(), localizedDeadline.Month(), localizedDeadline.Day())
-	dayCount := date.DaysUntil(lastDate) + 1
-	transitions := make([]Transition, 0, 16)
-	for step := range dayCount {
-		day, _ := addDate(date, step)
-		segments, _, err := s.effectiveSegments(day)
-		if err != nil {
-			return Transition{}, err
-		}
-		for _, item := range segments {
-			opening, openingErr := s.resolveBoundary(day, item.start, true)
-			if openingErr == nil {
-				transitions = append(transitions, Transition{Instant: opening, Kind: TransitionOpen})
-			}
-			closing, closingErr := s.resolveBoundary(day, item.end, false)
-			if closingErr == nil {
-				transitions = append(transitions, Transition{Instant: closing, Kind: TransitionClose})
-			}
-		}
+	transitions, err := s.transitionCandidates(date, lastDate, instant, deadline)
+	if err != nil {
+		return Transition{}, err
 	}
+
 	slices.SortFunc(transitions, func(left, right Transition) int {
 		if comparison := left.Instant.Compare(right.Instant); comparison != 0 {
 			return comparison
@@ -95,14 +81,14 @@ func (s Schedule) NextTransition(instant time.Time, horizon time.Duration) (Tran
 	return Transition{}, newError("next transition", CodeSearchExhausted)
 }
 
-// NextOpening selects the next opening among NextTransition's endpoint
-// candidates within the same bounded horizon; it inherits its fold-search limit.
+// NextOpening finds the first actual opening strictly after instant within
+// NextTransition's bounded horizon.
 func (s Schedule) NextOpening(instant time.Time, horizon time.Duration) (Transition, error) {
 	return s.nextTransitionOfKind(instant, horizon, TransitionOpen)
 }
 
-// NextClosing selects the next closing among NextTransition's endpoint
-// candidates within the same bounded horizon; it inherits its fold-search limit.
+// NextClosing finds the first actual closing strictly after instant within
+// NextTransition's bounded horizon.
 func (s Schedule) NextClosing(instant time.Time, horizon time.Duration) (Transition, error) {
 	return s.nextTransitionOfKind(instant, horizon, TransitionClose)
 }
@@ -135,11 +121,11 @@ func advanceTransitionCursor(cursor time.Time, transition Transition, deadline t
 	return transition.Instant
 }
 
-// PreviousTransition finds the nearest resolved endpoint before instant whose
-// before/after IsOpen values differ, within a positive horizon of at most 366
-// elapsed days. Like NextTransition, it does not enumerate timezone-offset jumps
-// or every fold occurrence and can omit changes there. Closing explanations use
-// the pre-boundary result; opening explanations use the post-boundary result.
+// PreviousTransition finds the nearest actual point-availability change strictly
+// before instant within a positive horizon of at most 366 elapsed days. Like
+// NextTransition, it includes offset discontinuities and both fold occurrences.
+// Closing explanations use the pre-boundary result; opening explanations use
+// the post-boundary result.
 func (s Schedule) PreviousTransition(instant time.Time, horizon time.Duration) (Transition, error) {
 	if horizon <= 0 || horizon > maxSearchHorizon {
 		return Transition{}, newError("previous transition", CodeInvalidHorizon)
@@ -155,25 +141,11 @@ func (s Schedule) PreviousTransition(instant time.Time, horizon time.Duration) (
 	if firstDateErr != nil {
 		firstDate = MustDate(1, time.January, 1)
 	}
-	dayCount := firstDate.DaysUntil(date) + 1
-	candidates := make([]Transition, 0, 16)
-	for step := range dayCount {
-		day, _ := addDate(firstDate, step)
-		segments, _, err := s.effectiveSegments(day)
-		if err != nil {
-			return Transition{}, err
-		}
-		for _, item := range segments {
-			opening, openingErr := s.resolveBoundary(day, item.start, true)
-			if openingErr == nil {
-				candidates = append(candidates, Transition{Instant: opening, Kind: TransitionOpen})
-			}
-			closing, closingErr := s.resolveBoundary(day, item.end, false)
-			if closingErr == nil {
-				candidates = append(candidates, Transition{Instant: closing, Kind: TransitionClose})
-			}
-		}
+	candidates, err := s.transitionCandidates(firstDate, date, oldest.Add(-time.Nanosecond), instant)
+	if err != nil {
+		return Transition{}, err
 	}
+
 	slices.SortFunc(candidates, func(left, right Transition) int {
 		return right.Instant.Compare(left.Instant)
 	})

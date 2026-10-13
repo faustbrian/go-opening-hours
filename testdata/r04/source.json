@@ -1,0 +1,19 @@
+{
+  "source": "https://github.com/golang/go/blob/022c8636110ebac86a9b88724cda168ed713c21f/lib/time/zoneinfo.zip",
+  "go_tag": "go1.27.2",
+  "git_commit": "022c8636110ebac86a9b88724cda168ed713c21f",
+  "archive_sha256": "b2d18a7c8fa8142097a48c99609fb3c92db5ee98bc740294e57eab8ae9f94779",
+  "entry": "America/New_York",
+  "tzif_sha256": "d7f2206b3a45989fc9ad63d558922532fa7352280d5f87176bf1db79cb1d1fa9",
+  "attribution": "Go lib/time/README: compiled from IANA Time Zone Database, public domain. No separately inferred IANA release edition.",
+  "additional_entry": {
+    "entry": "Antarctica/Casey",
+    "tzif_sha256": "d6373e1408ef90a9e60a3873f3ec908042ab37fb159b3022f03568cbdfcaf004"
+  },
+  "oracle_generator": {
+    "command": "python3 testdata/r04/oracle.py testdata/r04/zoneinfo/America/New_York > testdata/r04/oracle.json",
+    "python_version": "3.9.6",
+    "producer_sha256": "54c4befbcc11f31b33e470e68f58d360b524cd010151710fc79400e207903450",
+    "oracle_sha256": "652f9af812e39db3c47d4867d31ef9ea8f4ff8ec3274dd7040767f75b1a2aeb6"
+  }
+}
