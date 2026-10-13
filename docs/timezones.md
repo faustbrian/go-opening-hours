@@ -33,10 +33,10 @@ uses that same membership. For New York's Sunday 01:30–02:30 rule on 2026-11-0
 `[06:00Z,06:30Z)` period returns no intervals and zero duration. An all-day rule
 still spans the entire 25-hour fold day, because the offset jump does not close it.
 
-The Unreleased point-membership policy supersedes the former contiguous
+The prepared v5.0.0 point-membership policy supersedes the former contiguous
 earlier-opening/later-closing envelope and gap-boundary shifting used by interval
 expansion. Applications depending on that envelope must change their duration
-and expansion expectations when adopting the repaired release. Canonical bytes
+and expansion expectations when adopting v5 after publication. Canonical bytes
 and explicit local resolution policies are unchanged.
 
 Transition search follows actual point membership: it includes timezone-offset

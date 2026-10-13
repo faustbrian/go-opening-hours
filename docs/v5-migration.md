@@ -2,9 +2,16 @@
 
 [Documentation map](index.md) · [Repository README](../README.md)
 
-Current main prepares `github.com/faustbrian/go-opening-hours/v5`. V5 is not
-published yet. Published v4.0.0 remains available unchanged at `/v4`; do not
-infer v5 availability from this source tree.
+Current main prepares v5.0.0 of `github.com/faustbrian/go-opening-hours/v5`.
+Public adoption requires the v5.0.0 tag and release; source-tree presence alone
+does not establish availability. Published v4.0.0 remains available unchanged at
+`/v4`.
+
+Once the v5.0.0 tag and release are published, select it explicitly:
+
+```sh
+go get github.com/faustbrian/go-opening-hours/v5@v5.0.0
+```
 
 Migrate all owned Opening imports from `/v4` to `/v5` together, including
 canonical `adapters/<target>` packages and retained `openinghours<target>`

@@ -5,17 +5,22 @@ Versioning after v1.0.0.
 
 ## [Unreleased]
 
+## [5.0.0] - 2026-10-13
+
+Recorded as a prepared release candidate on this date; publication is a separate
+step. Public adoption requires the v5.0.0 tag and release.
+
 ### Fixed
 
 - Restore first/nearest actual availability transitions across timezone-offset
   jumps and repeated fold endpoints, including typed searches and prepared
-  indexes.
+  indexes. ([9268ec2577](https://github.com/faustbrian/go-opening-hours/commit/9268ec25777270b83a8bdcef8da5c621cbfaca3c))
 - Make instant expansion and elapsed duration agree with civil point membership
   across folds and gaps. New York's 2026-11-01 Sunday 01:30–02:30 rule expands
   to two open intervals totaling 90 minutes, not the former contiguous two-hour
   envelope. Consumers relying on that envelope must adopt the point-membership
   policy; explicit local resolution policies and stored canonical bytes remain
-  unchanged.
+  unchanged. ([e1979a85e9](https://github.com/faustbrian/go-opening-hours/commit/e1979a85e99b159f57accfafbcc2b887125b76db))
 
 ### Changed
 
@@ -26,7 +31,25 @@ Versioning after v1.0.0.
   version 1 are retained. See the [v5 migration guide](docs/v5-migration.md).
 - Clarify copied schedule ownership, point-membership DST expansion, adapter
   admission, representation equality and synchronous observation limits.
-  Stored formats and calendar behavior are unchanged.
+  Stored formats and calendar behavior are unchanged by this documentation-only
+  item. ([f9539194e6](https://github.com/faustbrian/go-opening-hours/commit/f9539194e65b56c4eed3d051364d3140658e22fb))
+
+### Documentation
+
+- Improve package adoption navigation and reconcile the independently published
+  v4 cohort; this is documentation history, not another v5 runtime correction.
+  ([43f3227a1f](https://github.com/faustbrian/go-opening-hours/commit/43f3227a1f116f51ad5caec791f4fbe107a65a41), [72a64ab20d](https://github.com/faustbrian/go-opening-hours/commit/72a64ab20d55d1ff70838f916f919f75503851da))
+
+### Maintenance
+
+- Standardize the risk-based repository development policy without changing
+  schedule semantics. ([0474b88589](https://github.com/faustbrian/go-opening-hours/commit/0474b88589c1bb079b5d3ea0dc009e3a339e994b))
+- Update verification through patched documentation tooling, bounded public
+  Tools v2.1.1, supply-chain Tools v2.3.0 and source-documentation enforcement
+  at Tools v2.4.0. Development/CI selects Go 1.27.2 while the module minimum
+  stays Go 1.27.0. Ordinary bounded checks and explicit full/release gates remain
+  separate; these changes are verification maintenance, not supplier repins or
+  runtime fixes. ([f3beee84e8](https://github.com/faustbrian/go-opening-hours/commit/f3beee84e889c09a0c838ccfa8aad9fda1eb39ee), [3d7170435c](https://github.com/faustbrian/go-opening-hours/commit/3d7170435cce222c3770693731741f6e655c4f50), [b312297180](https://github.com/faustbrian/go-opening-hours/commit/b31229718005f68f508694699fb20bd76e457fb5), [46d206ac47](https://github.com/faustbrian/go-opening-hours/commit/46d206ac471a6985105eb0578bec036583890528))
 
 ## [4.0.0] - 2026-10-06
 
@@ -245,6 +268,7 @@ GitHub release was published for this tag.
 - Replace unreachable owned-module pseudo-versions with published revisions so
   clean checkouts can reproduce every gate without local replacements.
 
-[Unreleased]: https://github.com/faustbrian/go-opening-hours/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/faustbrian/go-opening-hours/compare/e1979a85e99b159f57accfafbcc2b887125b76db...HEAD
+[5.0.0]: https://github.com/faustbrian/go-opening-hours/compare/v4.0.0...e1979a85e99b159f57accfafbcc2b887125b76db
 [1.1.0]: https://github.com/faustbrian/go-opening-hours/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/faustbrian/go-opening-hours/releases/tag/v1.0.0

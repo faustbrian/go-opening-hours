@@ -10,10 +10,12 @@
 Immutable, deterministic, timezone-safe recurring opening hours and dated
 exceptions for Go 1.27.0 and later.
 
-Current main prepares `github.com/faustbrian/go-opening-hours/v5` with exact
-civil point-membership expansion and duration. V5 is not published yet; see the
-[v5 migration guide](docs/v5-migration.md). Published v4.0.0 remains independently
-available under `/v4` with its original interval-expansion policy.
+Current main prepares v5.0.0 of `github.com/faustbrian/go-opening-hours/v5`
+with exact civil point-membership expansion and duration. Public adoption requires
+the v5.0.0 tag and release; source-tree presence alone does not establish
+availability. See the [v5 migration guide](docs/v5-migration.md). Published v4.0.0
+remains independently available under `/v4` with its original interval-expansion
+policy.
 Public Opening v3.0.0 remains available at `/v3`, and the retained public
 v2 root module is `github.com/faustbrian/go-opening-hours/v2`.
 Stable releases are available on [GitHub](https://github.com/faustbrian/go-opening-hours/releases).
@@ -40,6 +42,15 @@ The prepared root module is `github.com/faustbrian/go-opening-hours/v5`.
 It requires Go 1.27.0. Adopt v5 only after its public release is available;
 the latest published v4 cohort remains `v4.0.0` under `/v4`.
 Root subpackages share this module; they need no separate installation.
+
+After v5.0.0 is published, select the complete v5 cohort explicitly:
+
+```sh
+go get github.com/faustbrian/go-opening-hours/v5@v5.0.0
+```
+
+Review interval-expansion and duration expectations before migrating; unchanged
+canonical bytes do not preserve v4's former expansion semantics.
 
 Start with the [documentation map](docs/index.md) for package selection,
 examples, operational constraints, and contributor references.
