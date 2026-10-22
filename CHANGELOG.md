@@ -3,6 +3,12 @@
 All notable changes follow Keep a Changelog. The project uses Semantic
 Versioning after v1.0.0.
 
+## 5.0.1 - 2026-10-22
+
+### Changed
+
+- Publish the current source and documentation with a fresh immutable tag.
+
 ## [Unreleased]
 
 ## [5.0.0] - 2026-10-13
