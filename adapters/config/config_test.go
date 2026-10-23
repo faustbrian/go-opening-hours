@@ -1,17 +1,12 @@
-//nolint:staticcheck // This compatibility test intentionally exercises deprecated facades.
 package openinghoursconfig_test
 
-//lint:file-ignore SA1019 This compatibility test intentionally exercises deprecated facades.
-
 import (
-	"reflect"
 	"strings"
 	"testing"
 
-	configdecode "github.com/faustbrian/go-config/v2/decode"
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
-	openinghoursconfig "github.com/faustbrian/go-opening-hours/v5/adapters/config"
-	legacy "github.com/faustbrian/go-opening-hours/v5/openinghoursconfig"
+	configdecode "github.com/faustbrian/go-config/v3/decode"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
+	openinghoursconfig "github.com/faustbrian/go-opening-hours/v6/adapters/config"
 )
 
 func TestValueRoundTripAndAtomicFailure(t *testing.T) {
@@ -41,11 +36,7 @@ func TestValueRoundTripAndAtomicFailure(t *testing.T) {
 	}
 }
 
-func TestValueErrorsAndNamedIdentity(t *testing.T) {
-	//nolint:errorlint // Exact sentinel identity is the compatibility contract.
-	if openinghoursconfig.ErrInvalidValue != legacy.ErrInvalidValue {
-		t.Fatal("config sentinel identity differs between canonical and legacy paths")
-	}
+func TestValueErrors(t *testing.T) {
 	var nilValue *openinghoursconfig.Value
 	//nolint:errorlint // Exact sentinel return is the compatibility contract.
 	if err := nilValue.UnmarshalConfigValue("{}"); err != openinghoursconfig.ErrInvalidValue {
@@ -55,9 +46,6 @@ func TestValueErrorsAndNamedIdentity(t *testing.T) {
 	//nolint:errorlint // Exact sentinel return is the compatibility contract.
 	if err := value.UnmarshalConfigValue(42); err != openinghoursconfig.ErrInvalidValue {
 		t.Fatalf("non-string error = %v", err)
-	}
-	if reflect.TypeOf(value) == reflect.TypeOf(legacy.Value{}) {
-		t.Fatal("canonical and legacy Value reflection identities match")
 	}
 	if _, err := openinghoursconfig.Parse(`{"secret":"do-not-repeat"}`); err == nil || strings.Contains(err.Error(), "do-not-repeat") {
 		t.Fatalf("invalid config error = %v", err)

@@ -1,7 +1,4 @@
-//nolint:staticcheck // This compatibility test intentionally exercises deprecated facades.
 package openinghourscalendar_test
-
-//lint:file-ignore SA1019 This compatibility test intentionally exercises deprecated facades.
 
 import (
 	"errors"
@@ -10,49 +7,11 @@ import (
 
 	calendar "github.com/faustbrian/go-calendar/v2"
 	"github.com/faustbrian/go-calendar/v2/business"
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
-	openinghourscalendar "github.com/faustbrian/go-opening-hours/v5/adapters/calendar"
-	legacy "github.com/faustbrian/go-opening-hours/v5/openinghourscalendar"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
+	openinghourscalendar "github.com/faustbrian/go-opening-hours/v6/adapters/calendar"
 )
 
-func TestDateConversionAndHolidayClosuresMatchLegacy(t *testing.T) {
-	date := calendar.MustDate(2026, time.December, 25)
-	converted, err := openinghourscalendar.FromDate(date)
-	if err != nil || converted != openinghours.MustDate(2026, time.December, 25) {
-		t.Fatalf("FromDate() = %#v, %v", converted, err)
-	}
-	if got, err := openinghourscalendar.ToDate(converted); err != nil || !got.Equal(date) {
-		t.Fatalf("ToDate() = %#v, %v", got, err)
-	}
-
-	holiday := business.MustHoliday(date, "Christmas", nil)
-	businessCalendar, err := business.NewCalendar(business.Config{
-		Revision: "2026", Holidays: []business.Holiday{holiday},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	start := calendar.MustDate(2026, time.December, 24)
-	end := calendar.MustDate(2026, time.December, 26)
-	want, err := legacy.HolidayClosures(businessCalendar, start, end, 3, 100, "public-holidays")
-	if err != nil {
-		t.Fatal(err)
-	}
-	got, err := openinghourscalendar.HolidayClosures(businessCalendar, start, end, 3, 100, "public-holidays")
-	if err != nil || len(got) != 1 || len(want) != 1 ||
-		got[0].Date() != want[0].Date() || got[0].Operation() != want[0].Operation() ||
-		got[0].Priority() != want[0].Priority() || got[0].Source() != want[0].Source() ||
-		got[0].Revision() != want[0].Revision() || got[0].Set() != want[0].Set() {
-		t.Fatalf("HolidayClosures() = %#v, %v; legacy = %#v", got, err, want)
-	}
-}
-
-func TestCalendarErrorsAndBoundsMatchLegacy(t *testing.T) {
-	//nolint:errorlint // Exact sentinel identity is the compatibility contract.
-	if openinghourscalendar.ErrInvalidInput != legacy.ErrInvalidInput ||
-		openinghourscalendar.ErrExpansionLimit != legacy.ErrExpansionLimit {
-		t.Fatal("calendar sentinel identity differs between canonical and legacy paths")
-	}
+func TestCalendarErrorsAndBounds(t *testing.T) {
 	if _, err := openinghourscalendar.FromDate(calendar.Date{}); !errors.Is(err, openinghourscalendar.ErrInvalidInput) {
 		t.Fatalf("FromDate() error = %v", err)
 	}

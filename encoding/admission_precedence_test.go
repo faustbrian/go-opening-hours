@@ -3,7 +3,7 @@ package encoding_test
 import (
 	"testing"
 
-	openinghoursencoding "github.com/faustbrian/go-opening-hours/v5/encoding"
+	openinghoursencoding "github.com/faustbrian/go-opening-hours/v6/encoding"
 )
 
 func TestImportLimitsRejectBeforeMalformedInput(t *testing.T) {

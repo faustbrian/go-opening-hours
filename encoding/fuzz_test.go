@@ -3,7 +3,7 @@ package encoding_test
 import (
 	"testing"
 
-	openinghoursencoding "github.com/faustbrian/go-opening-hours/v5/encoding"
+	openinghoursencoding "github.com/faustbrian/go-opening-hours/v6/encoding"
 )
 
 // FuzzStructuredImports feeds one arbitrary weekday/range to both import representations; accepted schedules must encode and parse. Cardinality is fixed at one and endpoint strings have no separate harness byte cap.

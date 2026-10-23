@@ -1,12 +1,14 @@
 # Compatibility Policy
 
 The repository has one releasable root Go module. Its packages, including
-canonical adapters and compatibility facades, ship under root `v<version>`
+canonical adapters, ship under root `v<version>`
 tags and follow semantic versioning together.
 
-Main prepares the `/v4` module/import suffix without version-specific source
-directories. Its Wire3 adoption requires coordinated nominal-type migration;
-see [v4 preparation](docs/v4-migration.md). Public v3.0.0 remains available
+Main prepares the `/v6` module/import suffix without version-specific source
+directories; it adopts Config, Temporal and Validation v3 and removes the
+compatibility facades. Public v5 remains available under `/v5` and v4.0.0
+under `/v4`; v4 adopted Wire3, see [v4 preparation](docs/v4-migration.md).
+Public v3.0.0 remains available
 under `/v3` with Calendar2, Temporal2 and Validation2 dependencies.
 Public v2.0.2 uses the required `/v2` module/import suffix. Published v1.1.0 remains
 available under the original module path. V2 intentionally rejects malformed
@@ -31,8 +33,7 @@ Specification-backed modules MUST NOT diverge from their declared standards.
 Ambiguities require documented decisions and stable tests. Deprecated APIs
 follow [`DEPRECATION.md`](DEPRECATION.md).
 
-The `openinghourscalendar`, `openinghoursconfig`, `openinghourstemporal`,
-`openinghoursvalidation`, and `openinghourswire` package paths remain supported
-compatibility facades for their `adapters/<target>` successors. The facades
-preserve released signatures, named-type identity, shared sentinels, encoding,
-and error behavior for the interval defined in [`DEPRECATION.md`](DEPRECATION.md).
+Version 6 removed the `openinghourscalendar`, `openinghoursconfig`,
+`openinghourstemporal`, `openinghoursvalidation`, and `openinghourswire`
+compatibility facades in favour of their `adapters/<target>` successors; see
+[`DEPRECATION.md`](DEPRECATION.md).

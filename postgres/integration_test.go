@@ -9,7 +9,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
 )
 
 // This tagged test exercises a real server, unlike the in-process pgx codec

@@ -1,0 +1,1033 @@
+package openinghours // import "github.com/faustbrian/go-opening-hours/v6"
+
+Package openinghours provides immutable recurring opening-hours schedules, dated
+exceptions, explicit timezone evaluation, bounded search, and stable canonical
+persistence. Start with NewSchedule and IsOpen for explicit instant queries.
+LocalTime is a civil wall value, not an elapsed duration; ranges own their start
+date and are start-inclusive/end-exclusive. A zero Schedule is closed without a
+timezone, while a zero DayRule is inherited.
+
+Constructed schedules and returned detached results support concurrent reads.
+Constructors copy input collections; callers must not mutate them during a
+call. Pointer decoding/scanning replaces caller storage and needs external
+synchronization. The core owns no goroutines, clocks, network IO or database
+lifecycle. Borrowed clock/observer capabilities execute synchronously.
+
+Date and zone resolution use Calendar v2; timezone behavior depends on the
+installed Go/IANA data, not a frozen rule snapshot. Canonical wire edition 1
+is package-owned and carries provenance, not authentication. Optional adapters
+introduce their declared client/module contracts and own no external service.
+
+CONSTANTS
+
+const (
+	// MaxExceptions is the maximum accepted exception collection per schedule.
+	MaxExceptions = 4096
+)
+const (
+
+	// MaxRangesPerDay is the maximum accepted range collection for one day.
+	MaxRangesPerDay = 64
+)
+const (
+	// MaxJSONBytes bounds canonical and parsed schedule documents.
+	MaxJSONBytes = 1 << 20
+)
+const (
+	// MaxCompositionDepth bounds immutable algebra expression nesting.
+	MaxCompositionDepth = 16
+)
+const (
+	// MaxHumanSummaryBytes bounds presentation-oriented schedule summaries.
+	MaxHumanSummaryBytes = 64 << 10
+)
+
+FUNCTIONS
+
+func IsCode(err error, code Code) bool
+    IsCode reports whether err or an error in its chain has code.
+
+
+TYPES
+
+type Availability struct {
+	// Open reports availability at the queried instant; ranges are start-inclusive/end-exclusive.
+	Open bool
+	// Explanation describes the broad source even for closed outcomes; exception provenance
+	// names the last operation, not every contributor.
+	Explanation Explanation
+}
+    Availability is the explained result of a point query.
+
+type Clock = clock.Clock
+    Clock is the clock current-time capability. Core schedule queries never read
+    a process-global clock.
+
+type Code string
+    Code identifies a stable, safe-to-expose failure category.
+
+const (
+	// CodeInvalidTime reports a wall-clock value outside its valid domain.
+	CodeInvalidTime Code = "invalid_time"
+	// CodeInvalidDate reports a civil date outside its valid domain.
+	CodeInvalidDate Code = "invalid_date"
+	// CodeInvalidRange reports a malformed or zero-length time range.
+	CodeInvalidRange Code = "invalid_range"
+	// CodeInvalidTimezone reports an absent or unknown IANA timezone.
+	CodeInvalidTimezone Code = "invalid_timezone"
+	// CodeInvalidWeekday reports a weekday outside Sunday through Saturday.
+	CodeInvalidWeekday Code = "invalid_weekday"
+	// CodeInvalidState reports an unsupported enum or state combination.
+	CodeInvalidState Code = "invalid_state"
+	// CodeOverlap reports overlapping ranges under a rejecting policy.
+	CodeOverlap Code = "overlap"
+	// CodeLimitExceeded reports a configured resource bound was exceeded.
+	CodeLimitExceeded Code = "limit_exceeded"
+	// CodeAmbiguousException reports equal-priority exception ambiguity.
+	CodeAmbiguousException Code = "ambiguous_exception"
+	// CodeDuplicateRevision reports duplicate source revision identity.
+	CodeDuplicateRevision Code = "duplicate_revision"
+	// CodeAmbiguousLocalTime reports a local time in a timezone fold.
+	CodeAmbiguousLocalTime Code = "ambiguous_local_time"
+	// CodeNonexistentLocalTime reports a local time in a timezone gap.
+	CodeNonexistentLocalTime Code = "nonexistent_local_time"
+	// CodeInvalidHorizon reports an unbounded or excessive search horizon.
+	CodeInvalidHorizon Code = "invalid_horizon"
+	// CodeSearchExhausted reports no transition in the bounded horizon.
+	CodeSearchExhausted Code = "search_exhausted"
+	// CodeTimezoneMismatch reports composition across different timezones.
+	CodeTimezoneMismatch Code = "timezone_mismatch"
+	// CodeInvalidEncoding reports malformed or noncanonical input structure.
+	CodeInvalidEncoding Code = "invalid_encoding"
+	// CodeUnsupportedVersion reports an unknown canonical wire version.
+	CodeUnsupportedVersion Code = "unsupported_version"
+	// CodeInvalidInterval reports a reversed, empty, or excessive interval.
+	CodeInvalidInterval Code = "invalid_interval"
+	// CodeOutsideEffectiveRange reports a query outside configured dates.
+	CodeOutsideEffectiveRange Code = "outside_effective_range"
+	// CodeInvalidClock reports a missing injected clock capability.
+	CodeInvalidClock Code = "invalid_clock"
+	// CodeAdjacent reports adjacent ranges under a rejecting policy.
+	CodeAdjacent Code = "adjacent"
+	// CodeDayBoundaryOverflow reports normalized ownership beyond one day.
+	CodeDayBoundaryOverflow Code = "day_boundary_overflow"
+)
+type Config struct {
+	// Timezone is the explicit location name admitted by calendar/timezone, with no
+	// process-local fallback.
+	Timezone string
+	// Weekly is copied with nested range slices; absent/inherited days are closed without a
+	// lower source.
+	Weekly map[time.Weekday]DayRule
+	// Exceptions is copied and normalized with nested rule slices; total flattened exceptions
+	// must be at most MaxExceptions.
+	Exceptions []Exception
+	// ExceptionSets is flattened into copied exceptions; every set must be named and nonempty.
+	ExceptionSets []ExceptionSet
+	// ConflictPolicy defaults to RejectAmbiguous; ResolveCanonical selects deterministic
+	// equal-priority provenance order.
+	ConflictPolicy ConflictPolicy
+	// Metadata is copied bounded provenance, not secret classification or authentication.
+	Metadata Metadata
+	// EffectiveStart is an optional inclusive civil-date bound; the pointed value is copied.
+	EffectiveStart *Date
+	// EffectiveEnd is an optional inclusive civil-date bound; when both exist, it must not
+	// precede EffectiveStart.
+	EffectiveEnd *Date
+	// OutsideEffective defaults to OutsideClosed; OutsideError rejects evaluation outside
+	// configured dates.
+	OutsideEffective OutsideEffectivePolicy
+}
+    Config is copied by NewSchedule.
+
+type ConflictPolicy uint8
+    ConflictPolicy controls equal-priority exception handling.
+
+const (
+	// RejectAmbiguous rejects equal-priority rules without unique precedence.
+	RejectAmbiguous ConflictPolicy = iota
+	// ResolveCanonical resolves equal priorities by stable provenance order.
+	ResolveCanonical
+)
+type DailyRange struct {
+	// Start is the inclusive local/absolute endpoint.
+	Start LocalTime
+	// End is the exclusive endpoint; DailyRange midnight requires EndAtDayBoundary to
+	// distinguish the end of the date.
+	End LocalTime
+	// EndAtDayBoundary marks the date-end midnight represented by zero End, not a zero-length
+	// interval.
+	EndAtDayBoundary bool
+}
+    DailyRange is a start-inclusive, end-exclusive interval within one civil
+    date. EndAtDayBoundary distinguishes midnight at the end from midnight at
+    the start of the date.
+
+type Date = calendar.Date
+    Date is the calendar immutable Gregorian civil date value.
+
+func MustDate(year int, month time.Month, day int) Date
+    MustDate returns a valid date or panics. It is intended for static fixtures.
+
+func NewDate(year int, month time.Month, day int) (Date, error)
+    NewDate validates and constructs a Gregorian civil date.
+
+type DayResult struct {
+	// State is the resolved weekly state, not dated/composed availability.
+	State DayState
+	// Ranges is a detached canonical range slice, safe for caller mutation.
+	Ranges []Range
+}
+    DayResult is a detached result safe for caller mutation.
+
+type DayRule struct {
+	// Has unexported fields.
+}
+    DayRule is an immutable weekly or dated availability rule.
+
+func Closed() DayRule
+    Closed returns an explicit closure rule.
+
+func Inherited() DayRule
+    Inherited returns a rule that delegates to the lower-precedence source.
+
+func OpenAllDay() DayRule
+    OpenAllDay returns an explicit full-day rule.
+
+func OpenRanges(input []Range, policy OverlapPolicy) (DayRule, error)
+    OpenRanges copies, validates and normalizes 1–MaxRangesPerDay input ranges
+    under the selected overlap/adjacency policy. Nil/empty input is not all-day.
+    Exactly one midnight-owned 24-hour merge becomes OpenAllDay; other merges
+    spanning 24 civil hours or more return CodeDayBoundaryOverflow.
+
+func (rule DayRule) Ranges() []Range
+    Ranges returns a detached copy of canonical ranges.
+
+func (rule DayRule) State() DayState
+    State returns the explicit day state.
+
+type DayState uint8
+    DayState distinguishes absence, ranged opening, full-day opening, and
+    closure.
+
+const (
+	// DayInherited delegates to a lower-precedence rule source.
+	DayInherited DayState = iota
+	// DayOpenRanges opens only the rule's explicit local-time ranges.
+	DayOpenRanges
+	// DayOpenAllDay opens the complete owned civil day.
+	DayOpenAllDay
+	// DayClosed explicitly closes the owned civil day.
+	DayClosed
+)
+type ElapsedClock = clock.ElapsedClock
+    ElapsedClock is the clock monotonic elapsed-time capability. Observation
+    helpers accept it separately so measuring a query never reads wall time.
+
+type Error struct {
+	// Code is the stable failure category; package-created values contain no input payload.
+	Code Code
+	// Op names the failing operation; callers constructing Error must keep it bounded and secret-safe.
+	Op string
+}
+    Error is a typed package diagnostic. Package-created errors use fixed safe
+    operation/category text and never embed schedule or input payloads.
+
+func (e *Error) Error() string
+    Error renders the operation/category pair; a nil receiver is not supported.
+
+type Exception struct {
+	// Has unexported fields.
+}
+    Exception is an immutable exact-date availability operation.
+
+func NewException(config ExceptionConfig) (Exception, error)
+    NewException validates an exact-date operation and copies its rule ranges.
+    Source/revision require 1–128 UTF-8 bytes, not secret-free or authenticated
+    text. Priority is bounded; close requires an inherited rule, while other
+    operations require ranged/all-day rules. Failed admission returns a zero
+    Exception.
+
+func (e Exception) Date() Date
+    Date returns the exact exception date.
+
+func (e Exception) Operation() ExceptionOperation
+    Operation returns the exception operation.
+
+func (e Exception) Priority() int
+    Priority returns the deterministic precedence priority.
+
+func (e Exception) Revision() string
+    Revision returns bounded provenance revision.
+
+func (e Exception) Rule() DayRule
+    Rule returns a detached immutable rule.
+
+func (e Exception) Set() string
+    Set returns the optional named exception set.
+
+func (e Exception) Source() string
+    Source returns bounded provenance.
+
+type ExceptionConfig struct {
+	// Date is the exact owned civil date.
+	Date Date
+	// Operation selects replace/add/subtract/close; zero selects replace.
+	Operation ExceptionOperation
+	// Rule supplies ranged/all-day availability except close, which requires the zero inherited rule.
+	Rule DayRule
+	// Priority is from -1000000 through 1000000; later, higher-priority operations are applied
+	// after earlier ones.
+	Priority int
+	// Source is required UTF-8 provenance of 1–128 bytes, not authenticated authority.
+	Source string
+	// Revision is required UTF-8 provenance of 1–128 bytes; source/revision must be unique per
+	// date in a schedule.
+	Revision string
+}
+    ExceptionConfig is copied by NewException.
+
+type ExceptionOperation uint8
+    ExceptionOperation defines how a dated rule changes inherited availability.
+
+const (
+	// ExceptionReplace replaces availability for its civil date.
+	ExceptionReplace ExceptionOperation = iota
+	// ExceptionAdd unions availability into its civil date.
+	ExceptionAdd
+	// ExceptionSubtract removes availability from its civil date.
+	ExceptionSubtract
+	// ExceptionClose closes its civil date completely.
+	ExceptionClose
+)
+type ExceptionRangeConfig struct {
+	// Name is the required UTF-8 set identity of 1–128 bytes.
+	Name string
+	// Start is the inclusive first civil date.
+	Start Date
+	// End is the inclusive last civil date, not earlier than Start.
+	End Date
+	// MaximumDates bounds expanded dates to 1–MaxExceptions; exceeding it returns no partial set.
+	MaximumDates int
+	// Operation selects replace/add/subtract/close; zero selects replace.
+	Operation ExceptionOperation
+	// Rule supplies ranged/all-day availability except close, which requires the zero inherited rule.
+	Rule DayRule
+	// Priority is from -1000000 through 1000000; later, higher-priority operations are applied
+	// after earlier ones.
+	Priority int
+	// Source is required UTF-8 provenance of 1–128 bytes, not authenticated authority.
+	Source string
+	// Revision is required UTF-8 provenance of 1–128 bytes; source/revision must be unique per
+	// date in a schedule.
+	Revision string
+}
+    ExceptionRangeConfig expands a bounded inclusive civil-date range.
+
+type ExceptionSet struct {
+	// Has unexported fields.
+}
+    ExceptionSet is an immutable named group flattened before evaluation.
+
+func ExpandExceptionRange(config ExceptionRangeConfig) (ExceptionSet, error)
+    ExpandExceptionRange resolves a multi-day rule to deterministic exact dates.
+
+func NewExceptionSet(name string, input []Exception) (ExceptionSet, error)
+    NewExceptionSet validates, names, and copies a non-empty exception group.
+
+func (set ExceptionSet) Exceptions() []Exception
+    Exceptions returns detached exception values and range slices.
+
+func (set ExceptionSet) Name() string
+    Name returns the bounded set name.
+
+type Explanation struct {
+	// Rule identifies the broad rule source, not a complete decision trace.
+	Rule RuleKind
+	// Timezone is the schedule zone name, empty for a zero schedule.
+	Timezone string
+	// Source is the final applied exception's caller-supplied provenance, not secret-redacted text.
+	Source string
+	// Revision is that final exception's opaque revision, not authenticated proof.
+	Revision string
+}
+    Explanation reports bounded caller-supplied rule provenance, not a complete
+    causal trace or automatic redaction. Do not put secret data in identities.
+
+type InstantRange struct {
+	// Start is the inclusive local/absolute endpoint.
+	Start time.Time
+	// End is the exclusive absolute endpoint.
+	End time.Time
+}
+    InstantRange is a start-inclusive, end-exclusive absolute interval.
+
+type LocalKind uint8
+    LocalKind classifies a local-to-instant conversion.
+
+const (
+	// LocalExact identifies a local time with exactly one corresponding instant.
+	LocalExact LocalKind = iota
+	// LocalGap identifies a local time shifted through a timezone gap.
+	LocalGap
+	// LocalFold identifies a local time selected from a timezone fold.
+	LocalFold
+)
+type LocalResolutionPolicy uint8
+    LocalResolutionPolicy explicitly resolves DST gaps and folds.
+
+const (
+	// RejectDST rejects both nonexistent and ambiguous local times.
+	RejectDST LocalResolutionPolicy = iota
+	// PreferEarlier selects the earlier instant in a local-time fold.
+	PreferEarlier
+	// PreferLater selects the later instant in a local-time fold.
+	PreferLater
+	// ShiftForward advances a nonexistent local time through a timezone gap.
+	ShiftForward
+)
+type LocalTime struct {
+	// Has unexported fields.
+}
+    LocalTime is a nanosecond-precision wall-clock time without a date or zone.
+    Its zero value is midnight.
+
+func NewLocalTime(hour, minute, second, nanosecond int) (LocalTime, error)
+    NewLocalTime constructs a wall-clock time in the half-open day
+    [00:00,24:00).
+
+func (t LocalTime) Hour() int
+    Hour returns the hour component.
+
+func (t LocalTime) Minute() int
+    Minute returns the minute component.
+
+func (t LocalTime) Nanosecond() int
+    Nanosecond returns the fractional second component.
+
+func (t LocalTime) Second() int
+    Second returns the second component.
+
+type Metadata struct {
+	// Label is caller-supplied UTF-8 text of at most 256 bytes, not automatically redacted.
+	Label string
+	// Source is bounded UTF-8 provenance, not authenticated authority.
+	Source string
+	// Revision is an opaque bounded UTF-8 identity; it is not a content hash or freshness proof.
+	Revision string
+}
+    Metadata carries bounded provenance and has no interval semantics.
+
+type Observation struct {
+	// Operation identifies the observed query or search.
+	Operation Operation
+	// Outcome records success classification or an error without embedding diagnostic text.
+	Outcome Outcome
+	// RangeCount is the number of separately evaluated effective fragments for ObserveIsOpen, or
+	// zero if unavailable.
+	RangeCount int
+	// SearchSteps is a horizon-based estimate capped at 367, not a measured count of candidate
+	// evaluations.
+	SearchSteps int
+	// Duration is caller-supplied elapsed measurement; absent/panicking capabilities report zero.
+	Duration time.Duration
+}
+    Observation contains only bounded operational data. It intentionally has no
+    schedule label, source, revision, date, timezone, or customer fields.
+
+type Observer func(Observation)
+    Observer receives one completed observation outside any lock.
+    Panics are contained and cannot alter the query result. Nil is ignored.
+    Calls are synchronous: blocking code has no cancellation bound and remains
+    caller-owned; concurrent observations may invoke the observer concurrently.
+
+type Operation uint8
+    Operation identifies an observable package operation.
+
+const (
+	// OperationIsOpen identifies an observed instant availability query.
+	OperationIsOpen Operation = iota
+	// OperationNextTransition identifies an observed transition search.
+	OperationNextTransition
+)
+type Outcome uint8
+    Outcome is a bounded, non-sensitive operation result.
+
+const (
+	// OutcomeClosed reports a successful query whose resource is closed.
+	OutcomeClosed Outcome = iota
+	// OutcomeOpen reports a successful query whose resource is open.
+	OutcomeOpen
+	// OutcomeFound reports a transition found within the search horizon.
+	OutcomeFound
+	// OutcomeError reports a typed query or search failure.
+	OutcomeError
+)
+type OutsideEffectivePolicy uint8
+    OutsideEffectivePolicy controls queries outside inclusive effective dates.
+
+const (
+	// OutsideClosed treats dates outside the effective range as closed.
+	OutsideClosed OutsideEffectivePolicy = iota
+	// OutsideError rejects queries outside the effective range.
+	OutsideError
+)
+type OverlapPolicy uint8
+    OverlapPolicy makes normalization of overlapping or adjacent input explicit.
+
+const (
+	// RejectOverlap rejects overlapping ranges but permits adjacency.
+	RejectOverlap OverlapPolicy = iota
+	// RejectOverlapAndAdjacent rejects both overlap and adjacency.
+	RejectOverlapAndAdjacent
+	// MergeOverlap merges overlap but preserves adjacent ranges.
+	MergeOverlap
+	// MergeAdjacent merges both overlapping and adjacent ranges.
+	MergeAdjacent
+)
+type Range struct {
+	// Has unexported fields.
+}
+    Range is a start-inclusive, end-exclusive local-time interval. If End is
+    earlier than Start, the interval is overnight and belongs to its start date.
+
+func NewRange(start, end LocalTime) (Range, error)
+    NewRange creates a non-empty local-time range.
+
+func (r Range) End() LocalTime
+    End returns the exclusive endpoint.
+
+func (r Range) Overnight() bool
+    Overnight reports whether the range ends on the following civil date.
+
+func (r Range) Start() LocalTime
+    Start returns the inclusive endpoint.
+
+type ResolvedLocal struct {
+	// Instant is the selected absolute time in the schedule location.
+	Instant time.Time
+	// Kind distinguishes exact, selected fold or shifted gap resolution.
+	Kind LocalKind
+}
+    ResolvedLocal records the instant and DST classification selected by policy.
+
+type RuleKind uint8
+    RuleKind identifies the broad rule source used by a query.
+
+const (
+	// RuleNone means no schedule rule supplied availability.
+	RuleNone RuleKind = iota
+	// RuleWeekly means the current date's weekly rule supplied availability.
+	RuleWeekly
+	// RuleWeeklySpill means the preceding date's overnight rule supplied it.
+	RuleWeeklySpill
+	// RuleException means a dated exception supplied the final result.
+	RuleException
+	// RuleComposition means schedule algebra supplied the final result.
+	RuleComposition
+	// RuleOutsideEffective means the queried date is outside configured dates.
+	RuleOutsideEffective
+)
+type Schedule struct {
+	// Has unexported fields.
+}
+    Schedule is an immutable availability value. Its zero value is closed and
+    carries no timezone; it never means always open. Constructed values may be
+    shared for concurrent queries/algebra. Mutating a caller's *Schedule through
+    Scan/Unmarshal is a distinct ownership boundary requiring synchronization.
+
+func NewSchedule(config Config) (Schedule, error)
+    NewSchedule validates and copies caller collections, nested rule slices
+    and effective-date values without retaining mutable input containers.
+    Nil weekly input is permitted. It admits an explicit installed location,
+    at most 64 ranges per day and 4096 total direct/named exceptions; errors
+    return a zero Schedule. Caller inputs must not be modified concurrently
+    during construction.
+
+func ParseJSON(data []byte) (Schedule, error)
+    ParseJSON accepts one UTF-8 wire-edition 1 document of at most
+    MaxJSONBytes, rejecting duplicate keys, unknown fields, excess nesting
+    and invalid evaluated schedule fields. A zero-schedule envelope ignores
+    metadata/effective/outside values; compositions reconstruct operand policies
+    rather than outer wrapper fields. It borrows input only during the call.
+    Accepted whitespace/key ordering need not be canonical bytes; CanonicalJSON
+    normalizes them. Errors return zero without rendering input data.
+
+func (s Schedule) CanonicalJSON() ([]byte, error)
+    CanonicalJSON returns new stable compact wire-edition 1 JSON bytes, bounded
+    by MaxJSONBytes after encoding. They include caller metadata/exception
+    provenance, not automatically redacted content. Stability is representation
+    identity, not frozen timezone rules, authentication or arbitrary algebraic
+    equivalence.
+
+func (s Schedule) Compare(other Schedule) (int, error)
+    Compare returns -1, 0, or 1 according to the schedules' canonical byte
+    ordering. It includes provenance and composition shape, like Equal.
+
+func (s Schedule) EffectiveInstantRanges(start, end time.Time) ([]InstantRange, error)
+    EffectiveInstantRanges returns clipped absolute availability within a
+    bounded interval of at most 366 elapsed days. Ranges represent exactly
+    IsOpen's civil point membership: folds may produce disjoint intervals and
+    gaps contribute only existing wall times. At most 8192 collected fragments
+    are admitted before normalization; errors discard partial results. Returned
+    ranges are detached and sorted/merged.
+
+func (s Schedule) EffectiveRanges(date Date) ([]DailyRange, error)
+    EffectiveRanges returns normalized availability fragments for one civil
+    date.
+
+func (s Schedule) Equal(other Schedule) bool
+    Equal reports canonical equality, including provenance and composition
+    shape.
+
+func (s Schedule) Hash() [sha256.Size]byte
+    Hash returns the unkeyed SHA-256 of the canonical representation, including
+    provenance/tree shape, or all-zero bytes when encoding exceeds limits.
+    It is neither authentication nor proof of equivalent evaluated availability.
+
+func (s Schedule) HumanSummary() (string, error)
+    HumanSummary returns deterministic presentation text that is not a wire
+    encoding and cannot be parsed by UnmarshalText. It excludes labels and
+    exception provenance, reporting only the number of dated exceptions.
+
+func (s Schedule) Intersection(other Schedule) (Schedule, error)
+    Intersection returns a schedule open only when both operands are open.
+
+func (s Schedule) IsOpen(instant time.Time) (Availability, error)
+    IsOpen evaluates an absolute instant in the schedule's explicit timezone.
+
+func (s Schedule) IsOpenLocal(date Date, localTime LocalTime, policy LocalResolutionPolicy) (Availability, error)
+    IsOpenLocal resolves a civil date and wall-clock time under the explicit DST
+    policy, then evaluates the selected instant in the schedule timezone.
+
+func (s Schedule) IsOpenNow(clock Clock) (Availability, error)
+    IsOpenNow evaluates an injected clock's current instant. Nil/typed-nil
+    capabilities and panicking Now calls return CodeInvalidClock without
+    exposing panic data. The synchronous borrowed clock may block and is not
+    canceled.
+
+func (s Schedule) MarshalJSON() ([]byte, error)
+    MarshalJSON implements json.Marshaler with the canonical encoding.
+
+func (s Schedule) MarshalText() ([]byte, error)
+    MarshalText implements encoding.TextMarshaler using canonical JSON text.
+
+func (s Schedule) Metadata() Metadata
+    Metadata returns a detached copy of schedule provenance.
+
+func (s Schedule) NextClosing(instant time.Time, horizon time.Duration) (Transition, error)
+    NextClosing finds the first actual closing strictly after instant within
+    NextTransition's bounded horizon.
+
+func (s Schedule) NextOpening(instant time.Time, horizon time.Duration) (Transition, error)
+    NextOpening finds the first actual opening strictly after instant within
+    NextTransition's bounded horizon.
+
+func (s Schedule) NextTransition(instant time.Time, horizon time.Duration) (Transition, error)
+    NextTransition finds the first actual point-availability change strictly
+    after instant. Candidates include civil endpoints in both fold occurrences
+    and timezone-offset discontinuities. The positive horizon is at most 366
+    elapsed days; exhaustion returns CodeSearchExhausted. Interval expansion and
+    duration use the same civil point membership; see docs/timezones.md.
+
+func (s Schedule) ObserveIsOpen(instant time.Time, elapsedClock ElapsedClock, observer Observer) (Availability, error)
+    ObserveIsOpen runs IsOpen and reports bounded operational data. A nil clock
+    disables elapsed measurement and reports a zero duration. Typed nil, panic
+    or a nil measurement also means zero. Measurement covers IsOpen itself,
+    excluding the separate RangeCount query and observer callback; collaborator
+    work may block.
+
+func (s Schedule) ObserveNextTransition(instant time.Time, horizon time.Duration, elapsedClock ElapsedClock, observer Observer) (Transition, error)
+    ObserveNextTransition runs a bounded transition search and reports
+    its outcome. A nil/panicking elapsed capability reports zero duration.
+    SearchSteps estimates horizon-day cardinality rather than actual candidate
+    visits; observer callback work is outside the measured query and remains
+    synchronous.
+
+func (s Schedule) OpenDuration(start, end time.Time) (time.Duration, error)
+    OpenDuration sums elapsed duration of EffectiveInstantRanges' actual open
+    intervals, not nominal wall-clock hours. It inherits that method's bounds
+    and agrees with IsOpen's civil point membership across gaps and folds.
+
+func (s Schedule) Overlay(other Schedule) (Schedule, error)
+    Overlay returns a schedule where explicit right-hand rules override
+    left-hand availability and inherited right-hand rules leave it unchanged.
+
+func (s Schedule) PreviousTransition(instant time.Time, horizon time.Duration) (Transition, error)
+    PreviousTransition finds the nearest actual point-availability change
+    strictly before instant within a positive horizon of at most 366 elapsed
+    days. Like NextTransition, it includes offset discontinuities and both
+    fold occurrences. Closing explanations use the pre-boundary result; opening
+    explanations use the post-boundary result.
+
+func (s Schedule) Ranges(date Date) (DayResult, error)
+    Ranges resolves the effective weekly rule for date. Missing and inherited
+    weekly rules are closed because there is no lower-precedence source. This
+    is not EffectiveRanges: dated exceptions, incoming spill, composition and
+    effective-date bounds are not evaluated here. Returned ranges are copied.
+
+func (s Schedule) ResolveLocal(date Date, localTime LocalTime, policy LocalResolutionPolicy) (ResolvedLocal, error)
+    ResolveLocal converts a civil date and wall-clock time in the schedule zone.
+    Gaps and folds are never resolved without the caller-selected policy. Exact
+    occurrences succeed under every valid policy. PreferEarlier/PreferLater
+    only select folds; only ShiftForward handles gaps and it rejects folds.
+    A zero Schedule has no zone and fails with CodeInvalidTimezone.
+
+func (s Schedule) Revision() string
+    Revision returns the opaque bounded revision identifier.
+
+func (s *Schedule) Scan(source any) error
+    Scan implements sql.Scanner for JSON/JSONB bytes, strings, and NULL.
+    NULL produces the fail-closed zero schedule. Non-nil input is bounded to
+    MaxJSONBytes and decoded before assignment, leaving the previous receiver
+    unchanged on failure. A nil receiver returns CodeInvalidState. Calls mutate
+    caller storage and need external synchronization; no DB or connection
+    lifecycle is owned.
+
+func (s Schedule) SemanticallyEqual(other Schedule) bool
+    SemanticallyEqual compares canonical wire representations after clearing
+    schedule metadata recursively. Exception provenance, timezone, effective
+    policies and composition shape remain significant; this is not a proof of
+    arbitrary algebraic/point-set equivalence.
+
+func (s Schedule) String() string
+    String returns canonical JSON, including caller metadata/provenance,
+    or a fixed error marker. It is not a secret-safe logging/redaction
+    representation.
+
+func (s Schedule) Subtract(other Schedule) (Schedule, error)
+    Subtract returns a schedule open when s is open and other is closed.
+
+func (s Schedule) Timezone() string
+    Timezone returns the explicit IANA timezone identity, or empty for zero
+    value.
+
+func (s Schedule) Union(other Schedule) (Schedule, error)
+    Union returns a schedule open whenever either operand is open.
+
+func (s *Schedule) UnmarshalJSON(data []byte) error
+    UnmarshalJSON decodes before replacing caller-owned storage; any error
+    leaves the receiver unchanged. Nil returns CodeInvalidState and concurrent
+    receiver mutation requires external synchronization.
+
+func (s *Schedule) UnmarshalText(data []byte) error
+    UnmarshalText implements encoding.TextUnmarshaler using the strict parser.
+
+func (s Schedule) Value() (driver.Value, error)
+    Value implements driver.Valuer using canonical JSON suitable for JSONB.
+
+type Transition struct {
+	// Instant is the selected absolute boundary.
+	Instant time.Time
+	// Kind reports availability immediately after the boundary.
+	Kind TransitionKind
+	// Explanation is post-boundary provenance for forward searches; PreviousTransition uses
+	// pre-boundary provenance for closing.
+	Explanation Explanation
+}
+    Transition is an explained availability boundary.
+
+type TransitionKind uint8
+    TransitionKind identifies an opening or closing boundary.
+
+const (
+	// TransitionOpen identifies a boundary whose following instant is open.
+	TransitionOpen TransitionKind = iota
+	// TransitionClose identifies a boundary whose following instant is closed.
+	TransitionClose
+)
+package openinghourscalendar // import "github.com/faustbrian/go-opening-hours/v6/adapters/calendar"
+
+Package openinghourscalendar adapts calendar civil dates and bounded
+business-calendar holidays to opening-hours values. Use HolidayClosures with an
+explicit traversal bound; calendars, holiday datasets and synchronous calendar
+work remain caller-owned. No clock, network lookup or connection lifecycle is
+started by this adapter.
+
+VARIABLES
+
+var (
+	// ErrInvalidInput reports an invalid date, calendar, source, or range.
+	ErrInvalidInput = errors.New("openinghourscalendar: invalid input")
+	// ErrExpansionLimit reports a non-positive or exhausted date bound.
+	ErrExpansionLimit = errors.New("openinghourscalendar: expansion limit")
+)
+
+FUNCTIONS
+
+func FromDate(date calendar.Date) (openinghours.Date, error)
+    FromDate converts a valid calendar civil date without timezone inference.
+
+func HolidayClosures(businessCalendar business.Calendar, start, end calendar.Date,
+	maximumDates, priority int, source string,
+) ([]openinghours.Exception, error)
+    HolidayClosures resolves holidays in an inclusive, explicitly bounded civil
+    date range to deterministic exact-date closure exceptions. maximumDates
+    bounds all traversed dates, not just holidays, and must be 1–MaxExceptions.
+    No partial exceptions are returned on failure; priority/provenance errors
+    are observed only when a holiday exception is constructed. Calendar work is
+    synchronous.
+
+func ToDate(date openinghours.Date) (calendar.Date, error)
+    ToDate converts a valid opening-hours civil date without timezone inference.
+
+package openinghoursconfig // import "github.com/faustbrian/go-opening-hours/v6/adapters/config"
+
+Package openinghoursconfig adapts canonical schedule documents from
+configuration sources while leaving environment and file ownership to the
+caller. Use Parse for a bounded document or NewValue for the config value seam.
+Returned schedules are immutable, but decoding mutates Value and needs external
+synchronization; this package performs no environment or file IO.
+
+VARIABLES
+
+var ErrInvalidValue = errors.New("openinghoursconfig: invalid value")
+    ErrInvalidValue reports a configuration value that is not canonical JSON
+    text. The rejected value is never included.
+
+
+FUNCTIONS
+
+func Parse(value string) (openinghours.Schedule, error)
+    Parse strictly decodes one bounded canonical configuration value.
+
+
+TYPES
+
+type Value struct {
+	// Has unexported fields.
+}
+    Value implements config's value-unmarshal seam without owning sources.
+
+func NewValue(schedule openinghours.Schedule) Value
+    NewValue wraps an immutable schedule for configuration serialization.
+
+func (value Value) MarshalText() ([]byte, error)
+    MarshalText returns canonical configuration text.
+
+func (value Value) Schedule() openinghours.Schedule
+    Schedule returns the decoded immutable schedule.
+
+func (value *Value) UnmarshalConfigValue(input any) error
+    UnmarshalConfigValue accepts only a string and assigns after successful
+    Parse. Nil receiver/non-string inputs return ErrInvalidValue; parse errors
+    propagate without replacing the old schedule. Callers synchronize mutable
+    Value access.
+
+package openinghourstemporal // import "github.com/faustbrian/go-opening-hours/v6/adapters/temporal"
+
+Package openinghourstemporal provides lossless adapters for temporal/timeofday
+values. Use RangeFromInterval/RuleFromIntervals for input and IntervalFromRange
+for explicitly selected precision. Conversions retain no input collections and
+perform no timezone/clock resolution or background work.
+
+VARIABLES
+
+var ErrLossyMapping = errors.New("openinghourstemporal: lossy mapping")
+    ErrLossyMapping reports an interval whose state or bounds cannot be
+    represented without changing semantics.
+
+
+FUNCTIONS
+
+func IntervalFromRange(value openinghours.Range, digits int) (timeofday.Interval, error)
+    IntervalFromRange converts a range while making fractional precision
+    explicit. Digits must exactly represent both endpoints.
+
+func RangeFromInterval(interval timeofday.Interval) (openinghours.Range, error)
+    RangeFromInterval converts an ordinary or circular start-inclusive,
+    end-exclusive interval.
+
+func RuleFromIntervals(intervals []timeofday.Interval,
+	policy openinghours.OverlapPolicy,
+) (openinghours.DayRule, error)
+    RuleFromIntervals converts an explicitly bounded interval collection.
+    An empty or single collapsed interval maps to closed; full day must stand
+    alone.
+
+package openinghoursvalidation // import "github.com/faustbrian/go-opening-hours/v6/adapters/validation"
+
+Package openinghoursvalidation adapts schedule validation to the shared
+validation contract. Use Validate or Validator for serialization/parse
+admission. The adapter owns neither source IO nor an application validation
+lifecycle and does not establish official conformance or compare arbitrary
+algebraic equivalence.
+
+CONSTANTS
+
+const CodeInvalidSchedule = "opening_hours.invalid_schedule"
+    CodeInvalidSchedule is the stable validation violation code.
+
+
+FUNCTIONS
+
+func Validate(schedule openinghours.Schedule) error
+    Validate requires successful canonical serialization followed by accepted
+    parsing. It does not compare the reparsed value or assert external
+    conformance.
+
+func Validator() validation.Validator[openinghours.Schedule]
+    Validator returns a deterministic validation adapter.
+
+
+TYPES
+
+type ValidationError struct{}
+    ValidationError retains a distinct public diagnostic type for this import
+    path. Validate currently returns encoding/parsing errors, not this type.
+
+func (*ValidationError) Error() string
+    Error returns the stable, data-free diagnostic.
+
+package openinghourswire // import "github.com/faustbrian/go-opening-hours/v6/adapters/wire"
+
+Package openinghourswire adapts schedules to byte-oriented wire registries. Use
+the stateless Codec and WireFormat for wire-edition 1 JSON. This adapter owns no
+registry registration, transport, authentication or resource close lifecycle;
+encoding contains caller provenance and decoding borrows input.
+
+CONSTANTS
+
+const Format = "opening-hours+json;v=1"
+    Format is the stable registry name for canonical opening-hours JSON.
+
+const WireFormat wire.Format = Format
+    WireFormat is the typed wire registry identity.
+
+
+TYPES
+
+type Codec struct{}
+    Codec is stateless and safe for concurrent use.
+
+func (Codec) Decode(data []byte) (openinghours.Schedule, error)
+    Decode strictly parses canonical bytes.
+
+func (Codec) Encode(schedule openinghours.Schedule) ([]byte, error)
+    Encode returns canonical bytes.
+
+package compile // import "github.com/faustbrian/go-opening-hours/v6/compile"
+
+Package compile provides an immutable prepared schedule handle for repeated
+queries. The current implementation relies on the root schedule's bounded
+sorted exception index and adds no cache, lock, goroutine, or global state.
+Use New to validate/copy canonical representation, then query the value. Zero
+Index wraps a closed zero schedule. There is no performance improvement claim
+beyond delegation; timezone data and pointer receiver ownership remain those of
+the root package.
+
+TYPES
+
+type Index struct {
+	// Has unexported fields.
+}
+    Index is safe for concurrent reads because Schedule is immutable.
+
+func New(schedule openinghours.Schedule) (Index, error)
+    New validates the canonical form and returns an owned immutable index.
+
+func (index Index) IsOpen(instant time.Time) (openinghours.Availability, error)
+    IsOpen delegates an instant query to the prepared schedule.
+
+func (index Index) IsOpenLocal(date openinghours.Date, localTime openinghours.LocalTime,
+	policy openinghours.LocalResolutionPolicy,
+) (openinghours.Availability, error)
+    IsOpenLocal delegates an explicitly resolved civil query to the prepared
+    schedule.
+
+func (index Index) NextTransition(instant time.Time, horizon time.Duration) (openinghours.Transition, error)
+    NextTransition delegates a bounded transition search.
+
+func (index Index) Schedule() openinghours.Schedule
+    Schedule returns the immutable prepared schedule value.
+
+package encoding // import "github.com/faustbrian/go-opening-hours/v6/encoding"
+
+Package encoding exposes the canonical schedule wire contract without shadowing
+human-readable formatting concerns in the root package. Use Marshal/Unmarshal
+for wire-edition 1 documents, or ImportLocation and ImportSpatie for bounded
+weekday structures. The parser normalizes accepted documents; this package owns
+no provider transport, authorization or file IO.
+
+FUNCTIONS
+
+func ImportLocation(timezone string, days map[string][]Slot, limits ImportLimits) (openinghours.Schedule, error)
+    ImportLocation imports Location's weekday-keyed {from,to} slot structure.
+    A present empty/nil day is closed; an absent day remains inherited.
+
+func ImportSpatie(timezone string, days map[string][]string, limits ImportLimits) (openinghours.Schedule, error)
+    ImportSpatie imports strict Spatie weekday arrays. Carrier prose and
+    variable formats are intentionally excluded. It requires exactly one
+    hyphen separator and time-only endpoints accepted by Go's 15:04 parser,
+    then normalizes into copied schedule rules. Limits are explicit, not
+    automatically defaulted.
+
+func Marshal(schedule openinghours.Schedule) ([]byte, error)
+    Marshal returns canonical versioned JSON.
+
+func Unmarshal(data []byte) (openinghours.Schedule, error)
+    Unmarshal strictly parses canonical JSON into an immutable schedule.
+
+
+TYPES
+
+type ImportError struct {
+	// Kind is the fixed admission category for package-created errors; custom values are caller-owned.
+	Kind string
+}
+    ImportError is bounded and never includes source payload data.
+
+func (e *ImportError) Error() string
+    Error renders Kind without source input; a nil receiver is not supported.
+
+type ImportLimits struct {
+	// MaximumDays must be 1–7; it bounds the provided weekday map cardinality, not an elapsed horizon.
+	MaximumDays int
+	// MaximumRangesPerDay must be 1–MaxRangesPerDay; zero limits do not select defaults.
+	MaximumRangesPerDay int
+}
+    ImportLimits makes structured input cardinality explicit.
+
+func DefaultImportLimits() ImportLimits
+    DefaultImportLimits returns the package-safe structured import limits.
+
+type Slot struct {
+	// From is a local time accepted by the Go 15:04 parser, without a date or zone.
+	From string `json:"from"`
+	// To is the exclusive local endpoint; an earlier endpoint represents overnight ownership.
+	To string `json:"to"`
+}
+    Slot is a strict structured local-time interval.
+
+package postgres // import "github.com/faustbrian/go-opening-hours/v6/postgres"
+
+Package postgres provides nullable JSONB persistence values. The root Schedule
+directly implements database/sql and the interfaces selected by pgx JSON/JSONB
+codecs, so no connection-global type registration is needed. Use New for a
+valid nullable value, or zero JSONB for SQL NULL. Callers own DB connections,
+transactions and receiver synchronization; this package opens no service and
+performs no server migration or type-map registration.
+
+TYPES
+
+type JSONB struct {
+	// Has unexported fields.
+}
+    JSONB is a nullable database wrapper around an immutable Schedule.
+    Zero means SQL NULL, which is distinct from New(Schedule{}), a valid closed
+    schedule. Scan mutates caller-owned wrapper storage; concurrent mutation
+    needs locking.
+
+func New(schedule openinghours.Schedule) JSONB
+    New returns a valid nullable JSONB value.
+
+func (j JSONB) Get() (openinghours.Schedule, bool)
+    Get returns the stored schedule and validity flag.
+
+func (j *JSONB) Scan(source any) error
+    Scan implements sql.Scanner/pgx JSONB scanning, copying/decoding before
+    assignment. NULL resets validity; malformed input leaves the prior wrapper
+    unchanged. Nil receivers return the root CodeInvalidState error.
+
+func (j JSONB) Value() (driver.Value, error)
+    Value implements driver.Valuer.

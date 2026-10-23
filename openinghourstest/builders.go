@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
 )
 
 // Time constructs a test local time or fails the test immediately.

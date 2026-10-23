@@ -1,30 +1,22 @@
-//nolint:staticcheck // This compatibility test intentionally exercises deprecated facades.
 package openinghourstemporal_test
-
-//lint:file-ignore SA1019 This compatibility test intentionally exercises deprecated facades.
 
 import (
 	"errors"
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
-	openinghourstemporal "github.com/faustbrian/go-opening-hours/v5/adapters/temporal"
-	legacy "github.com/faustbrian/go-opening-hours/v5/openinghourstemporal"
-	temporal "github.com/faustbrian/go-temporal/v2"
-	"github.com/faustbrian/go-temporal/v2/timeofday"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
+	openinghourstemporal "github.com/faustbrian/go-opening-hours/v6/adapters/temporal"
+	temporal "github.com/faustbrian/go-temporal/v3"
+	"github.com/faustbrian/go-temporal/v3/timeofday"
 )
 
-func TestRangeAndRuleConversionsMatchLegacy(t *testing.T) {
+func TestRangeAndRuleConversions(t *testing.T) {
 	start, _ := timeofday.New(22, 0, 0, 0, 0)
 	end, _ := timeofday.New(2, 0, 0, 0, 0)
 	interval, _ := timeofday.Between(start, end, temporal.ClosedOpen)
 	got, err := openinghourstemporal.RangeFromInterval(interval)
 	if err != nil || !got.Overnight() {
 		t.Fatalf("RangeFromInterval() = %#v, %v", got, err)
-	}
-	want, err := legacy.RangeFromInterval(interval)
-	if err != nil || got != want {
-		t.Fatalf("canonical = %#v; legacy = %#v, %v", got, want, err)
 	}
 	roundTrip, err := openinghourstemporal.IntervalFromRange(got, 0)
 	if err != nil || !roundTrip.Equal(interval) {
@@ -37,10 +29,6 @@ func TestRangeAndRuleConversionsMatchLegacy(t *testing.T) {
 }
 
 func TestLossyMappingsAndSpecialRules(t *testing.T) {
-	//nolint:errorlint // Exact sentinel identity is the compatibility contract.
-	if openinghourstemporal.ErrLossyMapping != legacy.ErrLossyMapping {
-		t.Fatal("temporal sentinel identity differs between canonical and legacy paths")
-	}
 	closed, _ := timeofday.Between(timeofday.Midnight(), timeofday.Noon(), temporal.Closed)
 	if _, err := openinghourstemporal.RangeFromInterval(closed); !errors.Is(err, openinghourstemporal.ErrLossyMapping) {
 		t.Fatalf("closed-bounds error = %v", err)

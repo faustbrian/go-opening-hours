@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
 )
 
 // FuzzParseJSON feeds arbitrary bytes into the bounded parser; every accepted schedule must canonically reparse with Equal identity. There is no separate harness size cap.

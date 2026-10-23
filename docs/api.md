@@ -3,13 +3,13 @@
 [Documentation map](index.md) · [Repository README](../README.md)
 [Next: Security model](security.md)
 
-This reference describes the prepared v5 API at
-`github.com/faustbrian/go-opening-hours/v5`.
-V5 is not published yet. Public v4.0.0, v3.0.0, v2.0.2 and historical v1.1.0 remain independently available.
+This reference describes the prepared v6 API at
+`github.com/faustbrian/go-opening-hours/v6`.
+V6 is not published yet. Public v5, v4.0.0, v3.0.0, v2.0.2 and historical v1.1.0 remain independently available.
 The exposed v2.0.0 Git tag is immutable but did not complete release validation.
 
 The authoritative symbol reference is the package documentation generated from
-the source and selected for `golib api check` against `api/v5.txt`. Historical
+the source and selected for `golib api check` against `api/v6.txt`. Historical
 `api/baseline.txt`, `api/v3.txt` and the published `api/v4.txt` are retained. The
 baseline and package selection are declared in `.golib.yaml`. Key contracts
 are:

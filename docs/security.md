@@ -67,7 +67,7 @@ an explicitly unmeasured zero duration and cannot suppress a completed query.
 | Oversized persistence/configuration values cause a second full-size copy | Length rejection precedes byte conversion or ownership copy | `TestInputLimitsAndAtomicSQLScan`, `TestParseRejectsOversizedStringBeforeConversion`; source ordering establishes copy avoidance |
 | Oversized adapter collections allocate before reaching core limits | Spatie and Temporal adapters preflight the shared public cardinality bounds | `TestImportSpatieRejectsOversizedCollectionsBeforeConversion`, `TestRuleFromIntervalsRejectsOversizedCollectionBeforeConversion` |
 | A hostile clock panics before or after a query | Typed-nil detection and panic containment isolate clock capabilities from query results | `TestIsOpenNowRejectsTypedNilClock`, `TestHostileElapsedClocksCannotChangeQueryResult` |
-| A caller selects an effectively unbounded holiday expansion | Calendar expansion rejects limits above `MaxExceptions` | `TestCalendarErrorsAndBoundsMatchLegacy` |
+| A caller selects an effectively unbounded holiday expansion | Calendar expansion rejects limits above `MaxExceptions` | `TestCalendarErrorsAndBounds` |
 | A replaced dependency archive is silently trusted | `go.sum` is checked against the public checksum database; authentication is never disabled | Fresh `GOMODCACHE` plus `GOSUMDB=sum.golang.org go mod download -json` and `go mod verify` |
 
 ## Concurrency

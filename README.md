@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-opening-hours/actions/workflows/ci.yml)
 [![Documentation](https://img.shields.io/badge/docs-adoption_and_API-blue)](docs/index.md)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours/v5.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours/v5)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-opening-hours/v6.svg)](https://pkg.go.dev/github.com/faustbrian/go-opening-hours/v6)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-opening-hours?sort=semver)](https://github.com/faustbrian/go-opening-hours/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -10,12 +10,12 @@
 Immutable, deterministic, timezone-safe recurring opening hours and dated
 exceptions for Go 1.27.0 and later.
 
-Current main prepares v5.0.0 of `github.com/faustbrian/go-opening-hours/v5`
-with exact civil point-membership expansion and duration. Public adoption requires
-the v5.0.0 tag and release; source-tree presence alone does not establish
-availability. See the [v5 migration guide](docs/v5-migration.md). Published v4.0.0
-remains independently available under `/v4` with its original interval-expansion
-policy.
+Current main prepares v6.0.0 of `github.com/faustbrian/go-opening-hours/v6`.
+It adopts Config, Temporal and Validation v3 and removes the compatibility
+facades; schedule semantics match v5. Public adoption requires the v6.0.0 tag
+and release. Published v5 remains available under `/v5` with the exact civil
+point-membership expansion described in the [v5 migration guide](docs/v5-migration.md);
+published v4.0.0 remains under `/v4` with its original interval-expansion policy.
 Public Opening v3.0.0 remains available at `/v3`, and the retained public
 v2 root module is `github.com/faustbrian/go-opening-hours/v2`.
 Stable releases are available on [GitHub](https://github.com/faustbrian/go-opening-hours/releases).
@@ -38,26 +38,28 @@ book appointments, plan workforces, or decide whether an order is eligible.
 
 ## Adoption entry points
 
-The prepared root module is `github.com/faustbrian/go-opening-hours/v5`.
-It requires Go 1.27.0. Adopt v5 only after its public release is available;
-the latest published v4 cohort remains `v4.0.0` under `/v4`.
+The prepared root module is `github.com/faustbrian/go-opening-hours/v6`.
+It requires Go 1.27.0. Adopt v6 only after its public release is available;
+the latest published cohort remains v5 under `/v5`.
 Root subpackages share this module; they need no separate installation.
 
-After v5.0.0 is published, select the complete v5 cohort explicitly:
+After v6.0.0 is published, select it explicitly:
 
 ```sh
-go get github.com/faustbrian/go-opening-hours/v5@v5.0.0
+go get github.com/faustbrian/go-opening-hours/v6@v6.0.0
 ```
 
-Review interval-expansion and duration expectations before migrating; unchanged
-canonical bytes do not preserve v4's former expansion semantics.
+Move Opening imports from `/v5` to `/v6` together with go-config, go-temporal
+and go-validation `/v3`, and replace any `openinghours<target>` facade import
+with the matching `adapters/<target>` package. Coming from v4, also review the
+interval-expansion and duration changes in the v5 guide.
 
 Start with the [documentation map](docs/index.md) for package selection,
 examples, operational constraints, and contributor references.
 
 ## Five-minute start
 
-This example uses the prepared v5 imports; retained v2 usage remains
+This example uses the prepared v6 imports; retained v2 usage remains
 documented in the [v2 migration guide](docs/v2-migration.md).
 
 ```go
@@ -67,7 +69,7 @@ import (
 	"fmt"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
 )
 
 func main() {
@@ -125,10 +127,9 @@ no timezone; it never means always open.
 | `openinghourstest` | Panic-on-error test builders |
 | `postgres` | Domain-owned nullable JSONB and pgx schedule mapping |
 
-The released `openinghourscalendar`, `openinghoursconfig`,
+Version 6 removed the `openinghourscalendar`, `openinghoursconfig`,
 `openinghourstemporal`, `openinghoursvalidation`, and `openinghourswire`
-packages remain compatibility facades. New code should use the corresponding
-`adapters/<target>` path. See the [migration guide](docs/legacy-migration.md).
+facades; use the corresponding `adapters/<target>` path.
 
 ## Documentation
 

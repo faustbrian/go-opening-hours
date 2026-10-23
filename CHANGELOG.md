@@ -3,6 +3,21 @@
 All notable changes follow Keep a Changelog. The project uses Semantic
 Versioning after v1.0.0.
 
+## 6.0.0 - 2026-10-23
+
+### Changed
+
+- Move the module to `github.com/faustbrian/go-opening-hours/v6` and adopt
+  `go-config/v3`, `go-temporal/v3` and `go-validation/v3`. Schedule, wire and
+  persistence semantics are unchanged from v5.
+
+### Removed
+
+- Remove the deprecated `openinghourscalendar`, `openinghoursconfig`,
+  `openinghourstemporal`, `openinghoursvalidation` and `openinghourswire`
+  facades. Import the matching `adapters/<target>` package. The removal
+  precedes the announced support window; the v5 line keeps the facades.
+
 ## 5.0.1 - 2026-10-22
 
 ### Changed
@@ -10,8 +25,6 @@ Versioning after v1.0.0.
 - Publish the current source and documentation with a fresh immutable tag.
 - Build with Go 1.27.3 to address GO-2026-6809 in `crypto/x509`.
   Consumers should use Go 1.27.3 or newer.
-
-## [Unreleased]
 
 ## [5.0.0] - 2026-10-13
 

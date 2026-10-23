@@ -1,26 +1,17 @@
-//nolint:staticcheck // This compatibility test intentionally exercises deprecated facades.
 package openinghoursvalidation_test
 
-//lint:file-ignore SA1019 This compatibility test intentionally exercises deprecated facades.
-
 import (
-	"errors"
 	"fmt"
-	"reflect"
 	"strings"
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
-	openinghoursvalidation "github.com/faustbrian/go-opening-hours/v5/adapters/validation"
-	legacy "github.com/faustbrian/go-opening-hours/v5/openinghoursvalidation"
-	validation "github.com/faustbrian/go-validation/v2"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
+	openinghoursvalidation "github.com/faustbrian/go-opening-hours/v6/adapters/validation"
+	validation "github.com/faustbrian/go-validation/v3"
 )
 
 func TestValidatorAndErrorContract(t *testing.T) {
-	if openinghoursvalidation.CodeInvalidSchedule != legacy.CodeInvalidSchedule {
-		t.Fatal("validation codes differ")
-	}
 	schedule, err := openinghours.NewSchedule(openinghours.Config{Timezone: "UTC"})
 	if err != nil {
 		t.Fatal(err)
@@ -38,18 +29,6 @@ func TestValidatorAndErrorContract(t *testing.T) {
 	var nilError *openinghoursvalidation.ValidationError
 	if nilError.Error() != "openinghoursvalidation: canonical round trip mismatch" {
 		t.Fatalf("typed-nil Error() = %q", nilError.Error())
-	}
-}
-
-func TestValidationErrorHasCanonicalNamedIdentity(t *testing.T) {
-	canonical := &openinghoursvalidation.ValidationError{}
-	legacyError := &legacy.ValidationError{}
-	if reflect.TypeOf(canonical) == reflect.TypeOf(legacyError) {
-		t.Fatal("canonical and legacy ValidationError identities match")
-	}
-	var target *openinghoursvalidation.ValidationError
-	if errors.As(legacyError, &target) {
-		t.Fatal("legacy ValidationError matched canonical named type")
 	}
 }
 

@@ -2,9 +2,9 @@
 
 ## Supported versions
 
-Public v2.0.2 is the current supported stable line. Retained v1 reports must
-identify their affected versions separately. Main prepares v3; it is not a
-published security-fix claim for either retained line.
+Only the latest patch of the latest major receives security fixes. Main
+prepares v6; once it is published, v1 to v5 remain published but receive no
+further releases.
 
 ## Reporting
 

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
 )
 
 func TestSQLValueAndScanRoundTrip(t *testing.T) {

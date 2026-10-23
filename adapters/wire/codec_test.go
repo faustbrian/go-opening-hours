@@ -1,33 +1,24 @@
-//nolint:staticcheck // This compatibility test intentionally exercises deprecated facades.
 package openinghourswire_test
-
-//lint:file-ignore SA1019 This compatibility test intentionally exercises deprecated facades.
 
 import (
 	"bytes"
-	"reflect"
 	"strings"
 	"sync"
 	"testing"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
-	openinghourswire "github.com/faustbrian/go-opening-hours/v5/adapters/wire"
-	legacy "github.com/faustbrian/go-opening-hours/v5/openinghourswire"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
+	openinghourswire "github.com/faustbrian/go-opening-hours/v6/adapters/wire"
 	wire "github.com/faustbrian/go-wire/v3"
 )
 
 // These assignments preserve the public nominal identity, not only its string value.
 var (
 	_ wire.Format = openinghourswire.WireFormat
-	_ wire.Format = legacy.WireFormat
 )
 
-func TestCodecRoundTripAndNamedIdentity(t *testing.T) {
+func TestCodecRoundTrip(t *testing.T) {
 	if openinghourswire.Format != "opening-hours+json;v=1" || openinghourswire.WireFormat != wire.Format(openinghourswire.Format) {
 		t.Fatalf("format constants = %q, %q", openinghourswire.Format, openinghourswire.WireFormat)
-	}
-	if reflect.TypeOf(openinghourswire.Codec{}) == reflect.TypeOf(legacy.Codec{}) {
-		t.Fatal("canonical and legacy Codec reflection identities match")
 	}
 	want, err := openinghours.NewSchedule(openinghours.Config{Timezone: "UTC"})
 	if err != nil {

@@ -16,7 +16,7 @@ api:
   baselines:
     - module: .
       mode: go-doc
-      path: api/v5.txt
+      path: api/v6.txt
       packages:
         - .
         - ./adapters/calendar
@@ -26,11 +26,6 @@ api:
         - ./adapters/wire
         - ./compile
         - ./encoding
-        - ./openinghourscalendar
-        - ./openinghoursconfig
-        - ./openinghourstemporal
-        - ./openinghoursvalidation
-        - ./openinghourswire
         - ./postgres
 operations:
   - module: .

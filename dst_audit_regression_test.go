@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	openinghours "github.com/faustbrian/go-opening-hours/v5"
-	prepared "github.com/faustbrian/go-opening-hours/v5/compile"
+	openinghours "github.com/faustbrian/go-opening-hours/v6"
+	prepared "github.com/faustbrian/go-opening-hours/v6/compile"
 )
 
 type r04OraclePoint struct {

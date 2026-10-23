@@ -72,9 +72,9 @@ POSTGRES_URL='<disposable test database URL>' go test -tags=integration -count=1
 ```
 
 `make check-full` retains full assurance, the DST/fold/timezone operation, all
-eight native 10000x fuzz budgets and benchmarks. Canonical and legacy adapters
-remain packages in this module; preserve their API identity and compatibility
-checks along with affected direct consumers. Relevant release qualification is
+eight native 10000x fuzz budgets and benchmarks. The adapters
+remain packages in this module; preserve their API identity checks along with
+affected direct consumers. Relevant release qualification is
 `golib release dry-run --module .`. The public verifier owns disposable caches,
 service fixtures and gate thresholds. Report unavailable, skipped and failed
 checks honestly; local tests are not live-database, hosted-CI or public-release

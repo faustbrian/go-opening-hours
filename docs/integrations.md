@@ -27,11 +27,8 @@ The package keeps each owned capability at an explicit adapter boundary:
 - `adapters/wire.WireFormat` provides the typed `wire` registry identity;
   `Codec` still enforces the package's stricter canonical parser.
 
-The five former top-level integration packages remain compatibility facades.
-They delegate to these canonical implementations, share sentinel identities,
-and preserve their released named types. The named types on the canonical and
-legacy paths are intentionally distinct, so reflection and `errors.As` retain
-the identity of the path selected by the consumer.
+Version 6 removed the five former top-level integration facades; the v5 line
+keeps them.
 
 None of these adapters owns environment lookup, holiday datasets, provider
 payload interpretation, process clocks, or global registries.

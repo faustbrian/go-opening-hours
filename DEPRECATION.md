@@ -15,12 +15,8 @@ review.
 
 ## Opening-hours integration paths
 
-`openinghourscalendar`, `openinghoursconfig`, `openinghourstemporal`,
-`openinghoursvalidation`, and `openinghourswire` are supported compatibility
-facades for the corresponding `adapters/<target>` packages introduced in
-v1.1.0. New consumers should use the target-oriented paths.
-
-The earliest permitted removal is the later of 180 days after v1.1.0 public
-availability and two subsequently published stable minor releases containing
-the successors. Removal also requires an authorized next major, migrated owned
-consumers, a fresh public-usage audit, and clean external-consumer proof.
+Version 6 removed the `openinghourscalendar`, `openinghoursconfig`,
+`openinghourstemporal`, `openinghoursvalidation`, and `openinghourswire`
+compatibility facades. Import the corresponding `adapters/<target>` package.
+The removal precedes the announced support window; the v5 line keeps the
+facades.

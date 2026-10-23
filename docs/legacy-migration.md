@@ -5,9 +5,9 @@
 
 ## Go adapter import migration
 
-New consumers should select the target-oriented paths:
+Version 6 removed the compatibility paths; replace each with its adapter:
 
-| Compatibility path | Canonical path |
+| Removed v6 path (kept by v5) | Adapter path |
 | --- | --- |
 | `openinghourscalendar` | `adapters/calendar` |
 | `openinghoursconfig` | `adapters/config` |
@@ -17,14 +17,8 @@ New consumers should select the target-oriented paths:
 
 Change the import and any explicit named `Value`, `ValidationError`, or `Codec`
 references in one consumer change. Functions retain their signatures and
-behavior, while sentinels are shared across both paths. The named types are
-deliberately distinct so reflection and `errors.As` keep reporting the path
-the consumer selected. Failed config decoding remains atomic on both paths.
-
-The compatibility paths remain supported for the longer of 180 days after
-successor public availability and two subsequent stable minor releases. Their
-eventual removal additionally requires a new major release and a fresh
-consumer audit.
+behavior; the named types are owned by the adapter packages. Failed config
+decoding remains atomic.
 
 ## Location structured data
 
