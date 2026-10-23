@@ -5,12 +5,10 @@
 
 Version: `OPENINGHOURS-TM-3.0-development`.
 
-This model covers the prepared v3 source and retained published v2 controls.
-Public v2.0.2 remains available under its original module path, as does
-v1.1.0. The v3 nominal dependency migration does not establish new security
-qualification: public v2 dependencies are verified, while Opening v3 affected
-native gates and release evidence remain pending. See
-[v3 preparation](v3-migration.md).
+This is the historical model written for v3. It has not been re-qualified for
+v6: v4 to v6 changed the Wire, Temporal and Validation majors, interval
+expansion and adapter import paths. Earlier majors remain published but
+receive no further releases.
 The exposed v2.0.0 Git tag is immutable but did not complete release validation.
 
 ## Trust boundaries

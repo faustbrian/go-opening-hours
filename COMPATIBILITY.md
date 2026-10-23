@@ -4,9 +4,9 @@ The repository has one releasable root Go module. Its packages, including
 canonical adapters, ship under root `v<version>`
 tags and follow semantic versioning together.
 
-Main prepares the `/v6` module/import suffix without version-specific source
-directories; it adopts Config, Temporal and Validation v3 and removes the
-compatibility facades. Public v5 remains available under `/v5` and v4.0.0
+The root module uses the `/v6` module/import suffix without version-specific
+source directories; v6 adopts Temporal and Validation v3 (Config v3 only in
+tests) and removes the compatibility facades. Public v5 remains available under `/v5` and v4.0.0
 under `/v4`; v4 adopted Wire3, see [v4 preparation](docs/v4-migration.md).
 Public v3.0.0 remains available
 under `/v3` with Calendar2, Temporal2 and Validation2 dependencies.

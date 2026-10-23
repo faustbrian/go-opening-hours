@@ -8,8 +8,8 @@ Versioning after v1.0.0.
 ### Changed
 
 - Move the module to `github.com/faustbrian/go-opening-hours/v6` and adopt
-  `go-config/v3`, `go-temporal/v3` and `go-validation/v3`. Schedule, wire and
-  persistence semantics are unchanged from v5.
+  `go-temporal/v3` and `go-validation/v3`; tests use `go-config/v3`. Schedule,
+  wire and persistence semantics are unchanged from v5.
 
 ### Removed
 

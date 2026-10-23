@@ -2,9 +2,8 @@
 
 ## Supported versions
 
-Only the latest patch of the latest major receives security fixes. Main
-prepares v6; once it is published, v1 to v5 remain published but receive no
-further releases.
+Only the latest patch of the latest major receives security fixes. V6 is the
+current major; v1 to v5 remain published but receive no further releases.
 
 ## Reporting
 

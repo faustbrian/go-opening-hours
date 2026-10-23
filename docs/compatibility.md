@@ -3,8 +3,7 @@
 [Documentation map](index.md) · [Repository README](../README.md)
 [Next: API reference](api.md)
 
-The minimum supported compiler is Go 1.27.0. Current main prepares v6 with
-`api/v6.txt`; the published v5 and v4 projections are retained at `api/v5.txt`
+The minimum supported compiler is Go 1.27.0. V6 uses `api/v6.txt`; the published v5 and v4 projections are retained at `api/v5.txt`
 and `api/v4.txt`. Historical `api/baseline.txt` and `api/v3.txt` remain
 unchanged. Breaking
 changes require a new major release. Public v2.0.2 is available at `github.com/faustbrian/go-opening-hours/v2`; published v1.1.0 remains
