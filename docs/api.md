@@ -3,9 +3,9 @@
 [Documentation map](index.md) · [Repository README](../README.md)
 [Next: Security model](security.md)
 
-This reference describes the prepared v6 API at
+This reference describes the v6 API at
 `github.com/faustbrian/go-opening-hours/v6`.
-V6 is not published yet. Public v5, v4.0.0, v3.0.0, v2.0.2 and historical v1.1.0 remain independently available.
+Earlier majors remain published but receive no further releases.
 The exposed v2.0.0 Git tag is immutable but did not complete release validation.
 
 The authoritative symbol reference is the package documentation generated from

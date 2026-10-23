@@ -13,7 +13,7 @@ change and import migration are described in [v2 migration](v2-migration.md).
 The exposed v2.0.0 Git tag remains immutable; it is not a verified stable
 release. V2.0.1 is the validated replacement release, not a rewritten tag.
 
-Prepared v6 uses Wire3, Calendar2, Config3, Temporal3 and Validation3 nominal
+V6 uses Wire3, Calendar2, Temporal3 and Validation3 nominal
 types and removes the facades; published v5 and v4.0.0 used Temporal2 and
 Validation2. V5 changed interval expansion/duration to exact civil point
 membership; see the [v5 migration guide](v5-migration.md).

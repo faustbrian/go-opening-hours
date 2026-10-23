@@ -10,27 +10,13 @@
 Immutable, deterministic, timezone-safe recurring opening hours and dated
 exceptions for Go 1.27.0 and later.
 
-Current main prepares v6.0.0 of `github.com/faustbrian/go-opening-hours/v6`.
-It adopts Config, Temporal and Validation v3 and removes the compatibility
-facades; schedule semantics match v5. Public adoption requires the v6.0.0 tag
-and release. Published v5 remains available under `/v5` with the exact civil
-point-membership expansion described in the [v5 migration guide](docs/v5-migration.md);
-published v4.0.0 remains under `/v4` with its original interval-expansion policy.
-Public Opening v3.0.0 remains available at `/v3`, and the retained public
-v2 root module is `github.com/faustbrian/go-opening-hours/v2`.
-Stable releases are available on [GitHub](https://github.com/faustbrian/go-opening-hours/releases).
-V2 requires nonempty, valid UTF-8 exception source and revision identities;
-see the [v2 migration guide](docs/v2-migration.md). Published v1.1.0 remains
-available at `github.com/faustbrian/go-opening-hours`.
-
-The v2.0.0 Git tag was exposed before release validation completed. It remains
-immutable, but has no verified stable release; use a validated v2 release.
-
-Existing v2 applications can pin a validated v2 release with:
-
-```sh
-go get github.com/faustbrian/go-opening-hours/v2@v2.0.2
-```
+The current major is v6 at `github.com/faustbrian/go-opening-hours/v6`.
+It adopts Temporal and Validation v3 and removes the compatibility facades;
+schedule semantics match v5. Only the latest major receives security fixes:
+v1 to v5 remain published under their module paths but receive no further
+releases. Stable releases are listed on
+[GitHub](https://github.com/faustbrian/go-opening-hours/releases), and the
+per-major guides start at the [v5 migration guide](docs/v5-migration.md).
 
 The package models generic availability for service points, storefronts,
 offices, pickup locations, and support desks. It does not parse carrier prose,
@@ -38,19 +24,16 @@ book appointments, plan workforces, or decide whether an order is eligible.
 
 ## Adoption entry points
 
-The prepared root module is `github.com/faustbrian/go-opening-hours/v6`.
-It requires Go 1.27.0. Adopt v6 only after its public release is available;
-the latest published cohort remains v5 under `/v5`.
+The root module is `github.com/faustbrian/go-opening-hours/v6`.
+It requires Go 1.27.0.
 Root subpackages share this module; they need no separate installation.
-
-After v6.0.0 is published, select it explicitly:
 
 ```sh
 go get github.com/faustbrian/go-opening-hours/v6@v6.0.0
 ```
 
-Move Opening imports from `/v5` to `/v6` together with go-config, go-temporal
-and go-validation `/v3`, and replace any `openinghours<target>` facade import
+Move Opening imports from `/v5` to `/v6` together with go-temporal and
+go-validation `/v3`, and replace any `openinghours<target>` facade import
 with the matching `adapters/<target>` package. Coming from v4, also review the
 interval-expansion and duration changes in the v5 guide.
 
@@ -59,7 +42,7 @@ examples, operational constraints, and contributor references.
 
 ## Five-minute start
 
-This example uses the prepared v6 imports; retained v2 usage remains
+This example uses the v6 imports; v2 usage remains
 documented in the [v2 migration guide](docs/v2-migration.md).
 
 ```go
