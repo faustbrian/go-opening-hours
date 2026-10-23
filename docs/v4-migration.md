@@ -25,5 +25,5 @@ v4 API projection is `api/v4.txt`. This migration does not rewrite historical
 tags or module graphs. Select the published `v4.0.0` root tag when adopting v4.
 
 
-Current main prepares v5 with a breaking timezone expansion correction; see
-the [v5 migration guide](v5-migration.md). Published v4 remains unchanged.
+v5 later shipped a breaking timezone expansion correction; see the
+[v5 migration guide](v5-migration.md). Published v4 remains unchanged.

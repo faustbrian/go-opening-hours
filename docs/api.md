@@ -10,7 +10,8 @@ The exposed v2.0.0 Git tag is immutable but did not complete release validation.
 
 The authoritative symbol reference is the package documentation generated from
 the source and selected for `golib api check` against `api/v6.txt`. Historical
-`api/baseline.txt`, `api/v3.txt` and the published `api/v4.txt` are retained. The
+`api/baseline.txt`, `api/v3.txt` and the published `api/v4.txt` and `api/v5.txt`
+are retained. The
 baseline and package selection are declared in `.golib.yaml`. Key contracts
 are:
 
@@ -26,8 +27,7 @@ are:
 | formatting | `HumanSummary` display text, canonical JSON/text wire encoding |
 | encoding | strict parse, SQL scanner/valuer |
 | capabilities | `Clock`, `ElapsedClock`, `Observer`, `Observation` |
-| canonical adapters | `adapters/calendar`, `adapters/config`, `adapters/temporal`, `adapters/validation`, `adapters/wire` |
-| compatibility paths | `openinghourscalendar`, `openinghoursconfig`, `openinghourstemporal`, `openinghoursvalidation`, `openinghourswire` |
+| adapters | `adapters/calendar`, `adapters/config`, `adapters/temporal`, `adapters/validation`, `adapters/wire` |
 
 Root constructors with error results return typed package `Error` categories
 through `IsCode`; `MustDate` panics on invalid static input and adapter errors
@@ -41,8 +41,6 @@ provenance, and 256-byte metadata fields.
 The zero `Date` is invalid, zero `LocalTime` is midnight, zero `DayRule` is
 inherited, and zero `Schedule` is closed without a timezone.
 
-Canonical and compatibility adapter paths share the same package-owned error
-sentinels and observable behavior. Their exported named `Value`,
-`ValidationError`, and `Codec` types retain distinct reflection identities;
-use the type from the import path your code selected. Failed configuration
-decoding is atomic and leaves the prior schedule unchanged.
+The adapter packages own their error sentinels and their exported `Value`,
+`ValidationError`, and `Codec` types. Failed configuration decoding is atomic
+and leaves the prior schedule unchanged.

@@ -30,6 +30,9 @@ func TestValidatorAndErrorContract(t *testing.T) {
 	if nilError.Error() != "openinghoursvalidation: canonical round trip mismatch" {
 		t.Fatalf("typed-nil Error() = %q", nilError.Error())
 	}
+	if got := (&openinghoursvalidation.ValidationError{}).Error(); got != "openinghoursvalidation: canonical round trip mismatch" {
+		t.Fatalf("zero Error() = %q", got)
+	}
 }
 
 func TestValidateRejectsScheduleBeyondCanonicalLimit(t *testing.T) {

@@ -16,8 +16,10 @@ Version 6 removed the compatibility paths; replace each with its adapter:
 | `openinghourswire` | `adapters/wire` |
 
 Change the import and any explicit named `Value`, `ValidationError`, or `Codec`
-references in one consumer change. Functions retain their signatures and
-behavior; the named types are owned by the adapter packages. Failed config
+references in one consumer change, together with go-config, go-temporal and
+go-validation `/v3`: `adapters/temporal` takes go-temporal v3 types and
+`adapters/validation` returns go-validation v3 validators. Behavior is
+unchanged; the named types are owned by the adapter packages. Failed config
 decoding remains atomic.
 
 ## Location structured data

@@ -2,12 +2,8 @@
 
 [Documentation map](index.md) · [Repository README](../README.md)
 
-Current main prepares v5.0.0 of `github.com/faustbrian/go-opening-hours/v5`.
-Public adoption requires the v5.0.0 tag and release; source-tree presence alone
-does not establish availability. Published v4.0.0 remains available unchanged at
-`/v4`.
-
-Once the v5.0.0 tag and release are published, select it explicitly:
+Version 5.0.0 of `github.com/faustbrian/go-opening-hours/v5` is published;
+v4.0.0 remains available unchanged at `/v4`. Select it explicitly:
 
 ```sh
 go get github.com/faustbrian/go-opening-hours/v5@v5.0.0
@@ -43,6 +39,6 @@ duration semantics. The Wire registry name remains `opening-hours+json;v=1`;
 codecs and SQL values do not encode the Go module major or a frozen timezone
 database. Migration must therefore review semantics as well as nominal types.
 
-The maintained symbol projection is `api/v5.txt`. Historical v4 tags, source
+The published v5 symbol projection is `api/v5.txt`. Historical v4 tags, source
 and the published `api/v4.txt` remain intact. See [timezones](timezones.md) for
 the attributable bounded regression corpus and runtime timezone-data limits.
