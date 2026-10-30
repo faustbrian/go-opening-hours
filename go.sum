@@ -5,8 +5,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/faustbrian/go-calendar/v2 v2.0.0 h1:ZIwXb4/VZF0VSLIRnFvdO0rFFzVRLu1O544F/zpcnnM=
 github.com/faustbrian/go-calendar/v2 v2.0.0/go.mod h1:oCiPd+h3SHu73FdHcpBt0e8InizcIzkEZ9AW3lUsPGg=
-github.com/faustbrian/go-clock v1.2.0 h1:vy2700wB/gaXRgW7zWw1iF7twxrKDyL3dSd3fz1DdAA=
-github.com/faustbrian/go-clock v1.2.0/go.mod h1:ZU+wKx09xmXbtOf+swccuicq5Bkezby3k49uk7PCoA0=
+github.com/faustbrian/go-clock v1.2.1 h1:BrJCEq7TQEUIY6YbQS6C5ubsfZ1o7aFPdMns+vghLww=
+github.com/faustbrian/go-clock v1.2.1/go.mod h1:ZU+wKx09xmXbtOf+swccuicq5Bkezby3k49uk7PCoA0=
 github.com/faustbrian/go-config/v3 v3.0.0 h1:EM78bsVWZaI876cqEAiy3G2DXIyJrG2/ZWncJPVj8Sw=
 github.com/faustbrian/go-config/v3 v3.0.0/go.mod h1:YwXZ8OJwr9Hd1E2/KiAc8UA5Tx4N066q93HLNlNsfew=
 github.com/faustbrian/go-temporal/v3 v3.0.0 h1:0DbaTx8VQ3kDvQpNGH3lSm4lktQ54HTvAyNkS4o1t4k=
